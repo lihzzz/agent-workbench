@@ -1,5 +1,5 @@
 import type { UIMessage, SubagentToolStep } from "@/types";
-import { getMcpCompactSummary } from "@/components/McpToolContent";
+import { getMcpCompactSummary } from "@/components/lib/mcp-tool-metadata";
 import { getTodoItems } from "@/lib/chat/todo-utils";
 import { getDistinctPatchPaths, getStructuredPatches } from "@/lib/diff/patch-utils";
 

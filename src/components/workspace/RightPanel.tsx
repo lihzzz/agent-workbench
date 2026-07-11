@@ -1,7 +1,10 @@
-import React from "react";
+import React, { lazy, Suspense } from "react";
 import { TodoPanel } from "@/components/TodoPanel";
-import { BackgroundAgentsPanel } from "@/components/BackgroundAgentsPanel";
 import type { TodoItem, BackgroundAgent } from "@/types";
+
+const BackgroundAgentsPanel = lazy(() =>
+  import("@/components/BackgroundAgentsPanel").then((mod) => ({ default: mod.BackgroundAgentsPanel })),
+);
 
 interface RightPanelLayoutProps {
   isIsland: boolean;
@@ -121,12 +124,14 @@ export const RightPanel = React.memo(function RightPanel({
                 : { flex: "1 1 0%", minHeight: 0 }
             }
           >
-            <BackgroundAgentsPanel
-              agents={bgAgents.agents}
-              expandEditToolCallsByDefault={expandEditToolCallsByDefault}
-              onDismiss={bgAgents.dismissAgent}
-              onStopAgent={bgAgents.stopAgent}
-            />
+            <Suspense fallback={null}>
+              <BackgroundAgentsPanel
+                agents={bgAgents.agents}
+                expandEditToolCallsByDefault={expandEditToolCallsByDefault}
+                onDismiss={bgAgents.dismissAgent}
+                onStopAgent={bgAgents.stopAgent}
+              />
+            </Suspense>
           </div>
         )}
       </div>

@@ -9,7 +9,7 @@
  * or any PII. Only pass anonymized metadata (engine type, tool name, counts, etc.).
  */
 
-import { posthog } from "@/lib/analytics/posthog";
+import { capturePostHogException } from "@/lib/analytics/posthog";
 
 /** Fire-and-forget analytics event via the main process PostHog client. */
 export function capture(event: string, properties?: Record<string, unknown>): void {
@@ -28,7 +28,7 @@ export function capture(event: string, properties?: Record<string, unknown>): vo
  */
 export function captureException(error: Error, properties?: Record<string, unknown>): void {
   try {
-    posthog.captureException(error, properties);
+    capturePostHogException(error, properties);
   } catch {
     // Analytics should never break the app
   }

@@ -1,4 +1,4 @@
-import { memo, useState, useEffect, useLayoutEffect, useRef, useMemo, type CSSProperties } from "react";
+import { lazy, memo, Suspense, useState, useEffect, useLayoutEffect, useRef, useMemo, type CSSProperties } from "react";
 import { ChevronRight, AlertCircle } from "lucide-react";
 import {
   Collapsible,
@@ -7,7 +7,6 @@ import {
 } from "@/components/ui/collapsible";
 import type { UIMessage } from "@/types";
 import { ToolCall } from "./ToolCall";
-import { ThinkingBlock } from "./ThinkingBlock";
 import { getToolLabel, getToolIcon, getToolColor } from "@/components/lib/tool-metadata";
 import { formatCompactSummary } from "@/components/lib/tool-formatting";
 import { useChatPersistedState } from "@/components/chat-ui-state";
@@ -16,6 +15,10 @@ import {
   CHAT_ROW_CLASS,
   CHAT_ROW_WIDTH_CLASS,
 } from "@/components/lib/chat-layout";
+
+const ThinkingBlock = lazy(() =>
+  import("./ThinkingBlock").then((mod) => ({ default: mod.ThinkingBlock })),
+);
 
 interface ToolGroupBlockProps {
   tools: UIMessage[];
@@ -296,12 +299,14 @@ export const ToolGroupBlock = memo(function ToolGroupBlock({
             disableCollapseAnimation={disableCollapseAnimation}
           />
         ) : (
-          <ThinkingBlock
-            thinking={message.thinking ?? ""}
-            isStreaming={message.isStreaming}
-            thinkingComplete={message.thinkingComplete}
-            storageKey={`thinking:${message.id}`}
-          />
+          <Suspense fallback={null}>
+            <ThinkingBlock
+              thinking={message.thinking ?? ""}
+              isStreaming={message.isStreaming}
+              thinkingComplete={message.thinkingComplete}
+              storageKey={`thinking:${message.id}`}
+            />
+          </Suspense>
         );
         return (
           <div key={message.id} className="flex">

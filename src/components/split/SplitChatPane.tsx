@@ -10,7 +10,7 @@
  * BottomComposer; only the outer wrapper and tool strip differ.
  */
 
-import React, { useMemo } from "react";
+import React, { lazy, Suspense, useMemo } from "react";
 import { motion } from "motion/react";
 import type { ChatSession, EngineId, InstalledAgent, TodoItem, BackgroundAgent } from "@/types";
 import type { SessionPaneState } from "@/hooks/session/useSessionPane";
@@ -21,12 +21,15 @@ import { ChatHeader } from "@/components/ChatHeader";
 import { ChatView } from "@/components/ChatView";
 import { BottomComposer } from "@/components/BottomComposer";
 import { TodoPanel } from "@/components/TodoPanel";
-import { BackgroundAgentsPanel } from "@/components/BackgroundAgentsPanel";
 import { SplitPaneToolStrip } from "@/components/split/SplitPaneToolStrip";
 import type { CodexModelSummary } from "@/hooks/session/types";
 import type { GrabbedElement } from "@/types";
 import type { SplitViewState } from "@/hooks/useSplitView";
 import { getChatPaneMinWidthPx } from "@/lib/layout/workspace-constraints";
+
+const BackgroundAgentsPanel = lazy(() =>
+  import("@/components/BackgroundAgentsPanel").then((mod) => ({ default: mod.BackgroundAgentsPanel })),
+);
 
 export interface SplitChatPaneProps {
   // Identity
@@ -317,12 +320,14 @@ function SplitChatPaneInner({
         )}
         {activeContextualTool === "agents" && (
           <div className="flex w-[280px] shrink-0 flex-col overflow-hidden border-s border-border/40 bg-background">
-            <BackgroundAgentsPanel
-              agents={bgAgents.agents}
-              expandEditToolCallsByDefault={expandEditToolCallsByDefault}
-              onDismiss={bgAgents.dismissAgent}
-              onStopAgent={bgAgents.stopAgent}
-            />
+            <Suspense fallback={null}>
+              <BackgroundAgentsPanel
+                agents={bgAgents.agents}
+                expandEditToolCallsByDefault={expandEditToolCallsByDefault}
+                onDismiss={bgAgents.dismissAgent}
+                onStopAgent={bgAgents.stopAgent}
+              />
+            </Suspense>
           </div>
         )}
         <SplitPaneToolStrip

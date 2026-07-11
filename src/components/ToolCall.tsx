@@ -1,4 +1,4 @@
-import { useEffect, useRef, useMemo, memo } from "react";
+import { lazy, Suspense, useEffect, useRef, useMemo, memo } from "react";
 import { ChevronRight, AlertCircle } from "lucide-react";
 import {
   Collapsible,
@@ -9,8 +9,6 @@ import type { UIMessage } from "@/types";
 import { getToolIcon, getToolLabel, getToolColor } from "@/components/lib/tool-metadata";
 import { formatCompactSummary } from "@/components/lib/tool-formatting";
 import { TextShimmer } from "@/components/ui/text-shimmer";
-import { TaskTool } from "./tool-renderers/TaskTool";
-import { ExpandedToolContent } from "./tool-renderers/ExpandedToolContent";
 import { useChatPersistedState } from "@/components/chat-ui-state";
 import { ToolGlyph } from "@/components/lib/ToolGlyph";
 import {
@@ -19,6 +17,18 @@ import {
   CHAT_ROW_WIDTH_CLASS,
 } from "@/components/lib/chat-layout";
 import { getToolDiffStats } from "@/lib/diff/diff-stats";
+import { ExitPlanModeContent } from "./tool-renderers/PlanContent";
+
+const TaskTool = lazy(() =>
+  import("./tool-renderers/TaskTool").then((mod) => ({ default: mod.TaskTool })),
+);
+const ExpandedToolContent = lazy(() =>
+  import("./tool-renderers/ExpandedToolContent").then((mod) => ({ default: mod.ExpandedToolContent })),
+);
+
+function ToolContentFallback() {
+  return <div className="h-6 w-full" />;
+}
 
 // ── Main entry ──
 
@@ -45,7 +55,11 @@ export const ToolCall = memo(function ToolCall({
   const isTask = normalizedToolName === "task" || normalizedToolName === "agent";
   const isWideTool = normalizedToolName === "edit" || normalizedToolName === "write" || normalizedToolName === "notebookedit";
   const content = isTask
-    ? <TaskTool message={message} />
+    ? (
+      <Suspense fallback={<ToolContentFallback />}>
+        <TaskTool message={message} />
+      </Suspense>
+    )
     : (
       <RegularTool
         message={message}
@@ -209,7 +223,7 @@ const RegularTool = memo(function RegularTool({
       <div className={isWideTool ? "block w-full min-w-0" : undefined}>
         {trigger}
         <div className={`${CHAT_COLLAPSIBLE_CONTENT_CLASS} ${isWideTool ? "w-full min-w-0" : ""}`}>
-          <ExpandedToolContent message={message} />
+          <ExitPlanModeContent message={message} />
         </div>
       </div>
     );
@@ -223,7 +237,9 @@ const RegularTool = memo(function RegularTool({
         {trigger}
         {expanded && (
           <div className={`${CHAT_COLLAPSIBLE_CONTENT_CLASS} ${isWideTool ? "w-full min-w-0" : ""}`}>
-            <ExpandedToolContent message={message} />
+            <Suspense fallback={<ToolContentFallback />}>
+              <ExpandedToolContent message={message} />
+            </Suspense>
           </div>
         )}
       </div>
@@ -239,7 +255,9 @@ const RegularTool = memo(function RegularTool({
       <CollapsibleTrigger asChild>{trigger}</CollapsibleTrigger>
       <CollapsibleContent className={`${CHAT_COLLAPSIBLE_CONTENT_CLASS} ${isWideTool ? "w-full min-w-0" : ""}`}>
         <div className={isWideTool ? "w-full min-w-0" : undefined}>
-          <ExpandedToolContent message={message} />
+          <Suspense fallback={<ToolContentFallback />}>
+            <ExpandedToolContent message={message} />
+          </Suspense>
         </div>
       </CollapsibleContent>
     </Collapsible>

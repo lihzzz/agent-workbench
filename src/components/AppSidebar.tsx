@@ -1,5 +1,5 @@
-import { useState, useEffect, useMemo, useRef, useCallback, memo, type DragEvent } from "react";
-import { Bug, PanelLeft, Plus, Paintbrush } from "lucide-react";
+import { lazy, Suspense, useState, useEffect, useMemo, useRef, useCallback, memo, type DragEvent } from "react";
+import { PanelLeft, Plus, Paintbrush } from "lucide-react";
 import { toast } from "sonner";
 import { isMac } from "@/lib/utils";
 import { reportError } from "@/lib/analytics/analytics";
@@ -16,11 +16,14 @@ import type { ChatFolder, ChatSession, Project, Space, SpaceColor } from "@/type
 import { APP_SIDEBAR_WIDTH } from "@/lib/layout/constants";
 import { SidebarSearch } from "./SidebarSearch";
 import { SpaceBar, SpaceIcon } from "./SpaceBar";
-import { SpaceCustomizer } from "./SpaceCustomizer";
 import { ProjectSection } from "./sidebar/ProjectSection";
 import { SidebarActionsProvider } from "./sidebar/SidebarActionsContext";
 import { useAgentContext } from "./AgentContext";
 import { clearSidebarDragPayload, isSidebarDragKind } from "@/lib/sidebar/dnd";
+
+const LazySpaceCustomizer = lazy(() =>
+  import("./SpaceCustomizer").then((mod) => ({ default: mod.SpaceCustomizer })),
+);
 
 type ProjectDropPlacement = "before" | "after";
 
@@ -602,13 +605,15 @@ export const AppSidebar = memo(function AppSidebar({
                 className="w-72"
                 onOpenAutoFocus={(e) => e.preventDefault()}
               >
-                <SpaceCustomizer
-                  icon={draftSpace.icon}
-                  iconType={draftSpace.iconType}
-                  color={draftSpace.color}
-                  onUpdateIcon={handleDraftIconUpdate}
-                  onUpdateColor={handleDraftColorUpdate}
-                />
+                <Suspense fallback={<div className="h-72" />}>
+                  <LazySpaceCustomizer
+                    icon={draftSpace.icon}
+                    iconType={draftSpace.iconType}
+                    color={draftSpace.color}
+                    onUpdateIcon={handleDraftIconUpdate}
+                    onUpdateColor={handleDraftColorUpdate}
+                  />
+                </Suspense>
               </PopoverContent>
             </Popover>
           </div>
@@ -708,19 +713,6 @@ export const AppSidebar = memo(function AppSidebar({
             </ScrollArea>
           </div>
 
-          <div className="flex items-center justify-center gap-1.5 px-3 py-1.5 text-[11px] text-sidebar-foreground/40">
-            <span>Agent Workbench is in early beta</span>
-            <span className="text-sidebar-foreground/20">·</span>
-            <a
-              href="https://github.com/lihzzz/agent-workbench/issues"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-sidebar-foreground/50 transition-colors hover:text-sidebar-foreground/80"
-            >
-              <Bug className="h-3 w-3" />
-              <span>Report a bug</span>
-            </a>
-          </div>
         </div>
         </SidebarActionsProvider>
       )}

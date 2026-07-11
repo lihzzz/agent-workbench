@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useLayoutEffect, useRef, useMemo, useCallback, useState, startTransition, memo, type CSSProperties, type PointerEvent as ReactPointerEvent } from "react";
+import { Fragment, lazy, Suspense, useEffect, useLayoutEffect, useRef, useMemo, useCallback, useState, startTransition, memo, type CSSProperties, type PointerEvent as ReactPointerEvent } from "react";
 import { measureElement as measureVirtualElement, useVirtualizer } from "@tanstack/react-virtual";
 import { motion } from "motion/react";
 import { Loader2, Minus } from "lucide-react";
@@ -7,7 +7,6 @@ import { AgentIcon } from "./AgentIcon";
 import { getAgentIcon } from "@/lib/engine-icons";
 import { useAgentContext } from "./AgentContext";
 import { MessageBubble } from "./MessageBubble";
-import { SummaryBlock } from "./SummaryBlock";
 import { ToolCall } from "./ToolCall";
 import { ToolGroupBlock } from "./ToolGroupBlock";
 import { TurnChangesSummary } from "./TurnChangesSummary";
@@ -33,6 +32,10 @@ import {
 } from "@/lib/chat/virtualization";
 import { CHAT_ROW_CLASS } from "@/components/lib/chat-layout";
 import { useSettingsStore } from "@/stores/settings-store";
+
+const SummaryBlock = lazy(() =>
+  import("./SummaryBlock").then((mod) => ({ default: mod.SummaryBlock })),
+);
 
 // ── Row model ──
 
@@ -210,7 +213,9 @@ const ChatMessageRow = memo(function ChatMessageRow({
   if (msg.role === "summary") {
     return (
       <div data-message-id={msg.id}>
-        <SummaryBlock message={msg} />
+        <Suspense fallback={null}>
+          <SummaryBlock message={msg} />
+        </Suspense>
       </div>
     );
   }

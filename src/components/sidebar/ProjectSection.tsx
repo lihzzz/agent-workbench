@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect, useRef } from "react";
+import { lazy, Suspense, useState, useMemo, useEffect, useRef } from "react";
 import { useInlineRename } from "@/hooks/useInlineRename";
 import { useContextMenuPosition } from "@/hooks/useContextMenuPosition";
 import {
@@ -18,7 +18,7 @@ import {
   GitBranch,
   Network,
 } from "lucide-react";
-import { resolveLucideIcon } from "@/lib/icon-utils";
+import { DynamicLucideIcon } from "@/components/DynamicLucideIcon";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -36,7 +36,6 @@ import {
   PopoverAnchor,
   PopoverContent,
 } from "@/components/ui/popover";
-import { IconPicker } from "@/components/IconPicker";
 import type { ChatFolder, ChatSession, InstalledAgent, Project, Space } from "@/types";
 import { SessionItem } from "./SessionItem";
 import { CCSessionList } from "./CCSessionList";
@@ -49,6 +48,10 @@ import {
   clearSidebarDragPayload,
   writeSidebarDragPayload,
 } from "@/lib/sidebar/dnd";
+
+const LazyIconPicker = lazy(() =>
+  import("@/components/IconPicker").then((mod) => ({ default: mod.IconPicker })),
+);
 
 type ProjectDropIndicator = "before" | "after" | null;
 
@@ -286,14 +289,11 @@ export function ProjectSection({
             {project.icon && project.iconType === "emoji" ? (
               <span className="h-4 w-4 shrink-0 text-center text-sm leading-4">{project.icon}</span>
             ) : project.icon && project.iconType === "lucide" ? (
-              (() => {
-                const Icon = resolveLucideIcon(project.icon);
-                return Icon ? (
-                  <Icon className="h-4 w-4 shrink-0 text-sidebar-foreground/60" />
-                ) : (
-                  <FolderOpen className="h-4 w-4 shrink-0 text-sidebar-foreground/60" />
-                );
-              })()
+              <DynamicLucideIcon
+                name={project.icon}
+                fallback={FolderOpen}
+                className="h-4 w-4 shrink-0 text-sidebar-foreground/60"
+              />
             ) : (
               <FolderOpen className="h-4 w-4 shrink-0 text-sidebar-foreground/60" />
             )}
@@ -351,14 +351,16 @@ export function ProjectSection({
 
               {/* Icon picker popover — anchored to the ... button, triggered from dropdown "Set icon" */}
               <PopoverContent align="start" side="right" className="w-72 p-3">
-                <IconPicker
-                  value={project.icon ?? ""}
-                  iconType={project.iconType ?? "emoji"}
-                  onChange={(icon, type) => {
-                    onUpdateIcon(icon, type);
-                    setIconPickerOpen(false);
-                  }}
-                />
+                <Suspense fallback={<div className="h-64" />}>
+                  <LazyIconPicker
+                    value={project.icon ?? ""}
+                    iconType={project.iconType ?? "emoji"}
+                    onChange={(icon, type) => {
+                      onUpdateIcon(icon, type);
+                      setIconPickerOpen(false);
+                    }}
+                  />
+                </Suspense>
               </PopoverContent>
             </Popover>
           </div>
@@ -432,19 +434,19 @@ export function ProjectSection({
                     Move to space
                   </DropdownMenuSubTrigger>
                   <DropdownMenuSubContent className="w-44">
-                    {otherSpaces.map((s) => {
-                      const SpIcon = s.iconType === "lucide" ? resolveLucideIcon(s.icon) : null;
-                      return (
-                        <DropdownMenuItem key={s.id} onClick={() => onMoveToSpace(s.id)}>
-                          {s.iconType === "emoji" ? (
-                            <span className="me-2 text-sm">{s.icon}</span>
-                          ) : SpIcon ? (
-                            <SpIcon className="me-2 h-3.5 w-3.5" />
-                          ) : null}
-                          {s.name}
-                        </DropdownMenuItem>
-                      );
-                    })}
+                    {otherSpaces.map((s) => (
+                      <DropdownMenuItem key={s.id} onClick={() => onMoveToSpace(s.id)}>
+                        {s.iconType === "emoji" ? (
+                          <span className="me-2 text-sm">{s.icon}</span>
+                        ) : (
+                          <DynamicLucideIcon
+                            name={s.icon}
+                            className="me-2 h-3.5 w-3.5"
+                          />
+                        )}
+                        {s.name}
+                      </DropdownMenuItem>
+                    ))}
                   </DropdownMenuSubContent>
                 </DropdownMenuSub>
               )}

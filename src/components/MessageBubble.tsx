@@ -1,9 +1,5 @@
-import { memo, useState, useMemo, createContext, useContext, type ReactNode } from "react";
+import { lazy, memo, Suspense, useState, useMemo, type ReactNode } from "react";
 import { AlertCircle, Clock, Crosshair, File, Folder, Info, RotateCcw, Send, Undo2, X } from "lucide-react";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import {
   DropdownMenu,
@@ -12,107 +8,22 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
-import { guessLanguage } from "@/lib/languages";
 import { useStreamingTextReveal } from "@/hooks/useStreamingTextReveal";
 import { parseLeakedToolCalls } from "@/lib/engine/leaked-tool-parse";
 import type { UIMessage, ImageAttachment } from "@/types";
-import { ThinkingBlock } from "./ThinkingBlock";
-import { CopyButton } from "./CopyButton";
 import { ImageLightbox } from "./ImageLightbox";
-import { MermaidDiagram } from "./MermaidDiagram";
 import {
   CHAT_CONTENT_STACK_CLASS,
   CHAT_PROSE_EDGE_CLASS,
   CHAT_ROW_CLASS,
 } from "@/components/lib/chat-layout";
 
-// Stable references to avoid re-creating on every render
-const REMARK_PLUGINS = [remarkGfm];
-import type { Components } from "react-markdown";
-
-/**
- * Context to distinguish fenced code blocks (inside <pre>) from inline `code`.
- * react-markdown v10 removed the `inline` prop from the code component —
- * this Context replaces it by having the `pre` component signal block context.
- */
-const IsBlockCodeContext = createContext(false);
-const IsStreamingMarkdownContext = createContext(false);
-
-function parseFileHref(href: string): { filePath: string; line?: number } | null {
-  if (!href) return null;
-
-  try {
-    const url = new URL(href);
-    if (url.protocol !== "file:") return null;
-    const filePath = decodeURIComponent(url.pathname);
-    const hashLine = /^#L(\d+)$/i.exec(url.hash)?.[1];
-    const line = hashLine ? Number(hashLine) : undefined;
-    return { filePath, line };
-  } catch {
-    // Not an absolute URL; continue with path-like fallback.
-  }
-
-  if (
-    href.startsWith("/") ||
-    href.startsWith("./") ||
-    href.startsWith("../") ||
-    /^[A-Za-z]:[\\/]/.test(href)
-  ) {
-    const [, pathPart, linePart] = href.match(/^(.*?)(?::(\d+))?$/) ?? [];
-    if (pathPart) {
-      return { filePath: pathPart, line: linePart ? Number(linePart) : undefined };
-    }
-  }
-
-  return null;
-}
-
-const MD_COMPONENTS: Components = {
-  a({ href, children, ...props }) {
-    const onClick: React.MouseEventHandler<HTMLAnchorElement> = (event) => {
-      if (!href || href.startsWith("#")) return;
-      event.preventDefault();
-      const fileTarget = parseFileHref(href);
-      if (fileTarget) {
-        void window.claude.openInEditor(fileTarget.filePath, fileTarget.line);
-        return;
-      }
-      void window.claude.openExternal(href);
-    };
-
-    return (
-      <a
-        {...props}
-        href={href}
-        onClick={onClick}
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        {children}
-      </a>
-    );
-  },
-  code: CodeBlock,
-  // Strip the <pre> wrapper but signal block context to CodeBlock
-  pre({ children }) {
-    return (
-      <IsBlockCodeContext.Provider value={true}>
-        {children}
-      </IsBlockCodeContext.Provider>
-    );
-  },
-};
-const SYNTAX_STYLE: React.CSSProperties = {
-  margin: 0,
-  borderRadius: 0,
-  background: "transparent",
-  textShadow: "none",
-  fontSize: "12px",
-  padding: "12px",
-};
-
-/** Override oneDark's background on the inner <code> element */
-const CODE_TAG_PROPS = { style: { background: "transparent", textShadow: "none" } };
+const MarkdownContent = lazy(() =>
+  import("./MarkdownContent").then((mod) => ({ default: mod.MarkdownContent })),
+);
+const ThinkingBlock = lazy(() =>
+  import("./ThinkingBlock").then((mod) => ({ default: mod.ThinkingBlock })),
+);
 
 /** Strip `<file path="...">...</file>` and `<folder path="...">...</folder>` context blocks from user messages */
 function stripFileContext(text: string): string {
@@ -361,12 +272,14 @@ export const MessageBubble = memo(function MessageBubble({
             ) : null}
               <div className={assistantTurnDividerLabel ? "inline-block min-w-0 max-w-full" : undefined}>
                 {showThinking && message.thinking && (
-                  <ThinkingBlock
-                    thinking={message.thinking}
-                    isStreaming={message.isStreaming}
-                    thinkingComplete={message.thinkingComplete}
-                    storageKey={`thinking:${message.id}`}
-                  />
+                  <Suspense fallback={null}>
+                    <ThinkingBlock
+                      thinking={message.thinking}
+                      isStreaming={message.isStreaming}
+                      thinkingComplete={message.thinkingComplete}
+                      storageKey={`thinking:${message.id}`}
+                    />
+                  </Suspense>
                 )}
                 {assistantContent ? (
                   <div
@@ -376,14 +289,12 @@ export const MessageBubble = memo(function MessageBubble({
                       CHAT_PROSE_EDGE_CLASS,
                     )}
                   >
-                    <IsStreamingMarkdownContext.Provider value={!!message.isStreaming}>
-                      <ReactMarkdown
-                        remarkPlugins={REMARK_PLUGINS}
-                        components={MD_COMPONENTS}
-                      >
-                        {assistantContent}
-                      </ReactMarkdown>
-                    </IsStreamingMarkdownContext.Provider>
+                    <Suspense fallback={<span className="whitespace-pre-wrap">{assistantContent}</span>}>
+                      <MarkdownContent
+                        content={assistantContent}
+                        isStreaming={!!message.isStreaming}
+                      />
+                    </Suspense>
                   </div>
                 ) : null}
               </div>
@@ -414,89 +325,3 @@ export const MessageBubble = memo(function MessageBubble({
   prev.onSendQueuedNow === next.onSendQueuedNow &&
   prev.onUnqueueQueued === next.onUnqueueQueued,
 );
-
-/**
- * Handles both fenced code blocks and inline `code` spans.
- * Uses IsBlockCodeContext (from the `pre` component) to detect fenced blocks,
- * since react-markdown v10 removed the `inline` prop.
- */
-function CodeBlock(props: React.HTMLAttributes<HTMLElement> & { node?: unknown }) {
-  const { className, children } = props;
-  const isBlock = useContext(IsBlockCodeContext);
-  const isStreaming = useContext(IsStreamingMarkdownContext);
-  const match = /language-(\w+)/.exec(String(className ?? ""));
-  const code = String(children).replace(/\n$/, "");
-
-  // Fenced code block with language tag → syntax highlighted
-  if (isBlock && match) {
-    const language = match[1];
-
-    // Render mermaid diagrams with MermaidDiagram component
-    if (language === "mermaid") {
-      return <MermaidDiagram code={code} isStreaming={isStreaming} />;
-    }
-
-    return (
-      <div className="not-prose group/code relative my-2 rounded-lg bg-foreground/[0.03] overflow-hidden" style={{ contain: "content" }}>
-        <div className="flex items-center justify-between bg-foreground/[0.04] px-3 py-1">
-          <span className="text-[11px] text-muted-foreground">{language}</span>
-          <CopyButton text={code} className="opacity-0 transition-opacity group-hover/code:opacity-100" />
-        </div>
-        {isStreaming ? (
-          <pre className="overflow-x-auto p-3 text-xs font-mono" style={SYNTAX_STYLE}>
-            <code>{code}</code>
-          </pre>
-        ) : (
-          <SyntaxHighlighter
-            style={oneDark}
-            language={language}
-            PreTag="div"
-            customStyle={SYNTAX_STYLE}
-            codeTagProps={CODE_TAG_PROPS}
-          >
-            {code}
-          </SyntaxHighlighter>
-        )}
-      </div>
-    );
-  }
-
-  // Fenced code block without language tag → try auto-detect
-  if (isBlock) {
-    const guessedLang = !isStreaming ? guessLanguage(code) : null;
-    return (
-      <div className="not-prose group/code relative my-2 rounded-lg bg-foreground/[0.03] overflow-hidden" style={{ contain: "content" }}>
-        <div className="flex items-center justify-between bg-foreground/[0.04] px-3 py-1">
-          {guessedLang ? (
-            <span className="text-[11px] text-muted-foreground">{guessedLang}</span>
-          ) : (
-            <span />
-          )}
-          <CopyButton text={code} className="opacity-0 transition-opacity group-hover/code:opacity-100" />
-        </div>
-        {guessedLang ? (
-          <SyntaxHighlighter
-            style={oneDark}
-            language={guessedLang}
-            PreTag="div"
-            customStyle={SYNTAX_STYLE}
-            codeTagProps={CODE_TAG_PROPS}
-          >
-            {code}
-          </SyntaxHighlighter>
-        ) : (
-          <pre className="overflow-x-auto p-3 text-xs font-mono">
-            <code>{code}</code>
-          </pre>
-        )}
-      </div>
-    );
-  }
-
-  // Inline code — not-prose prevents Typography backtick pseudo-elements
-  return (
-    <code className="not-prose rounded bg-foreground/[0.08] px-1.5 py-0.5 text-xs font-mono">
-      {children}
-    </code>
-  );
-}

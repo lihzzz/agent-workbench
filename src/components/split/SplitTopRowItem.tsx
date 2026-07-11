@@ -15,7 +15,7 @@ import { getStoredProjectGitCwd } from "@/lib/session/space-projects";
 import { getHorizontalInsertSide, getToolColumnDropIntent } from "@/lib/workspace/drag";
 import { PanelDockControls } from "@/components/PanelDockControls";
 import { PanelDockPreview } from "@/components/PanelDockPreview";
-import { ToolIslandContent } from "@/components/workspace/ToolIslandContent";
+import { LazyToolIslandContent } from "@/components/workspace/LazyToolIslandContent";
 import { SplitChatPane } from "@/components/split/SplitChatPane";
 import { SplitPaneHost } from "@/components/split/SplitPaneHost";
 import type { ToolId } from "@/types/tools";
@@ -237,7 +237,7 @@ function renderToolIsland(
         commitSplitToolDrop();
       }}
     >
-      <ToolIslandContent
+      <LazyToolIslandContent
         toolId={island.toolId as Extract<ToolId, "terminal" | "browser" | "git" | "files" | "project-files" | "mcp">}
         persistKey={island.persistKey}
         headerControls={controls}

@@ -3,7 +3,9 @@ import {
   useRef,
   useCallback,
   useMemo,
+  lazy,
   memo,
+  Suspense,
   type KeyboardEvent,
 } from "react";
 import {
@@ -39,7 +41,6 @@ import { useAgentContext } from "@/components/AgentContext";
 import { BOTTOM_CHAT_MAX_WIDTH_CLASS } from "@/lib/layout/constants";
 import { useSpeechRecognition } from "@/hooks/useSpeechRecognition";
 import { resolveModelValue } from "@/lib/model-utils";
-import { ImageAnnotationEditor } from "@/components/ImageAnnotationEditor";
 import { TOOLBAR_BTN } from "./constants";
 import {
   readFileAsBase64,
@@ -66,6 +67,10 @@ import { TemplateVarForm } from "./TemplateVarForm";
 import { useCommandAutocomplete } from "./CommandPicker";
 import { useInputHistory } from "./useInputHistory";
 import { InputHistoryDialog } from "./InputHistoryDialog";
+
+const ImageAnnotationEditor = lazy(() =>
+  import("@/components/ImageAnnotationEditor").then((mod) => ({ default: mod.ImageAnnotationEditor })),
+);
 
 export interface InputBarProps {
   onSend: (text: string, images?: ImageAttachment[], displayText?: string) => void;
@@ -938,19 +943,21 @@ export const InputBar = memo(function InputBar({
         />
 
         {editingAttachment && (
-          <ImageAnnotationEditor
-            image={editingAttachment}
-            open={!!editingAttachment}
-            onOpenChange={(isOpen) => {
-              if (!isOpen) setEditingAttachment(null);
-            }}
-            onSave={(updated) => {
-              setAttachments((prev) =>
-                prev.map((a) => (a.id === updated.id ? updated : a)),
-              );
-              setEditingAttachment(null);
-            }}
-          />
+          <Suspense fallback={null}>
+            <ImageAnnotationEditor
+              image={editingAttachment}
+              open={!!editingAttachment}
+              onOpenChange={(isOpen) => {
+                if (!isOpen) setEditingAttachment(null);
+              }}
+              onSave={(updated) => {
+                setAttachments((prev) =>
+                  prev.map((a) => (a.id === updated.id ? updated : a)),
+                );
+                setEditingAttachment(null);
+              }}
+            />
+          </Suspense>
         )}
 
         {/* Bottom toolbar */}

@@ -1,5 +1,5 @@
 import { Bot } from "lucide-react";
-import { resolveLucideIcon } from "@/lib/icon-utils";
+import { DynamicLucideIcon } from "@/components/DynamicLucideIcon";
 
 interface AgentIconProps {
   icon?: string;
@@ -35,10 +35,12 @@ export function AgentIcon({ icon, size = 16, className }: AgentIconProps) {
     return <span style={{ fontSize: size - 2 }} className={className}>{icon}</span>;
   }
 
-  // Lucide icon name (PascalCase or kebab-case)
-  const Icon = resolveLucideIcon(icon);
-  if (Icon) return <Icon style={{ width: size, height: size }} className={className} />;
-
-  // Fallback
-  return <Bot style={{ width: size, height: size }} className={className} />;
+  return (
+    <DynamicLucideIcon
+      name={icon}
+      fallback={Bot}
+      style={{ width: size, height: size }}
+      className={className}
+    />
+  );
 }

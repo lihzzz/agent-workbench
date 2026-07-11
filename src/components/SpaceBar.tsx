@@ -1,5 +1,5 @@
-import { memo, useState, useCallback, useRef, useEffect, useMemo } from "react";
-import { Plus, Settings, ChevronLeft, ChevronRight, Trash2, Pencil } from "lucide-react";
+import { lazy, memo, Suspense, useState, useCallback, useRef, useEffect, useMemo } from "react";
+import { Plus, Settings, ChevronLeft, ChevronRight, Trash2, Pencil, Circle } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
@@ -16,9 +16,12 @@ import {
   PopoverContent,
   PopoverAnchor,
 } from "@/components/ui/popover";
-import { resolveLucideIcon } from "@/lib/icon-utils";
-import { SpaceCustomizer } from "./SpaceCustomizer";
+import { DynamicLucideIcon } from "@/components/DynamicLucideIcon";
 import type { Space } from "@/types";
+
+const LazySpaceCustomizer = lazy(() =>
+  import("./SpaceCustomizer").then((mod) => ({ default: mod.SpaceCustomizer })),
+);
 
 interface SpaceBarProps {
   spaces: Space[];
@@ -37,9 +40,13 @@ export function SpaceIcon({ space, size = 18 }: { space: Space; size?: number })
   if (space.iconType === "emoji") {
     return <span style={{ fontSize: size - 2 }}>{space.icon}</span>;
   }
-  const Icon = resolveLucideIcon(space.icon);
-  if (!Icon) return <span style={{ fontSize: size - 2 }}>?</span>;
-  return <Icon style={{ width: size, height: size }} />;
+  return (
+    <DynamicLucideIcon
+      name={space.icon}
+      fallback={Circle}
+      style={{ width: size, height: size }}
+    />
+  );
 }
 
 function getSpaceIndicatorStyle(space: Space) {
@@ -290,20 +297,22 @@ export const SpaceBar = memo(function SpaceBar({
           onOpenAutoFocus={(e) => e.preventDefault()}
         >
           {editingSpace && (
-            <SpaceCustomizer
-              icon={editingSpace.icon}
-              iconType={editingSpace.iconType}
-              color={editingSpace.color}
-              onUpdateIcon={(ic, it) => onUpdateSpace(editingSpace.id, { icon: ic, iconType: it })}
-              onUpdateColor={(c) => onUpdateSpace(editingSpace.id, { color: c })}
-              editMode={{
-                name: editName,
-                onUpdateName: setEditName,
-                onDelete: editingSpace.id !== "default"
-                  ? () => { setDeleteSpace(editingSpace); setEditingSpaceId(null); }
-                  : undefined,
-              }}
-            />
+            <Suspense fallback={<div className="h-72" />}>
+              <LazySpaceCustomizer
+                icon={editingSpace.icon}
+                iconType={editingSpace.iconType}
+                color={editingSpace.color}
+                onUpdateIcon={(ic, it) => onUpdateSpace(editingSpace.id, { icon: ic, iconType: it })}
+                onUpdateColor={(c) => onUpdateSpace(editingSpace.id, { color: c })}
+                editMode={{
+                  name: editName,
+                  onUpdateName: setEditName,
+                  onDelete: editingSpace.id !== "default"
+                    ? () => { setDeleteSpace(editingSpace); setEditingSpaceId(null); }
+                    : undefined,
+                }}
+              />
+            </Suspense>
           )}
         </PopoverContent>
       </Popover>

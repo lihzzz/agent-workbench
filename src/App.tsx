@@ -5,9 +5,19 @@ import { AppLayout } from "@/components/AppLayout";
 import { syncAnalyticsSettings } from "@/lib/analytics/posthog";
 
 export function App() {
-  // Sync analytics opt-in state after mount — avoids blocking first paint with IPC calls
+  // Defer analytics loading until after first paint and idle time.
   useEffect(() => {
-    syncAnalyticsSettings();
+    const sync = () => {
+      void syncAnalyticsSettings();
+    };
+
+    if ("requestIdleCallback" in window) {
+      const id = window.requestIdleCallback(sync, { timeout: 5000 });
+      return () => window.cancelIdleCallback(id);
+    }
+
+    const id = window.setTimeout(sync, 1000);
+    return () => window.clearTimeout(id);
   }, []);
   // Guard: if the preload script failed, window.claude won't exist.
   // Throwing here lets the ErrorBoundary show a visible message instead of a blank window.

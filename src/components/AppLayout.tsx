@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useRef, useEffect, useLayoutEffect, useState } from "react";
+import React, { lazy, Suspense, useCallback, useMemo, useRef, useEffect, useLayoutEffect, useState } from "react";
 import { LayoutGroup, motion } from "motion/react";
 import { PanelLeft } from "lucide-react";
 import { toast } from "sonner";
@@ -29,14 +29,7 @@ import { ToolPicker } from "./ToolPicker";
 import { PANEL_TOOLS_MAP } from "./ToolPicker";
 import type { ToolId } from "@/types/tools";
 import { WelcomeScreen } from "./WelcomeScreen";
-import { WelcomeWizard } from "./welcome/WelcomeWizard";
 import { PanelDockPreview } from "./PanelDockPreview";
-import { FilePreviewOverlay } from "./FilePreviewOverlay";
-import { SettingsView } from "./SettingsView";
-import { CodexAuthDialog } from "./CodexAuthDialog";
-import { ACPAuthDialog } from "./ACPAuthDialog";
-import { JiraBoardPanel } from "./JiraBoardPanel";
-import { RelayLanesView } from "./relay/RelayLanesView";
 import { isMac, isWindows } from "@/lib/utils";
 import { SplitHandle } from "./split/SplitHandle";
 import { SplitDropZone } from "./split/SplitDropZone";
@@ -44,7 +37,7 @@ import { SplitTopRowItem } from "./split/SplitTopRowItem";
 import { SplitBottomToolIsland } from "./split/SplitBottomToolIsland";
 import { MainTopToolArea } from "./workspace/MainTopToolArea";
 import { MainBottomToolDock } from "./workspace/MainBottomToolDock";
-import { ToolIslandContent } from "./workspace/ToolIslandContent";
+import { LazyToolIslandContent } from "./workspace/LazyToolIslandContent";
 import { RightPanel } from "./workspace/RightPanel";
 import { DRAFT_ID } from "@/hooks/session/types";
 import { usePaneResize } from "@/hooks/usePaneResize";
@@ -81,6 +74,28 @@ import {
   isNearBottomDockZone,
 } from "@/lib/workspace/drag";
 import { AgentProvider, type AgentContextValue } from "./AgentContext";
+
+const WelcomeWizard = lazy(() =>
+  import("./welcome/WelcomeWizard").then((mod) => ({ default: mod.WelcomeWizard })),
+);
+const FilePreviewOverlay = lazy(() =>
+  import("./FilePreviewOverlay").then((mod) => ({ default: mod.FilePreviewOverlay })),
+);
+const SettingsView = lazy(() =>
+  import("./SettingsView").then((mod) => ({ default: mod.SettingsView })),
+);
+const CodexAuthDialog = lazy(() =>
+  import("./CodexAuthDialog").then((mod) => ({ default: mod.CodexAuthDialog })),
+);
+const ACPAuthDialog = lazy(() =>
+  import("./ACPAuthDialog").then((mod) => ({ default: mod.ACPAuthDialog })),
+);
+const JiraBoardPanel = lazy(() =>
+  import("./JiraBoardPanel").then((mod) => ({ default: mod.JiraBoardPanel })),
+);
+const RelayLanesView = lazy(() =>
+  import("./relay/RelayLanesView").then((mod) => ({ default: mod.RelayLanesView })),
+);
 
 export function AppLayout() {
   const o = useAppOrchestrator();
@@ -146,6 +161,11 @@ export function AppLayout() {
     handlePreviewFile,
     handleClosePreview,
   } = layoutUI;
+  const [filePreviewHasOpened, setFilePreviewHasOpened] = useState(false);
+
+  useEffect(() => {
+    if (previewFile) setFilePreviewHasOpened(true);
+  }, [previewFile]);
 
   const jiraBoard = useJiraBoard({
     jiraBoardEnabled,
@@ -992,7 +1012,7 @@ export function AppLayout() {
     toolId: Extract<ToolId, "terminal" | "browser" | "git" | "files" | "project-files" | "mcp">,
     controls: React.ReactNode,
   ) => (
-    <ToolIslandContent
+    <LazyToolIslandContent
       toolId={toolId}
       persistKey={`main:${spaceManager.activeSpaceId}`}
       headerControls={controls}
@@ -1104,42 +1124,46 @@ export function AppLayout() {
 
       <div ref={contentRef} className={`flex min-w-0 flex-1 flex-col ${settings.islandLayout ? "m-[var(--island-gap)]" : sidebar.isOpen ? "flat-divider-s" : ""} ${isResizing ? "select-none" : ""}`}>
         {showSettings && (
-          <SettingsView
-            onClose={() => setShowSettings(false)}
-            glassSupported={glassSupported}
-            macLiquidGlassSupported={macLiquidGlassSupported}
-            sidebarOpen={sidebar.isOpen}
-            onToggleSidebar={sidebar.toggle}
-            onReplayWelcome={handleReplayWelcome}
-            initialSection={showSettings}
-            sessions={manager.sessions}
-            projects={projectManager.projects}
-            onRestoreSession={(id) => o.handleArchiveSession(id, false)}
-            onDeleteSession={manager.deleteSession}
-            activeSessionId={manager.activeSession?.id ?? null}
-            activeEngine={manager.activeSession?.engine ?? null}
-          />
+          <Suspense fallback={null}>
+            <SettingsView
+              onClose={() => setShowSettings(false)}
+              glassSupported={glassSupported}
+              macLiquidGlassSupported={macLiquidGlassSupported}
+              sidebarOpen={sidebar.isOpen}
+              onToggleSidebar={sidebar.toggle}
+              onReplayWelcome={handleReplayWelcome}
+              initialSection={showSettings}
+              sessions={manager.sessions}
+              projects={projectManager.projects}
+              onRestoreSession={(id) => o.handleArchiveSession(id, false)}
+              onDeleteSession={manager.deleteSession}
+              activeSessionId={manager.activeSession?.id ?? null}
+              activeEngine={manager.activeSession?.engine ?? null}
+            />
+          </Suspense>
         )}
         {/* Keep chat area mounted (hidden) when settings is open to avoid
             destroying/recreating the entire ChatView DOM tree on toggle */}
         <div className={showSettings ? "hidden" : "flex min-h-0 flex-1 flex-col"}>
         {relay.isOpen ? (
-          <RelayLanesView
-            groupName={relay.activeGroupName}
-            lanes={relay.lanes}
-            activeLaneId={relay.activeLaneId}
-            activeMessages={manager.messages}
-            isProcessing={manager.isProcessing}
-            pendingPermission={manager.pendingPermission}
-            respondPermission={manager.respondPermission}
-            spaceId={spaceManager.activeSpaceId}
-            onClose={relay.closeRelay}
-            onActivateLane={relay.activateLane}
-            onSend={relay.send}
-            onStop={relay.interrupt}
-            onPrepareHandoff={relay.prepareHandoff}
-            onConfirmHandoff={relay.confirmHandoff}
-          />
+          <Suspense fallback={null}>
+            <RelayLanesView
+              groupName={relay.activeGroupName}
+              lanes={relay.lanes}
+              activeLaneId={relay.activeLaneId}
+              activeMessages={manager.messages}
+              isProcessing={manager.isProcessing}
+              pendingPermission={manager.pendingPermission}
+              respondPermission={manager.respondPermission}
+              spaceId={spaceManager.activeSpaceId}
+              onClose={relay.closeRelay}
+              onActivateLane={relay.activateLane}
+              onSend={relay.send}
+              onStop={relay.interrupt}
+              onPrepareHandoff={relay.prepareHandoff}
+              onConfirmHandoff={relay.confirmHandoff}
+            />
+          </Suspense>
         ) : (
           <>
         {/* ── Top row: Split View OR (Chat | Right Panel | Tools Column | ToolPicker) ── */}
@@ -1487,15 +1511,17 @@ export function AppLayout() {
                 }) as React.CSSProperties}
           >
             {jiraBoardProject ? (
-              <JiraBoardPanel
-                projectId={jiraBoardProject.id}
-                projectName={jiraBoardProject.name}
-                variant="main"
-                onClose={() => setJiraBoardProjectForSpace(spaceManager.activeSpaceId, null)}
-                sidebarOpen={sidebar.isOpen}
-                onToggleSidebar={sidebar.toggle}
-                onCreateTask={handleCreateTaskFromJiraIssue}
-              />
+              <Suspense fallback={null}>
+                <JiraBoardPanel
+                  projectId={jiraBoardProject.id}
+                  projectName={jiraBoardProject.name}
+                  variant="main"
+                  onClose={() => setJiraBoardProjectForSpace(spaceManager.activeSpaceId, null)}
+                  sidebarOpen={sidebar.isOpen}
+                  onToggleSidebar={sidebar.toggle}
+                  onCreateTask={handleCreateTaskFromJiraIssue}
+                />
+              </Suspense>
             ) : manager.activeSessionId ? (
               <>
               {/* Top fade: only visible when chat is scrolled down. Island mode uses dark shadow; flat mode fades content into bg */}
@@ -1803,41 +1829,51 @@ export function AppLayout() {
         )}
           </>
         )}
-        </div>{/* end showSettings wrapper */}
+      </div>{/* end showSettings wrapper */}
       </div>
       {showCodexAuthDialog && (
-        <CodexAuthDialog
-          sessionId={manager.activeSessionId!}
-          onComplete={() => manager.clearCodexAuthRequired()}
-          onCancel={() => manager.clearCodexAuthRequired()}
-        />
+        <Suspense fallback={null}>
+          <CodexAuthDialog
+            sessionId={manager.activeSessionId!}
+            onComplete={() => manager.clearCodexAuthRequired()}
+            onCancel={() => manager.clearCodexAuthRequired()}
+          />
+        </Suspense>
       )}
       {showAcpAuthDialog && (
-        <ACPAuthDialog
-          sessionId={manager.acpAuthSessionId!}
-          agentId={manager.acpAuthAgentId}
-          agentName={acpAuthAgentName}
-          authMethods={manager.acpAuthMethods}
-          onComplete={(result) => manager.completeAcpAuth(result)}
-          onCancel={manager.cancelAcpAuth}
-        />
+        <Suspense fallback={null}>
+          <ACPAuthDialog
+            sessionId={manager.acpAuthSessionId!}
+            agentId={manager.acpAuthAgentId}
+            agentName={acpAuthAgentName}
+            authMethods={manager.acpAuthMethods}
+            onComplete={(result) => manager.completeAcpAuth(result)}
+            onCancel={manager.cancelAcpAuth}
+          />
+        </Suspense>
       )}
-      <FilePreviewOverlay
-        filePath={previewFile?.path ?? null}
-        projectRoot={activeProjectPath ?? null}
-        sourceRect={previewFile?.sourceRect ?? null}
-        onClose={handleClosePreview}
-      />
+      {(previewFile || filePreviewHasOpened) && (
+        <Suspense fallback={null}>
+          <FilePreviewOverlay
+            filePath={previewFile?.path ?? null}
+            projectRoot={activeProjectPath ?? null}
+            sourceRect={previewFile?.sourceRect ?? null}
+            onClose={handleClosePreview}
+          />
+        </Suspense>
+      )}
       {/* Welcome wizard — full-screen overlay on first run */}
       {!welcomeCompleted && (
-        <WelcomeWizard
-          glassSupported={glassSupported}
-          permissionMode={settings.permissionMode}
-          onPermissionModeChange={handlePermissionModeChange}
-          onCreateProject={handleCreateProject}
-          hasProjects={hasProjects}
-          onComplete={handleWelcomeComplete}
-        />
+        <Suspense fallback={null}>
+          <WelcomeWizard
+            glassSupported={glassSupported}
+            permissionMode={settings.permissionMode}
+            onPermissionModeChange={handlePermissionModeChange}
+            onCreateProject={handleCreateProject}
+            hasProjects={hasProjects}
+            onComplete={handleWelcomeComplete}
+          />
+        </Suspense>
       )}
     </div>
     </AgentProvider>

@@ -1,20 +1,51 @@
 /**
  * PostHog renderer-side client initialization.
  *
- * Provides posthog-js instance for React error tracking and exception autocapture.
- * Respects the analytics opt-in/out setting from the main process.
- * Uses the same anonymous user ID as the main process client (posthog-node).
- *
- * Exception autocapture automatically hooks into window.onerror and
- * window.onunhandledrejection to capture unhandled errors as $exception events.
+ * posthog-js is intentionally loaded on demand so analytics does not add parse
+ * and execute cost to the initial renderer bundle.
  */
-
-import posthog from "posthog-js";
 
 // Same public API key used by the main process (posthog-node).
 // PostHog project API keys are client-side safe — designed to be embedded in source.
 const POSTHOG_KEY = "phc_lOKFRov0SWy2R71BNJ2t978tmNYc3ND7WwueOteV5vw";
 const POSTHOG_HOST = "https://us.i.posthog.com";
+
+type PostHogClient = typeof import("posthog-js").default;
+
+let clientPromise: Promise<PostHogClient> | null = null;
+let initializedClientPromise: Promise<PostHogClient> | null = null;
+
+function loadPostHog(): Promise<PostHogClient> {
+  clientPromise ??= import("posthog-js").then((mod) => mod.default);
+  return clientPromise;
+}
+
+function getInitializedPostHog(): Promise<PostHogClient> {
+  initializedClientPromise ??= loadPostHog()
+    .then((posthog) => {
+      posthog.init(POSTHOG_KEY, {
+        api_host: POSTHOG_HOST,
+        defaults: "2026-01-30",
+
+        // Privacy: start opted out until we confirm the user has opted in.
+        opt_out_capturing_by_default: true,
+
+        // Electron-specific: disable web-oriented autocapture.
+        capture_pageview: false,
+        capture_pageleave: false,
+        autocapture: false,
+
+        persistence: "localStorage",
+      });
+      return posthog;
+    })
+    .catch((error) => {
+      initializedClientPromise = null;
+      throw error;
+    });
+
+  return initializedClientPromise;
+}
 
 /**
  * Initialize posthog-js in the renderer process.
@@ -24,22 +55,8 @@ const POSTHOG_HOST = "https://us.i.posthog.com";
  * capturing based on the user's preference.
  */
 export function initPostHog(): void {
-  posthog.init(POSTHOG_KEY, {
-    api_host: POSTHOG_HOST,
-    defaults: "2026-01-30",
-
-    // ── Privacy: start opted out until we confirm the user has opted in ──
-    opt_out_capturing_by_default: true,
-
-    // ── Electron-specific: disable web-oriented autocapture ──
-    // No meaningful pageviews/pageleaves in a single-window Electron app
-    capture_pageview: false,
-    capture_pageleave: false,
-    // Disable generic click/input autocapture — we only want exception tracking
-    autocapture: false,
-
-    // ── Persistence ──
-    persistence: "localStorage",
+  void getInitializedPostHog().catch(() => {
+    // Analytics should never break the app.
   });
 }
 
@@ -55,7 +72,10 @@ export function initPostHog(): void {
  */
 export async function syncAnalyticsSettings(): Promise<void> {
   try {
-    const settings = await window.claude.settings.get();
+    const [posthog, settings] = await Promise.all([
+      getInitializedPostHog(),
+      window.claude.settings.get(),
+    ]);
 
     if (settings.analyticsEnabled) {
       posthog.opt_in_capturing();
@@ -73,4 +93,12 @@ export async function syncAnalyticsSettings(): Promise<void> {
   }
 }
 
-export { posthog };
+export function capturePostHogException(error: Error, properties?: Record<string, unknown>): void {
+  void getInitializedPostHog()
+    .then((posthog) => {
+      posthog.captureException(error, properties);
+    })
+    .catch(() => {
+      // Analytics should never break the app.
+    });
+}

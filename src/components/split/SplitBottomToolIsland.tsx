@@ -11,7 +11,7 @@ import { motion } from "motion/react";
 import { getHorizontalInsertSide } from "@/lib/workspace/drag";
 import { getStoredProjectGitCwd } from "@/lib/session/space-projects";
 import { PanelDockControls } from "@/components/PanelDockControls";
-import { ToolIslandContent } from "@/components/workspace/ToolIslandContent";
+import { LazyToolIslandContent } from "@/components/workspace/LazyToolIslandContent";
 import { SplitPaneHost } from "@/components/split/SplitPaneHost";
 import type { ToolId } from "@/types/tools";
 import type { ChatSession, Project } from "@/types";
@@ -129,7 +129,7 @@ function renderIslandContent(
         commitSplitToolDrop();
       }}
     >
-      <ToolIslandContent
+      <LazyToolIslandContent
         toolId={island.toolId as Extract<ToolId, "terminal" | "browser" | "git" | "files" | "project-files" | "mcp">}
         persistKey={island.persistKey}
         headerControls={controls}

@@ -1,55 +1,66 @@
+import { lazy, Suspense, type ReactNode } from "react";
 import type { UIMessage } from "@/types";
-import { McpToolContent, hasMcpRenderer } from "../McpToolContent";
-import { BashContent } from "./BashContent";
-import { WriteContent } from "./WriteContent";
-import { EditContent } from "./EditContent";
-import { ReadContent } from "./ReadContent";
-import { SearchContent } from "./SearchContent";
-import { WebSearchContent } from "./WebSearchContent";
-import { WebFetchContent } from "./WebFetchContent";
-import { TodoWriteContent } from "./TodoWriteContent";
-import { EnterPlanModeContent, ExitPlanModeContent } from "./PlanContent";
-import { AskUserQuestionContent } from "./AskUserQuestion";
-import { GenericContent } from "./GenericContent";
-import { ToolSearchContent } from "./ToolSearchContent";
-import { SkillContent } from "./SkillContent";
+import { hasMcpRenderer } from "../lib/mcp-tool-metadata";
+
+const BashContent = lazy(() => import("./BashContent").then((mod) => ({ default: mod.BashContent })));
+const WriteContent = lazy(() => import("./WriteContent").then((mod) => ({ default: mod.WriteContent })));
+const EditContent = lazy(() => import("./EditContent").then((mod) => ({ default: mod.EditContent })));
+const ReadContent = lazy(() => import("./ReadContent").then((mod) => ({ default: mod.ReadContent })));
+const SearchContent = lazy(() => import("./SearchContent").then((mod) => ({ default: mod.SearchContent })));
+const WebSearchContent = lazy(() => import("./WebSearchContent").then((mod) => ({ default: mod.WebSearchContent })));
+const WebFetchContent = lazy(() => import("./WebFetchContent").then((mod) => ({ default: mod.WebFetchContent })));
+const TodoWriteContent = lazy(() => import("./TodoWriteContent").then((mod) => ({ default: mod.TodoWriteContent })));
+const EnterPlanModeContent = lazy(() => import("./PlanContent").then((mod) => ({ default: mod.EnterPlanModeContent })));
+const ExitPlanModeContent = lazy(() => import("./PlanContent").then((mod) => ({ default: mod.ExitPlanModeContent })));
+const AskUserQuestionContent = lazy(() => import("./AskUserQuestion").then((mod) => ({ default: mod.AskUserQuestionContent })));
+const GenericContent = lazy(() => import("./GenericContent").then((mod) => ({ default: mod.GenericContent })));
+const ToolSearchContent = lazy(() => import("./ToolSearchContent").then((mod) => ({ default: mod.ToolSearchContent })));
+const SkillContent = lazy(() => import("./SkillContent").then((mod) => ({ default: mod.SkillContent })));
+const McpToolContent = lazy(() => import("../McpToolContent").then((mod) => ({ default: mod.McpToolContent })));
+
+function ExpandedToolFallback() {
+  return <div className="h-6 w-full" />;
+}
+
+function withSuspense(node: ReactNode) {
+  return <Suspense fallback={<ExpandedToolFallback />}>{node}</Suspense>;
+}
 
 /** Routes a UIMessage to its tool-specific expanded renderer. */
 export function ExpandedToolContent({ message }: { message: UIMessage }) {
   switch (message.toolName) {
     case "Bash":
-      return <BashContent message={message} />;
+      return withSuspense(<BashContent message={message} />);
     case "Write":
-      return <WriteContent message={message} />;
+      return withSuspense(<WriteContent message={message} />);
     case "Edit":
-      return <EditContent message={message} />;
+      return withSuspense(<EditContent message={message} />);
     case "Read":
-      return <ReadContent message={message} />;
+      return withSuspense(<ReadContent message={message} />);
     case "Grep":
     case "Glob":
-      return <SearchContent message={message} />;
+      return withSuspense(<SearchContent message={message} />);
     case "TodoWrite":
-      return <TodoWriteContent message={message} />;
+      return withSuspense(<TodoWriteContent message={message} />);
     case "EnterPlanMode":
-      return <EnterPlanModeContent message={message} />;
+      return withSuspense(<EnterPlanModeContent message={message} />);
     case "ExitPlanMode":
-      return <ExitPlanModeContent message={message} />;
+      return withSuspense(<ExitPlanModeContent message={message} />);
     case "WebSearch":
-      return <WebSearchContent message={message} />;
+      return withSuspense(<WebSearchContent message={message} />);
     case "WebFetch":
-      return <WebFetchContent message={message} />;
+      return withSuspense(<WebFetchContent message={message} />);
     case "AskUserQuestion":
-      return <AskUserQuestionContent message={message} />;
+      return withSuspense(<AskUserQuestionContent message={message} />);
     case "ToolSearch":
-      return <ToolSearchContent message={message} />;
+      return withSuspense(<ToolSearchContent message={message} />);
     case "Skill":
-      return <SkillContent message={message} />;
+      return withSuspense(<SkillContent message={message} />);
     default:
       // Check for specialized MCP tool renderers
       if (message.toolName && hasMcpRenderer(message.toolName)) {
-        const mcpResult = <McpToolContent message={message} />;
-        if (mcpResult) return mcpResult;
+        return withSuspense(<McpToolContent message={message} />);
       }
-      return <GenericContent message={message} />;
+      return withSuspense(<GenericContent message={message} />);
   }
 }

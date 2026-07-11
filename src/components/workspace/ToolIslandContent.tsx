@@ -8,16 +8,33 @@
  * - inline `toolNode` in `renderSplitBottomToolIsland` (split-view bottom dock)
  */
 
-import type { ReactNode } from "react";
-import { ToolsPanel } from "@/components/ToolsPanel";
-import { BrowserPanel } from "@/components/BrowserPanel";
-import { GitPanel } from "@/components/git/GitPanel";
-import { FilesPanel } from "@/components/FilesPanel";
-import { ProjectFilesPanel } from "@/components/ProjectFilesPanel";
-import { McpPanel } from "@/components/McpPanel";
+import { lazy, Suspense, type ReactNode } from "react";
 import type { PanelToolId, EngineId, McpServerConfig, McpServerStatus, UIMessage, GrabbedElement } from "@/types";
 import type { TerminalTab } from "@/lib/terminal-tabs";
 import type { ResolvedTheme } from "@/hooks/useTheme";
+
+const ToolsPanel = lazy(() =>
+  import("@/components/ToolsPanel").then((mod) => ({ default: mod.ToolsPanel })),
+);
+const BrowserPanel = lazy(() =>
+  import("@/components/BrowserPanel").then((mod) => ({ default: mod.BrowserPanel })),
+);
+const GitPanel = lazy(() =>
+  import("@/components/git/GitPanel").then((mod) => ({ default: mod.GitPanel })),
+);
+const FilesPanel = lazy(() =>
+  import("@/components/FilesPanel").then((mod) => ({ default: mod.FilesPanel })),
+);
+const ProjectFilesPanel = lazy(() =>
+  import("@/components/ProjectFilesPanel").then((mod) => ({ default: mod.ProjectFilesPanel })),
+);
+const McpPanel = lazy(() =>
+  import("@/components/McpPanel").then((mod) => ({ default: mod.McpPanel })),
+);
+
+function ToolPanelFallback() {
+  return <div className="h-full min-h-0 w-full" />;
+}
 
 // ── Props ──
 
@@ -96,71 +113,83 @@ export function ToolIslandContent({
   switch (toolId) {
     case "terminal":
       return (
-        <ToolsPanel
-          spaceId={spaceId}
-          tabs={terminalTabs}
-          activeTabId={activeTerminalTabId}
-          terminalsReady={terminalsReady}
-          onSetActiveTab={onSetActiveTab}
-          onCreateTerminal={onCreateTerminal}
-          onEnsureTerminal={onEnsureTerminal}
-          onCloseTerminal={onCloseTerminal}
-          resolvedTheme={resolvedTheme}
-          headerControls={headerControls}
-        />
+        <Suspense fallback={<ToolPanelFallback />}>
+          <ToolsPanel
+            spaceId={spaceId}
+            tabs={terminalTabs}
+            activeTabId={activeTerminalTabId}
+            terminalsReady={terminalsReady}
+            onSetActiveTab={onSetActiveTab}
+            onCreateTerminal={onCreateTerminal}
+            onEnsureTerminal={onEnsureTerminal}
+            onCloseTerminal={onCloseTerminal}
+            resolvedTheme={resolvedTheme}
+            headerControls={headerControls}
+          />
+        </Suspense>
       );
     case "browser":
       return (
-        <BrowserPanel
-          persistKey={persistKey}
-          onElementGrab={isActiveSessionPane ? onElementGrab : undefined}
-          headerControls={headerControls}
-        />
+        <Suspense fallback={<ToolPanelFallback />}>
+          <BrowserPanel
+            persistKey={persistKey}
+            onElementGrab={isActiveSessionPane ? onElementGrab : undefined}
+            headerControls={headerControls}
+          />
+        </Suspense>
       );
     case "git":
       return (
-        <GitPanel
-          cwd={projectRoot}
-          collapsedRepos={collapsedRepos}
-          onToggleRepoCollapsed={onToggleRepoCollapsed}
-          activeEngine={activeEngine}
-          activeSessionId={sessionId}
-          headerControls={headerControls}
-        />
+        <Suspense fallback={<ToolPanelFallback />}>
+          <GitPanel
+            cwd={projectRoot}
+            collapsedRepos={collapsedRepos}
+            onToggleRepoCollapsed={onToggleRepoCollapsed}
+            activeEngine={activeEngine}
+            activeSessionId={sessionId}
+            headerControls={headerControls}
+          />
+        </Suspense>
       );
     case "files":
       return (
-        <FilesPanel
-          sessionId={sessionId}
-          messages={messages}
-          cwd={projectPath}
-          activeEngine={activeEngine}
-          onScrollToToolCall={onScrollToToolCall}
-          enabled={true}
-          headerControls={headerControls}
-        />
+        <Suspense fallback={<ToolPanelFallback />}>
+          <FilesPanel
+            sessionId={sessionId}
+            messages={messages}
+            cwd={projectPath}
+            activeEngine={activeEngine}
+            onScrollToToolCall={onScrollToToolCall}
+            enabled={true}
+            headerControls={headerControls}
+          />
+        </Suspense>
       );
     case "project-files":
       return (
-        <ProjectFilesPanel
-          cwd={projectPath}
-          enabled={true}
-          onPreviewFile={onPreviewFile}
-          headerControls={headerControls}
-        />
+        <Suspense fallback={<ToolPanelFallback />}>
+          <ProjectFilesPanel
+            cwd={projectPath}
+            enabled={true}
+            onPreviewFile={onPreviewFile}
+            headerControls={headerControls}
+          />
+        </Suspense>
       );
     case "mcp":
       return (
-        <McpPanel
-          projectId={projectId}
-          runtimeStatuses={mcpServerStatuses}
-          isPreliminary={isActiveSessionPane ? mcpStatusPreliminary : false}
-          hasLiveSession={hasLiveSession}
-          onRefreshStatus={onRefreshMcpStatus}
-          onReconnect={onReconnectMcpServer}
-          onRestartWithServers={onRestartWithMcpServers}
-          headerControls={headerControls}
-        />
+        <Suspense fallback={<ToolPanelFallback />}>
+          <McpPanel
+            projectId={projectId}
+            runtimeStatuses={mcpServerStatuses}
+            isPreliminary={isActiveSessionPane ? mcpStatusPreliminary : false}
+            hasLiveSession={hasLiveSession}
+            onRefreshStatus={onRefreshMcpStatus}
+            onReconnect={onReconnectMcpServer}
+            onRestartWithServers={onRestartWithMcpServers}
+            headerControls={headerControls}
+          />
+        </Suspense>
       );
   }
 }

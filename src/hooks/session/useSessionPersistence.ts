@@ -539,11 +539,11 @@ export function useSessionPersistence({
         contextUsage: contextUsageRef.current,
         modelUsage: modelUsageRef.current,
         pendingPermission: pendingPermissionRef.current ?? null,
-        rawAcpPermission: null, // ACP ref is internal to useACP — will be restored via initialRawAcpPermission
+        rawAcpPermission: sessionEngine === "acp" ? acp.rawAcpPermission ?? null : null,
         slashCommands,
       });
     }
-  }, [claude.slashCommands, acp.slashCommands, codex.slashCommands]);
+  }, [claude.slashCommands, acp.slashCommands, acp.rawAcpPermission, codex.slashCommands]);
 
   // AI-generated title via background utility prompt (SDK Haiku or ACP utility session)
   const generateSessionTitle = useCallback(

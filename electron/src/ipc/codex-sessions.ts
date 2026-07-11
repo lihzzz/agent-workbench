@@ -42,6 +42,10 @@ interface CodexSession {
   threadId: string | null;
   /** Active turn id — needed for interrupt */
   activeTurnId: string | null;
+  /** True while turn/start is awaiting its response. */
+  pendingTurnStart: boolean;
+  /** Interrupt requested before turn/start returned a turn id. */
+  interruptWhenStarted: boolean;
   eventCounter: number;
   cwd: string;
   model?: string;
@@ -219,6 +223,18 @@ function setupCodexHandlers(
         // Spread typed params — the renderer narrows by method
         ...(msg.params as Record<string, unknown>),
       });
+    } else if (msg.method === "mcpServer/elicitation/request") {
+      log("codex", ` Auto-cancelling unsupported elicitation request: ${msg.method}`);
+      rpc.respondToServer(msg.id, { action: "cancel", content: null, _meta: null });
+    } else if (msg.method === "item/permissions/requestApproval") {
+      log("codex", ` Declining unsupported permissions request: ${msg.method}`);
+      rpc.respondToServer(msg.id, { permissions: {}, scope: "turn" });
+    } else if (msg.method === "item/tool/call") {
+      log("codex", ` Failing unsupported dynamic tool call: ${msg.method}`);
+      rpc.respondToServer(msg.id, {
+        contentItems: [{ type: "inputText", text: "Dynamic tool calls are not supported by this Harnss build." }],
+        success: false,
+      });
     } else {
       log("codex", ` Unknown server request: ${msg.method}, auto-declining`);
       rpc.respondToServerError(msg.id, -32601, `Unsupported server request: ${msg.method}`);
@@ -284,6 +300,8 @@ export function register(getMainWindow: () => BrowserWindow | null): void {
           internalId,
           threadId: null,
           activeTurnId: null,
+          pendingTurnStart: false,
+          interruptWhenStarted: false,
           eventCounter: 0,
           cwd: options.cwd,
           model: undefined,
@@ -421,7 +439,7 @@ export function register(getMainWindow: () => BrowserWindow | null): void {
 
       log(
         "codex",
-        ` Send requested: session=${shortId(data.sessionId, 12)} thread=${shortId(session.threadId, 12)} text_len=${data.text.length} images=${data.images?.length ?? 0} effort=${data.effort ?? "default"} collab=${data.collaborationMode?.mode ?? "none"} approval=${session.approvalPolicy ?? "default"} activeTurn=${session.activeTurnId ? shortId(session.activeTurnId, 12) : "none"}`,
+        ` Send requested: session=${shortId(data.sessionId, 12)} thread=${shortId(session.threadId, 12)} text_len=${data.text.length} images=${data.images?.length ?? 0} effort=${data.effort ?? "default"} approval=${session.approvalPolicy ?? "default"} activeTurn=${session.activeTurnId ? shortId(session.activeTurnId, 12) : "none"}`,
       );
 
       try {
@@ -437,19 +455,32 @@ export function register(getMainWindow: () => BrowserWindow | null): void {
           input,
           ...(session.model ? { model: session.model } : {}),
           ...(data.effort ? { effort: data.effort } : {}),
-          ...(data.collaborationMode ? { collaborationMode: data.collaborationMode } : {}),
           ...(session.approvalPolicy ? { approvalPolicy: session.approvalPolicy } : {}),
         };
 
 
+        session.pendingTurnStart = true;
         const result = await session.rpc.request<CodexTurnStartResponse>("turn/start", turnParams);
+        session.pendingTurnStart = false;
         session.activeTurnId = result.turn.id;
+        if (session.interruptWhenStarted) {
+          session.interruptWhenStarted = false;
+          try {
+            await session.rpc.request("turn/interrupt", {
+              threadId: session.threadId,
+              turnId: result.turn.id,
+            });
+          } catch (err) {
+            reportError("CODEX_DEFERRED_INTERRUPT_ERR", err, { engine: "codex", sessionId: data.sessionId });
+          }
+        }
         log(
           "codex",
           ` Send accepted: session=${shortId(data.sessionId, 12)} turn=${shortId(result.turn.id, 12)}`,
         );
         return { turnId: result.turn.id };
       } catch (err) {
+        session.pendingTurnStart = false;
         const errMsg = reportError("CODEX_SEND_ERR", err, { engine: "codex", sessionId: data.sessionId });
         return { error: errMsg };
       }
@@ -468,7 +499,14 @@ export function register(getMainWindow: () => BrowserWindow | null): void {
   // ─── codex:interrupt ───
   ipcMain.handle("codex:interrupt", async (_, sessionId: string) => {
     const session = codexSessions.get(sessionId);
-    if (!session?.threadId || !session.activeTurnId) return { error: "No active turn" };
+    if (!session?.threadId) return { error: "No active thread" };
+    if (!session.activeTurnId) {
+      if (session.pendingTurnStart) {
+        session.interruptWhenStarted = true;
+        return {};
+      }
+      return { error: "No active turn" };
+    }
 
     try {
       await session.rpc.request("turn/interrupt", {
@@ -734,6 +772,8 @@ export function register(getMainWindow: () => BrowserWindow | null): void {
           internalId,
           threadId: null,
           activeTurnId: null,
+          pendingTurnStart: false,
+          interruptWhenStarted: false,
           eventCounter: 0,
           cwd: data.cwd,
           model: normalizeCodexModelOverride(data.model),
@@ -792,6 +832,18 @@ export function register(getMainWindow: () => BrowserWindow | null): void {
       session.model = model;
       log("codex", ` Model updated: session=${shortId(data.sessionId, 12)} model=${model}`);
       void captureEvent("model_changed", { engine: "codex", model });
+      return {};
+    },
+  );
+
+  ipcMain.handle(
+    "codex:set-permission-mode",
+    async (_, data: { sessionId: string; approvalPolicy?: string; sandbox?: string }) => {
+      const session = codexSessions.get(data.sessionId);
+      if (!session) return { error: "Session not found" };
+      session.approvalPolicy = data.approvalPolicy;
+      session.sandbox = data.sandbox;
+      log("codex", ` Permission mode updated: session=${shortId(data.sessionId, 12)} approval=${data.approvalPolicy ?? "default"} sandbox=${data.sandbox ?? "default"}`);
       return {};
     },
   );

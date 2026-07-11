@@ -295,6 +295,8 @@ contextBridge.exposeInMainWorld("claude", {
       ipcRenderer.invoke("codex:resume", options),
     setModel: (sessionId: string, model: string) =>
       ipcRenderer.invoke("codex:set-model", { sessionId, model }),
+    setPermissionMode: (sessionId: string, approvalPolicy?: string, sandbox?: "read-only" | "workspace-write" | "danger-full-access") =>
+      ipcRenderer.invoke("codex:set-permission-mode", { sessionId, approvalPolicy, sandbox }),
     version: () => ipcRenderer.invoke("codex:version"),
     binaryStatus: () => ipcRenderer.invoke("codex:binary-status"),
     onEvent: (callback: (data: unknown) => void) => {

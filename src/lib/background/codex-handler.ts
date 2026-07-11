@@ -3,6 +3,7 @@ import type { InternalState } from "./session-store";
 import { codexItemToToolName, codexItemToToolInput, codexItemToToolResult, codexPlanToTodos } from "@/lib/engine/codex-adapter";
 import { ensureACPStreamingMsg, finalizeACPStreamingMsg } from "./acp-handler";
 import type { PermissionRequest } from "@/types";
+import { createSystemMessage } from "@/lib/message-factory";
 import type { ItemStartedNotification } from "../../types/codex-protocol/v2/ItemStartedNotification";
 import type { ItemCompletedNotification } from "../../types/codex-protocol/v2/ItemCompletedNotification";
 import type { AgentMessageDeltaNotification } from "../../types/codex-protocol/v2/AgentMessageDeltaNotification";
@@ -38,6 +39,10 @@ export function handleCodexEvent(
     case "turn/completed":
       finalizeACPStreamingMsg(state); // reuse — same pattern
       state.isProcessing = false;
+      state.pendingPermission = null;
+      if (params?.turn?.status === "failed") {
+        state.messages.push(createSystemMessage(params.turn.error?.message || "Turn failed", true));
+      }
       return { processingChanged: true, isProcessing: false };
 
     case "item/started": {
@@ -247,6 +252,15 @@ export function handleCodexEvent(
     case "thread/compacted":
       state.isCompacting = false;
       break;
+
+    case "error": {
+      const message = params?.error?.message || "Codex error";
+      state.messages.push(createSystemMessage(message, true));
+      if (/401\s+Unauthorized/i.test(message) || /Missing bearer or basic authentication/i.test(message)) {
+        state.pendingPermission = null;
+      }
+      break;
+    }
   }
 
   return undefined;

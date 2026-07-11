@@ -28,6 +28,8 @@ import {
   codexItemToToolResult,
   codexPlanToTodos,
   imageAttachmentsToCodexInputs,
+  permissionModeToCodexPolicy,
+  permissionModeToCodexSandbox,
 } from "@/lib/engine/codex-adapter";
 import { suppressNextSessionCompletion } from "@/lib/notification-utils";
 import { captureException } from "@/lib/analytics/analytics";
@@ -267,7 +269,7 @@ export function useCodex({
       },
     ]);
     return msgId;
-  }, []);
+  }, [cancelPendingFlush, setIsCompacting, setIsConnected, setIsProcessing, setPendingPermission]);
 
   const bindAssistantItem = useCallback((itemId: string): string => {
     const msgId = ensureStreamingAssistantMessage();
@@ -664,7 +666,7 @@ export function useCodex({
         ),
       );
     }
-  }, []);
+  }, [cancelPendingFlush, setIsCompacting, setIsConnected, setIsProcessing, setPendingPermission]);
 
   // ── Turn complete: finalize everything ──
   const handleTurnComplete = useCallback((params: TurnCompletedNotification) => {
@@ -672,6 +674,8 @@ export function useCodex({
     finalizeStreamingAssistant();
     assistantItemMapRef.current.clear();
     activeAssistantItemIdRef.current = null;
+    setPendingPermission(null);
+    serverRequestRef.current = null;
 
     // Check for failed turn
     const { turn } = params;
@@ -828,7 +832,12 @@ export function useCodex({
     if (data._sessionId !== sessionIdRef.current) return;
     setIsConnected(false);
     setIsProcessing(false);
-  }, []);
+    setIsCompacting(false);
+    setPendingPermission(null);
+    serverRequestRef.current = null;
+    bufferRef.current.reset();
+    cancelPendingFlush();
+  }, [cancelPendingFlush, setIsCompacting, setIsConnected, setIsProcessing, setPendingPermission]);
 
   // ── Subscribe to events ──
   useEffect(() => {
@@ -933,13 +942,26 @@ export function useCodex({
   const interrupt = useCallback(async () => {
     if (!sessionId) return;
     suppressNextSessionCompletion(sessionId);
-    await window.claude.codex.interrupt(sessionId);
-  }, [sessionId]);
+    const result = await window.claude.codex.interrupt(sessionId);
+    if (result?.error) {
+      setMessages((prev) => [
+        ...prev,
+        createSystemMessage(`Codex interrupt error: ${result.error}`, true),
+      ]);
+    }
+  }, [sessionId, setMessages]);
 
   const compact = useCallback(async () => {
     if (!sessionId) return;
     setIsCompacting(true);
-    await window.claude.codex.compact(sessionId);
+    const result = await window.claude.codex.compact(sessionId);
+    if (result?.error) {
+      setIsCompacting(false);
+      setMessages((prev) => [
+        ...prev,
+        createSystemMessage(`Codex compact error: ${result.error}`, true),
+      ]);
+    }
   }, [sessionId]);
 
   const respondPermission = useCallback(
@@ -1060,13 +1082,11 @@ export function useCodex({
         return;
       }
 
-      const decision = behavior === "allow" ? "accept" : behavior === "allowForSession" ? "accept" : "decline";
-      const acceptSettings = behavior === "allowForSession" ? { forSession: true } : undefined;
+      const decision = behavior === "allowForSession" ? "acceptForSession" : behavior === "allow" ? "accept" : "decline";
       const result = await window.claude.codex.respondApproval(
         sessionId,
         activeRequest.rpcId,
         decision,
-        acceptSettings,
       );
       if (result?.error) {
         showCodexPermissionError(result.error);
@@ -1078,9 +1098,14 @@ export function useCodex({
     [sessionId, pendingPermission, send, sessionInfo?.model],
   );
 
-  const setPermissionMode = useCallback(async (_mode: string) => {
-    // Codex doesn't support live permission mode changes — applied on next turn
-  }, []);
+  const setPermissionMode = useCallback(async (mode: string) => {
+    if (!sessionId) return;
+    await window.claude.codex.setPermissionMode(
+      sessionId,
+      permissionModeToCodexPolicy(mode),
+      permissionModeToCodexSandbox(mode),
+    );
+  }, [sessionId]);
 
   return {
     messages, setMessages,

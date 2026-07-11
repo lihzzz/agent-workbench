@@ -76,6 +76,8 @@ export function useACP({ sessionId, initialMessages, initialConfigOptions, initi
   /** Track the active ACP task/subagent tool so inner tool_calls + text are routed into its card. */
   const activeTaskRef = useRef<{ msgId: string; toolCallId: string; hasInnerTools: boolean; textBuffer: string } | null>(null);
   const acpPermissionRef = useRef<ACPPermissionEvent | null>(null);
+  const acpPermissionQueueRef = useRef<ACPPermissionEvent[]>([]);
+  const [rawAcpPermission, setRawAcpPermission] = useState<ACPPermissionEvent | null>(initialRawAcpPermission ?? null);
   // Track latest permission behavior to avoid stale closures in event listeners
   const acpPermissionBehaviorRef = useRef<AcpPermissionBehavior>(acpPermissionBehavior ?? "ask");
   acpPermissionBehaviorRef.current = acpPermissionBehavior ?? "ask";
@@ -83,6 +85,8 @@ export function useACP({ sessionId, initialMessages, initialConfigOptions, initi
   // Engine-specific reset — runs after base reset via the same sessionId dependency
   useEffect(() => {
     acpPermissionRef.current = initialRawAcpPermission ?? null;
+    acpPermissionQueueRef.current = initialRawAcpPermission ? [initialRawAcpPermission] : [];
+    setRawAcpPermission(initialRawAcpPermission ?? null);
     activeTaskRef.current = null;
     setConfigOptions(initialConfigOptions ?? []);
     setConfigOptionsLoading(false);
@@ -354,7 +358,7 @@ export function useACP({ sessionId, initialMessages, initialConfigOptions, initi
       }
       if (uu.cost) {
         acpLog("COST", { amount: uu.cost.amount, currency: uu.cost.currency });
-        setTotalCost(prev => prev + uu.cost!.amount);
+        setTotalCost(uu.cost.amount);
       }
     } else if (kind === "session_info_update") {
       const si = update as Extract<typeof update, { sessionUpdate: "session_info_update" }>;
@@ -440,6 +444,8 @@ export function useACP({ sessionId, initialMessages, initialConfigOptions, initi
               description: result.error,
             });
             acpPermissionRef.current = data;
+            acpPermissionQueueRef.current = [data];
+            setRawAcpPermission(data);
             setPendingPermission({
               requestId: data.requestId,
               toolName: data.toolCall.title,
@@ -453,6 +459,8 @@ export function useACP({ sessionId, initialMessages, initialConfigOptions, initi
               description: message,
             });
             acpPermissionRef.current = data;
+            acpPermissionQueueRef.current = [data];
+            setRawAcpPermission(data);
             setPendingPermission({
               requestId: data.requestId,
               toolName: data.toolCall.title,
@@ -464,8 +472,17 @@ export function useACP({ sessionId, initialMessages, initialConfigOptions, initi
       }
 
       // Fall through to manual prompt
-      acpPermissionRef.current = data;
-      setPendingPermission({
+      const existingIdx = acpPermissionQueueRef.current.findIndex(item => item.requestId === data.requestId);
+      if (existingIdx >= 0) {
+        acpPermissionQueueRef.current = acpPermissionQueueRef.current.map(item =>
+          item.requestId === data.requestId ? data : item
+        );
+      } else {
+        acpPermissionQueueRef.current = [...acpPermissionQueueRef.current, data];
+      }
+      acpPermissionRef.current = acpPermissionQueueRef.current[0] ?? data;
+      setRawAcpPermission(acpPermissionRef.current);
+      setPendingPermission(prev => prev ?? {
         requestId: data.requestId,
         toolName: data.toolCall.title,
         toolInput: normalizeToolInput(data.toolCall.rawInput, data.toolCall.kind),
@@ -558,7 +575,6 @@ export function useACP({ sessionId, initialMessages, initialConfigOptions, initi
     finalizeStreamingMessage();
     closePendingTools();
     setPendingPermission(null);
-    setIsProcessing(false);
     try {
       const result = await window.claude.acp.cancel(sessionId);
       if (result?.error) {
@@ -578,8 +594,10 @@ export function useACP({ sessionId, initialMessages, initialConfigOptions, initi
     _updatedInput?: Record<string, unknown>,
     _newPermissionMode?: string,
   ) => {
-    if (!sessionId || !pendingPermission || !acpPermissionRef.current) return;
-    const acpData = acpPermissionRef.current;
+    if (!sessionId || !pendingPermission) return;
+    const acpData = acpPermissionQueueRef.current.find(item => item.requestId === pendingPermission.requestId)
+      ?? acpPermissionRef.current;
+    if (!acpData) return;
 
     const optionId = behavior === "allow"
       ? acpData.options.find(o => o.kind.startsWith("allow"))?.optionId
@@ -607,8 +625,20 @@ export function useACP({ sessionId, initialMessages, initialConfigOptions, initi
       return;
     }
 
-    setPendingPermission(null);
-    acpPermissionRef.current = null;
+    acpPermissionQueueRef.current = acpPermissionQueueRef.current.filter(item => item.requestId !== acpData.requestId);
+    const nextRaw = acpPermissionQueueRef.current[0] ?? null;
+    acpPermissionRef.current = nextRaw;
+    setRawAcpPermission(nextRaw);
+    if (nextRaw) {
+      setPendingPermission({
+        requestId: nextRaw.requestId,
+        toolName: nextRaw.toolCall.title,
+        toolInput: normalizeToolInput(nextRaw.toolCall.rawInput, nextRaw.toolCall.kind),
+        toolUseId: nextRaw.toolCall.toolCallId,
+      });
+    } else {
+      setPendingPermission(null);
+    }
   }, [sessionId, pendingPermission]);
 
   const setConfig = useCallback(async (configId: string, value: string) => {
@@ -659,6 +689,7 @@ export function useACP({ sessionId, initialMessages, initialConfigOptions, initi
     setPermissionMode,
     configOptions, setConfigOptions, setConfig, configOptionsLoading,
     slashCommands,
+    rawAcpPermission,
     authRequired,
     authMethods,
     setAuthRequired,

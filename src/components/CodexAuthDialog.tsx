@@ -104,20 +104,23 @@ export const CodexAuthDialog = memo(function CodexAuthDialog({
     setError(null);
 
     try {
+      const waiter = waitForLoginCompletion(sessionId);
+      loginWaiterRef.current = waiter;
       const result = await window.claude.codex.login(sessionId, "apiKey", apiKey.trim()) as CodexLoginResult | null;
       if (isLoginError(result)) {
+        waiter.cancel();
+        loginWaiterRef.current = null;
         setError(result.error);
         setIsLoading(false);
         return;
       }
 
       // Wait for the account/login/completed notification from the Codex process
-      const waiter = waitForLoginCompletion(sessionId);
-      loginWaiterRef.current = waiter;
       await waiter.promise;
       loginWaiterRef.current = null;
       onComplete();
     } catch (err) {
+      loginWaiterRef.current?.cancel();
       loginWaiterRef.current = null;
       const message = err instanceof Error ? err.message : "Login failed";
       reportError("[CodexAuthDialog] API key login", err);
@@ -131,8 +134,12 @@ export const CodexAuthDialog = memo(function CodexAuthDialog({
     setError(null);
 
     try {
+      const waiter = waitForLoginCompletion(sessionId);
+      loginWaiterRef.current = waiter;
       const result = await window.claude.codex.login(sessionId, "chatgpt") as CodexLoginResult | null;
       if (isLoginError(result)) {
+        waiter.cancel();
+        loginWaiterRef.current = null;
         setError(result.error);
         setIsLoading(false);
         return;
@@ -143,12 +150,11 @@ export const CodexAuthDialog = memo(function CodexAuthDialog({
       }
 
       // Wait for the account/login/completed notification from the Codex process
-      const waiter = waitForLoginCompletion(sessionId);
-      loginWaiterRef.current = waiter;
       await waiter.promise;
       loginWaiterRef.current = null;
       onComplete();
     } catch (err) {
+      loginWaiterRef.current?.cancel();
       loginWaiterRef.current = null;
       const message = err instanceof Error ? err.message : "Login failed";
       reportError("[CodexAuthDialog] ChatGPT login", err);

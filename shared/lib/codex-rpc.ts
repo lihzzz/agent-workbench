@@ -6,6 +6,7 @@
  */
 
 import type { ChildProcess } from "child_process";
+import { StringDecoder } from "string_decoder";
 import type { RequestId } from "../types/codex-protocol/RequestId";
 
 const DEFAULT_TIMEOUT_MS = 30_000;
@@ -46,6 +47,8 @@ export class CodexRpcClient {
   private nextId = 1;
   private pendingRequests = new Map<RequestId, PendingRequest>();
   private lineBuffer = "";
+  private stdoutDecoder = new StringDecoder("utf8");
+  private stderrDecoder = new StringDecoder("utf8");
   private destroyed = false;
   private log: LogFn;
   private reportError: ReportErrorFn;
@@ -65,10 +68,14 @@ export class CodexRpcClient {
 
     proc.stdout?.on("data", (chunk: Buffer) => this.handleData(chunk));
     proc.stderr?.on("data", (chunk: Buffer) => {
-      const text = chunk.toString().trim();
+      const text = this.stderrDecoder.write(chunk).trim();
       if (text) this.onStderr?.(text);
     });
     proc.on("exit", (code, signal) => {
+      const trailingStdout = this.stdoutDecoder.end();
+      if (trailingStdout) this.handleDecodedData(trailingStdout);
+      const trailingStderr = this.stderrDecoder.end().trim();
+      if (trailingStderr) this.onStderr?.(trailingStderr);
       this.destroyed = true;
       // Reject all pending requests
       for (const [id, pending] of this.pendingRequests) {
@@ -151,7 +158,11 @@ export class CodexRpcClient {
   }
 
   private handleData(chunk: Buffer): void {
-    this.lineBuffer += chunk.toString();
+    this.handleDecodedData(this.stdoutDecoder.write(chunk));
+  }
+
+  private handleDecodedData(text: string): void {
+    this.lineBuffer += text;
     const lines = this.lineBuffer.split("\n");
     this.lineBuffer = lines.pop()!; // keep incomplete trailing line
 

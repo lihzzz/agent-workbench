@@ -2,6 +2,7 @@ import { useCallback } from "react";
 import { toast } from "sonner";
 import type { PersistedSession, ClaudeEffort } from "../../types";
 import { toMcpStatusState } from "../../lib/mcp-utils";
+import { permissionModeToCodexPolicy, permissionModeToCodexSandbox } from "../../lib/engine/codex-adapter";
 import { capture, captureException } from "../../lib/analytics/analytics";
 import { suppressNextSessionCompletion } from "../../lib/notification-utils";
 import {
@@ -469,6 +470,15 @@ export function useSessionSettings({
       ? DEFAULT_PERMISSION_MODE
       : permissionMode;
     persistSessionPatch(sessionId, { permissionMode: normalizedPermission });
+
+    if ((session.engine ?? "claude") === "codex" && liveSessionIdsRef.current.has(sessionId)) {
+      await window.claude.codex.setPermissionMode(
+        sessionId,
+        permissionModeToCodexPolicy(normalizedPermission),
+        permissionModeToCodexSandbox(normalizedPermission),
+      );
+      return;
+    }
 
     if ((session.engine ?? "claude") !== "claude" || !liveSessionIdsRef.current.has(sessionId)) {
       return;

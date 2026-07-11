@@ -204,7 +204,7 @@ export function handleACPEvent(state: InternalState, event: ACPSessionEvent): vo
         };
       }
       if (update.cost) {
-        state.totalCost += update.cost.amount;
+        state.totalCost = update.cost.amount;
       }
       break;
     }

@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect, useRef } from "react";
-import type { ChatSession, UIMessage, PermissionRequest, McpServerStatus, McpServerConfig, ModelInfo, AcpPermissionBehavior, EngineId, Project, ACPAuthenticateResult, ACPConfigOption, ACPPermissionEvent } from "@/types";
+import type { ChatSession, UIMessage, PermissionRequest, McpServerStatus, McpServerConfig, ModelInfo, AcpPermissionBehavior, EngineId, Project, ACPAuthenticateResult, ACPConfigOption, ACPPermissionEvent, ACPStartResult } from "@/types";
 import { toMcpStatusState } from "../lib/mcp-utils";
 import { toChatSession } from "../lib/session/records";
 import { BackgroundSessionStore } from "../lib/background/session-store";
@@ -159,6 +159,7 @@ export function useSessionManager(
   preStartedSessionIdRef.current = preStartedSessionId;  // kept in sync with state for event routing
   const draftAcpSessionIdRef = useRef<string | null>(null);
   draftAcpSessionIdRef.current = draftAcpSessionId;
+  const draftAcpStartPromiseRef = useRef<Promise<ACPStartResult> | null>(null);
   const draftMcpStatusesRef = useRef<McpServerStatus[]>([]);
   draftMcpStatusesRef.current = draftMcpStatuses;
   const materializingRef = useRef(false);
@@ -228,6 +229,7 @@ export function useSessionManager(
     backgroundStoreRef,
     preStartedSessionIdRef,
     draftAcpSessionIdRef,
+    draftAcpStartPromiseRef,
     draftMcpStatusesRef,
     materializingRef,
     saveTimerRef,

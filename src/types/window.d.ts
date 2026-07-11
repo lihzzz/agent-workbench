@@ -367,6 +367,7 @@ declare global {
         resume: (options: { cwd: string; threadId: string; model?: string; approvalPolicy?: string; sandbox?: "read-only" | "workspace-write" | "danger-full-access" }) =>
           Promise<{ sessionId?: string; threadId?: string; selectedModel?: string; error?: string }>;
         setModel: (sessionId: string, model: string) => Promise<{ error?: string }>;
+        setPermissionMode: (sessionId: string, approvalPolicy?: string, sandbox?: "read-only" | "workspace-write" | "danger-full-access") => Promise<{ error?: string }>;
         version: () => Promise<{ version?: string; error?: string }>;
         binaryStatus: () => Promise<{ installed: boolean; downloading: boolean }>;
         onEvent: (callback: (data: CodexSessionEvent) => void) => () => void;

@@ -82,6 +82,8 @@ interface ACPSessionEntry {
   utilityTextBuffers?: Map<string, string>;
   /** Last actionable stderr error line observed from the ACP agent process */
   lastStderrError?: string;
+  /** True while session/prompt is still awaiting its terminal result. */
+  promptInFlight?: boolean;
 }
 
 export const acpSessions = new Map<string, ACPSessionEntry>();
@@ -470,17 +472,24 @@ async function createAcpConnection(
     },
   }), stream);
 
-  // Protocol initialization
-  log(logLabel, `Initializing protocol...`);
-  const initResult = await withTimeout(connection.initialize({
-    protocolVersion: acp.PROTOCOL_VERSION,
-    clientCapabilities: ACP_CLIENT_CAPABILITIES,
-  }), ACP_INIT_TIMEOUT_MS, `${agentDef.name} ACP initialize`);
-  const supportsLoadSession = initResult.agentCapabilities?.loadSession === true;
-  const authMethods = normalizeAcpAuthMethods((initResult as Record<string, unknown>).authMethods);
-  log(logLabel, `Initialized protocol v${initResult.protocolVersion} for ${agentDef.name} (loadSession=${supportsLoadSession}, authMethods=${authMethods.length})`);
+  try {
+    // Protocol initialization
+    log(logLabel, `Initializing protocol...`);
+    const initResult = await withTimeout(connection.initialize({
+      protocolVersion: acp.PROTOCOL_VERSION,
+      clientCapabilities: ACP_CLIENT_CAPABILITIES,
+    }), ACP_INIT_TIMEOUT_MS, `${agentDef.name} ACP initialize`);
+    const supportsLoadSession = initResult.agentCapabilities?.loadSession === true;
+    const authMethods = normalizeAcpAuthMethods((initResult as Record<string, unknown>).authMethods);
+    log(logLabel, `Initialized protocol v${initResult.protocolVersion} for ${agentDef.name} (loadSession=${supportsLoadSession}, authMethods=${authMethods.length})`);
 
-  return { proc, connection, pendingPermissions, internalId, supportsLoadSession, authMethods };
+    return { proc, connection, pendingPermissions, internalId, supportsLoadSession, authMethods };
+  } catch (err) {
+    try { proc.kill(); } catch { /* already dead */ }
+    configBuffer.delete(internalId);
+    commandsBuffer.delete(internalId);
+    throw err;
+  }
 }
 
 export function register(getMainWindow: () => BrowserWindow | null): void {
@@ -715,6 +724,10 @@ export function register(getMainWindow: () => BrowserWindow | null): void {
       return { error: buildAuthRequiredError(session.agentName, session.authMethods) };
     }
     const acpSessionId = session.acpSessionId;
+    if (session.promptInFlight) {
+      log("ACP_SEND", `ERROR: session=${sessionId.slice(0, 8)} prompt already in flight`);
+      return { error: "A prompt is already running for this session" };
+    }
 
     log("ACP_SEND", `session=${sessionId.slice(0, 8)} text=${text.slice(0, 500)} images=${images?.length ?? 0}`);
 
@@ -728,6 +741,7 @@ export function register(getMainWindow: () => BrowserWindow | null): void {
 
     try {
       session.lastStderrError = undefined;
+      session.promptInFlight = true;
       const result = await session.connection.prompt({
         sessionId: acpSessionId,
         prompt,
@@ -747,6 +761,9 @@ export function register(getMainWindow: () => BrowserWindow | null): void {
       const surfacedError = msg === "Internal error" && session.lastStderrError ? session.lastStderrError : msg;
       reportError("ACP_PROMPT_ERR", err, { engine: "acp", sessionId, surfacedError });
       return { error: surfacedError };
+    } finally {
+      const current = acpSessions.get(sessionId);
+      if (current) current.promptInFlight = false;
     }
   });
 

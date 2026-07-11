@@ -183,6 +183,31 @@ describe("background context usage tracking", () => {
     expect(state.totalCost).toBe(0.02);
   });
 
+  it("treats ACP usage_update cost as cumulative", () => {
+    const state = createState();
+    const first = {
+      _sessionId: "session-1",
+      sessionId: "agent-session-1",
+      update: {
+        sessionUpdate: "usage_update",
+        cost: { amount: 0.01, currency: "USD" },
+      },
+    } satisfies ACPSessionEvent;
+    const second = {
+      _sessionId: "session-1",
+      sessionId: "agent-session-1",
+      update: {
+        sessionUpdate: "usage_update",
+        cost: { amount: 0.02, currency: "USD" },
+      },
+    } satisfies ACPSessionEvent;
+
+    handleACPEvent(state, first);
+    handleACPEvent(state, second);
+
+    expect(state.totalCost).toBe(0.02);
+  });
+
   it("updates Codex background state from token usage notifications", () => {
     const state = createState();
     const event = {

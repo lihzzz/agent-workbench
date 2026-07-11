@@ -1,4 +1,4 @@
-import type { ChatSession, UIMessage, SessionInfo, PermissionRequest, ImageAttachment, McpServerStatus, ModelInfo, AcpPermissionBehavior, EngineId, Project, SlashCommand, ClaudeEffort, ContextUsage, ACPConfigOption, ACPPermissionEvent, RelayStageRole } from "@/types";
+import type { ChatSession, UIMessage, SessionInfo, PermissionRequest, ImageAttachment, McpServerStatus, ModelInfo, AcpPermissionBehavior, EngineId, Project, SlashCommand, ClaudeEffort, ContextUsage, ACPConfigOption, ACPPermissionEvent, ACPStartResult, RelayStageRole } from "@/types";
 import type { BackgroundSessionStore } from "../../lib/background/session-store";
 import type { SessionModelUsage } from "../../lib/session/model-usage";
 import { permissionModeToCodexPolicy, permissionModeToCodexSandbox } from "../../lib/engine/codex-adapter";
@@ -87,6 +87,7 @@ export interface SharedSessionRefs {
   backgroundStoreRef: React.MutableRefObject<BackgroundSessionStore>;
   preStartedSessionIdRef: React.MutableRefObject<string | null>;
   draftAcpSessionIdRef: React.MutableRefObject<string | null>;
+  draftAcpStartPromiseRef: React.MutableRefObject<Promise<ACPStartResult> | null>;
   draftMcpStatusesRef: React.MutableRefObject<McpServerStatus[]>;
   materializingRef: React.MutableRefObject<boolean>;
   saveTimerRef: React.MutableRefObject<ReturnType<typeof setTimeout> | null>;
@@ -199,19 +200,8 @@ export function pickCodexModel(
 /** Build a CollaborationMode for plan mode, including the required model in settings. */
 export function buildCodexCollabMode(planMode: boolean | undefined, model: string | undefined): CollaborationMode | undefined {
   if (!planMode) return undefined;
-  const normalizedModel = model?.trim();
-  if (!normalizedModel) {
-    throw new Error("Codex plan mode is enabled, but no model is selected. Select a Codex model and try again.");
-  }
-  return {
-    mode: "plan" as const,
-    settings: {
-      // The server requires model in settings; it takes precedence when collaborationMode is set
-      model: normalizedModel,
-      reasoning_effort: null,
-      developer_instructions: null,
-    },
-  };
+  void model;
+  throw new Error("Codex plan mode is not supported by the current Codex app-server protocol.");
 }
 
 export function getCodexApprovalPolicy(options: StartOptions): string | undefined {

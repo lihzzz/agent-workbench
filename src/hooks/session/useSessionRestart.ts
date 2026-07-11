@@ -56,7 +56,7 @@ export function useSessionRestart({
 
     const session = sessionsRef.current.find(s => s.id === currentId);
     const project = session ? findProject(session.projectId) : null;
-    const agentId = acpAgentIdRef.current;
+    const agentId = session?.agentId ?? acpAgentIdRef.current;
     if (!session || !project || !agentId) return { error: "ACP session cannot be restarted right now." };
 
     // Probe servers so we get accurate statuses (including needs-auth) before any reload
@@ -91,6 +91,38 @@ export function useSessionRestart({
       cwd: nextCwd,
       mcpServers: servers,
     });
+    if ("authRequired" in result && result.authRequired) {
+      const pendingAuthId = result.sessionId;
+      liveSessionIdsRef.current.add(pendingAuthId);
+      setSessions(prev => prev.map(s =>
+        s.id === currentId ? { ...s, id: pendingAuthId } : s
+      ));
+      if (pendingAuthId !== currentId) {
+        try {
+          const oldData = await window.claude.sessions.load(session.projectId, currentId);
+          if (oldData) {
+            await window.claude.sessions.save({
+              ...oldData,
+              id: pendingAuthId,
+              messages: currentMessages,
+            });
+            await window.claude.sessions.delete(session.projectId, currentId);
+          }
+        } catch { /* persistence migration is best-effort */ }
+      }
+      setInitialMessages(currentMessages);
+      setInitialMeta({
+        isProcessing: false,
+        isConnected: false,
+        sessionInfo: null,
+        totalCost: currentCost,
+        contextUsage: contextUsageRef.current,
+      });
+      setActiveSessionId(pendingAuthId);
+      acp.setAuthMethods(result.authMethods ?? []);
+      acp.setAuthRequired(true);
+      return { error: "ACP session requires authentication before it can restart." };
+    }
     if (!("sessionId" in result) || !result.sessionId) {
       // Show error in the UI after restart failure — use setMessages directly
       // because session ID hasn't changed (no reset effect to consume initialMessages)
@@ -100,11 +132,13 @@ export function useSessionRestart({
     }
 
     const newId = result.sessionId;
+    const nextAgentSessionId = "agentSessionId" in result ? result.agentSessionId : undefined;
     liveSessionIdsRef.current.add(newId);
 
     setSessions(prev => prev.map(s =>
-      s.id === currentId ? { ...s, id: newId } : s
+      s.id === currentId ? { ...s, id: newId, agentSessionId: nextAgentSessionId ?? s.agentSessionId } : s
     ));
+    refs.acpAgentSessionIdRef.current = nextAgentSessionId ?? refs.acpAgentSessionIdRef.current;
 
     // Migrate the persisted session file from currentId to newId and delete the old
     // one, so the next full list rebuild doesn't surface a duplicate, identically-named
@@ -117,6 +151,7 @@ export function useSessionRestart({
             ...oldData,
             id: newId,
             messages: currentMessages,
+            agentSessionId: nextAgentSessionId ?? oldData.agentSessionId,
           });
           await window.claude.sessions.delete(session.projectId, currentId);
         }

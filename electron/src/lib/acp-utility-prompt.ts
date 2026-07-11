@@ -36,32 +36,31 @@ export async function acpUtilityPrompt(
   if (!entry.utilityTextBuffers) entry.utilityTextBuffers = new Map();
   entry.utilityTextBuffers.set(utilitySessionId, "");
 
-  let timedOut = false;
-  const timeoutHandle = setTimeout(() => {
-    timedOut = true;
-    conn.cancel({ sessionId: utilitySessionId }).catch(() => {});
-  }, timeoutMs);
+  let timeoutHandle: ReturnType<typeof setTimeout> | undefined;
 
   try {
-    await conn.prompt({
-      sessionId: utilitySessionId,
-      prompt: [{ type: "text", text: prompt }],
-    });
-
-    clearTimeout(timeoutHandle);
-
-    if (timedOut) {
-      throw new Error("ACP utility prompt timed out");
-    }
+    await Promise.race([
+      conn.prompt({
+        sessionId: utilitySessionId,
+        prompt: [{ type: "text", text: prompt }],
+      }),
+      new Promise<never>((_, reject) => {
+        timeoutHandle = setTimeout(() => {
+          conn.cancel({ sessionId: utilitySessionId }).catch(() => {});
+          reject(new Error(`ACP utility prompt timed out after ${timeoutMs}ms`));
+        }, timeoutMs);
+      }),
+    ]);
 
     const result = entry.utilityTextBuffers.get(utilitySessionId) ?? "";
     log("ACP_UTILITY", `Utility session ${utilitySessionId.slice(0, 12)} result len=${result.length}`);
     return result;
   } catch (err) {
-    clearTimeout(timeoutHandle);
+    if (timeoutHandle) clearTimeout(timeoutHandle);
     reportError("ACP_UTILITY_ERR", err, { internalId });
     throw err;
   } finally {
+    if (timeoutHandle) clearTimeout(timeoutHandle);
     // Clean up this utility session — don't null the collections since another
     // concurrent utility prompt may still be active on the same connection
     entry.utilitySessionIds?.delete(utilitySessionId);

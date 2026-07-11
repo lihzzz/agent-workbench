@@ -32,6 +32,7 @@ export interface PaneController {
   handlePaneAgentChange: (agent: InstalledAgent | null) => Promise<void>;
   handlePaneClear: () => Promise<void>;
   handlePaneSend: (text: string, images?: ImageAttachment[], displayText?: string) => Promise<void>;
+  handlePaneSlashCommand?: (text: string) => Promise<boolean>;
   handlePaneStop: () => Promise<void>;
   handlePaneAcpConfigChange: (key: string, value: string) => void;
 }

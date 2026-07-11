@@ -7,6 +7,8 @@ import { createSystemMessage } from "../lib/message-factory";
 import { suppressNextSessionCompletion } from "../lib/notification-utils";
 import {
   DRAFT_ID,
+  getCodexApprovalPolicy,
+  getCodexSandboxMode,
   type StartOptions,
   type CodexModelSummary,
   type InitialMeta,
@@ -566,6 +568,109 @@ export function useSessionManager(
     };
   }, []);
 
+  const runCodexSlashCommand = useCallback(async (text: string): Promise<boolean> => {
+    const currentId = activeSessionIdRef.current;
+    if (!currentId || currentId === DRAFT_ID) {
+      return codex.runSlashCommand(text);
+    }
+
+    const session = sessionsRef.current.find((entry) => entry.id === currentId);
+    if (!session || session.engine !== "codex") {
+      return false;
+    }
+
+    if (liveSessionIdsRef.current.has(currentId)) {
+      return codex.runSlashCommand(text);
+    }
+
+    const project = findProject(session.projectId);
+    if (!project) {
+      codex.setMessages((prev) => [
+        ...prev,
+        createSystemMessage("Codex session cannot be resumed because the project was not found.", true),
+      ]);
+      return true;
+    }
+
+    let codexThreadId = session.codexThreadId;
+    if (!codexThreadId) {
+      try {
+        const persisted = await window.claude.sessions.load(session.projectId, currentId);
+        codexThreadId = persisted?.codexThreadId;
+      } catch {
+        // Fall through to the user-facing missing-thread error.
+      }
+    }
+
+    if (!codexThreadId) {
+      codex.setMessages((prev) => [
+        ...prev,
+        createSystemMessage("Codex session cannot be resumed because its thread ID is missing.", true),
+      ]);
+      return true;
+    }
+
+    const result = await window.claude.codex.resume({
+      cwd: getProjectCwd(project),
+      threadId: codexThreadId,
+      model: session.model,
+      approvalPolicy: getCodexApprovalPolicy(startOptionsRef.current),
+      sandbox: getCodexSandboxMode(startOptionsRef.current),
+    });
+
+    if (result.error || !result.sessionId) {
+      codex.setMessages((prev) => [
+        ...prev,
+        createSystemMessage(result.error || "Failed to resume Codex session.", true),
+      ]);
+      return true;
+    }
+
+    const newId = result.sessionId;
+    const resolvedModel = result.selectedModel ?? session.model;
+    const resolvedThreadId = result.threadId ?? codexThreadId;
+
+    liveSessionIdsRef.current.add(newId);
+    setSessions((prev) => prev.map((entry) =>
+      entry.id === currentId
+        ? { ...entry, id: newId, model: resolvedModel, codexThreadId: resolvedThreadId }
+        : entry,
+    ));
+
+    if (newId !== currentId) {
+      liveSessionIdsRef.current.delete(currentId);
+      backgroundStoreRef.current.delete(currentId);
+      try {
+        const oldData = await window.claude.sessions.load(session.projectId, currentId);
+        if (oldData) {
+          await window.claude.sessions.save({
+            ...oldData,
+            id: newId,
+            messages: messagesRef.current,
+            model: resolvedModel ?? oldData.model,
+            codexThreadId: resolvedThreadId,
+          });
+          await window.claude.sessions.delete(session.projectId, currentId);
+        }
+      } catch {
+        // Persistence migration is best-effort; autosave will keep the new id fresh.
+      }
+    }
+
+    setInitialMessages(messagesRef.current);
+    setInitialMeta({
+      isProcessing: false,
+      isConnected: true,
+      sessionInfo: null,
+      totalCost: totalCostRef.current,
+      contextUsage: contextUsageRef.current,
+      modelUsage: modelUsageRef.current,
+    });
+    setActiveSessionId(newId);
+
+    return codex.runSlashCommand(text, newId);
+  }, [codex, findProject, getProjectCwd]);
+
   // ── Return ──
   return {
     primaryPane,
@@ -637,6 +742,7 @@ export function useSessionManager(
     contextUsage: engine.contextUsage,
     isCompacting: "isCompacting" in engine ? !!engine.isCompacting : false,
     compact: engine.compact,
+    runSlashCommand: isCodex ? runCodexSlashCommand : undefined,
     slashCommands: isCodex
       ? codex.slashCommands
       : isACP

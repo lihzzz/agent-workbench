@@ -236,24 +236,53 @@ export const LOCAL_CLEAR_COMMAND: SlashCommand = {
   source: "local",
 };
 
+export const LOCAL_COMPACT_COMMAND: SlashCommand = {
+  name: "compact",
+  description: "Compact the current conversation context",
+  argumentHint: "",
+  source: "local",
+};
+
+export type CommandPrefix = "/" | "$";
+
+export function getCommandPrefix(cmd: SlashCommand): CommandPrefix {
+  return cmd.source === "codex-skill" || cmd.source === "codex-app"
+    ? "$"
+    : "/";
+}
+
+interface GetAvailableSlashCommandsOptions {
+  includeCompact?: boolean;
+}
+
 export function getAvailableSlashCommands(
   slashCommands?: SlashCommand[],
+  options: GetAvailableSlashCommandsOptions = {},
 ): SlashCommand[] {
+  const localCommands = [LOCAL_CLEAR_COMMAND];
+  if (options.includeCompact) localCommands.push(LOCAL_COMPACT_COMMAND);
+
+  const localSlashNames = new Set(localCommands.map((cmd) => cmd.name));
   const commands =
     slashCommands?.filter(
-      (cmd) => cmd.name !== LOCAL_CLEAR_COMMAND.name,
+      (cmd) => getCommandPrefix(cmd) !== "/" || !localSlashNames.has(cmd.name),
     ) ?? [];
-  return [LOCAL_CLEAR_COMMAND, ...commands];
+  return [...localCommands, ...commands];
 }
 
 export function isClearCommandText(text: string): boolean {
   return text.trim() === `/${LOCAL_CLEAR_COMMAND.name}`;
 }
 
+export function isCompactCommandText(text: string): boolean {
+  return text.trim() === `/${LOCAL_COMPACT_COMMAND.name}`;
+}
+
 export function getSlashCommandReplacement(cmd: SlashCommand): string {
   switch (cmd.source) {
     case "claude":
     case "acp":
+    case "codex":
       return `/${cmd.name} `;
     case "codex-skill":
       return cmd.defaultPrompt

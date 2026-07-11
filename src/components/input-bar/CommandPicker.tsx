@@ -1,6 +1,10 @@
 import { useState, useRef, useMemo, useCallback, memo } from "react";
 import type { SlashCommand } from "@/types";
-import { getSlashCommandReplacement } from "./input-bar-utils";
+import {
+  getCommandPrefix,
+  getSlashCommandReplacement,
+  type CommandPrefix,
+} from "./input-bar-utils";
 
 // ── Hook: slash command autocomplete state ──
 
@@ -9,28 +13,44 @@ export interface UseCommandAutocompleteOptions {
   editableRef: React.RefObject<HTMLDivElement | null>;
 }
 
+export function getCommandAutocompleteResults(
+  availableSlashCommands: SlashCommand[],
+  commandPrefix: CommandPrefix,
+  commandQuery: string,
+): SlashCommand[] {
+  const q = commandQuery.toLowerCase();
+  const matchingPrefixCommands = availableSlashCommands.filter(
+    (cmd) => getCommandPrefix(cmd) === commandPrefix,
+  );
+  if (!q) return matchingPrefixCommands.slice(0, 15);
+  return matchingPrefixCommands
+    .filter(
+      (cmd) =>
+        cmd.name.toLowerCase().includes(q) ||
+        cmd.description.toLowerCase().includes(q),
+    )
+    .slice(0, 15);
+}
+
 export function useCommandAutocomplete({
   availableSlashCommands,
   editableRef,
 }: UseCommandAutocompleteOptions) {
   const [showCommands, setShowCommands] = useState(false);
   const [commandQuery, setCommandQuery] = useState("");
+  const [commandPrefix, setCommandPrefix] = useState<CommandPrefix>("/");
   const [commandIndex, setCommandIndex] = useState(0);
   const commandListRef = useRef<HTMLDivElement>(null);
 
   // Memoized filtered results (was previously an un-memoized IIFE)
   const cmdResults = useMemo(() => {
     if (!showCommands || availableSlashCommands.length === 0) return [];
-    const q = commandQuery.toLowerCase();
-    if (!q) return availableSlashCommands.slice(0, 15);
-    return availableSlashCommands
-      .filter(
-        (cmd) =>
-          cmd.name.toLowerCase().includes(q) ||
-          cmd.description.toLowerCase().includes(q),
-      )
-      .slice(0, 15);
-  }, [showCommands, availableSlashCommands, commandQuery]);
+    return getCommandAutocompleteResults(
+      availableSlashCommands,
+      commandPrefix,
+      commandQuery,
+    );
+  }, [showCommands, availableSlashCommands, commandPrefix, commandQuery]);
 
   const selectCommand = useCallback(
     (cmd: SlashCommand) => {
@@ -58,10 +78,16 @@ export function useCommandAutocomplete({
   /** Detect slash command trigger from the editable's full text content. */
   const detectCommandTrigger = useCallback(
     (fullText: string) => {
-      const slashMatch = fullText.trimStart().match(/^\/(\S*)$/);
-      if (slashMatch && availableSlashCommands.length > 0) {
+      const commandMatch = fullText.trimStart().match(/^([/$])(\S*)$/);
+      const nextPrefix = commandMatch?.[1] as CommandPrefix | undefined;
+      if (
+        commandMatch &&
+        nextPrefix &&
+        availableSlashCommands.some((cmd) => getCommandPrefix(cmd) === nextPrefix)
+      ) {
         setShowCommands(true);
-        setCommandQuery(slashMatch[1]);
+        setCommandPrefix(nextPrefix);
+        setCommandQuery(commandMatch[2]);
         setCommandIndex(0);
       } else if (showCommands) {
         setShowCommands(false);
@@ -107,52 +133,55 @@ export const CommandPicker = memo(function CommandPicker({
       ref={commandListRef}
       className="mx-2 mb-1 mt-2 max-h-64 overflow-y-auto rounded-lg border border-border/60 bg-popover p-1 shadow-lg"
     >
-      {cmdResults.map((cmd, i) => (
-        <button
-          key={`${cmd.source}-${cmd.name}`}
-          data-active={i === commandIndex}
-          className={`flex w-full items-center gap-2 rounded-md px-3 py-2 text-start text-sm transition-colors ${
-            i === commandIndex
-              ? "bg-accent text-accent-foreground"
-              : "text-popover-foreground hover:bg-muted/40"
-          }`}
-          onMouseDown={(e) => {
-            e.preventDefault();
-            onSelect(cmd);
-          }}
-          onMouseEnter={() => onHover(i)}
-        >
-          {cmd.iconUrl ? (
-            <img
-              src={cmd.iconUrl}
-              alt=""
-              className="h-4 w-4 shrink-0 rounded"
-            />
-          ) : (
-            <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded bg-muted text-[10px] font-bold text-muted-foreground">
-              {cmd.source.startsWith("codex") ? "$" : "/"}
-            </span>
-          )}
-          <div className="min-w-0 flex-1">
-            <div className="flex items-center gap-1.5">
-              <span className="font-mono text-xs font-medium">
-                {cmd.source.startsWith("codex") ? "$" : "/"}
-                {cmd.name}
+      {cmdResults.map((cmd, i) => {
+        const prefix = getCommandPrefix(cmd);
+        return (
+          <button
+            key={`${cmd.source}-${cmd.name}`}
+            data-active={i === commandIndex}
+            className={`flex w-full items-center gap-2 rounded-md px-3 py-2 text-start text-sm transition-colors ${
+              i === commandIndex
+                ? "bg-accent text-accent-foreground"
+                : "text-popover-foreground hover:bg-muted/40"
+            }`}
+            onMouseDown={(e) => {
+              e.preventDefault();
+              onSelect(cmd);
+            }}
+            onMouseEnter={() => onHover(i)}
+          >
+            {cmd.iconUrl ? (
+              <img
+                src={cmd.iconUrl}
+                alt=""
+                className="h-4 w-4 shrink-0 rounded"
+              />
+            ) : (
+              <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded bg-muted text-[10px] font-bold text-muted-foreground">
+                {prefix}
               </span>
-              {cmd.argumentHint && (
-                <span className="text-xs text-muted-foreground">
-                  {cmd.argumentHint}
+            )}
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center gap-1.5">
+                <span className="font-mono text-xs font-medium">
+                  {prefix}
+                  {cmd.name}
                 </span>
+                {cmd.argumentHint && (
+                  <span className="text-xs text-muted-foreground">
+                    {cmd.argumentHint}
+                  </span>
+                )}
+              </div>
+              {cmd.description && (
+                <div className="truncate text-xs text-muted-foreground">
+                  {cmd.description}
+                </div>
               )}
             </div>
-            {cmd.description && (
-              <div className="truncate text-xs text-muted-foreground">
-                {cmd.description}
-              </div>
-            )}
-          </div>
-        </button>
-      ))}
+          </button>
+        );
+      })}
     </div>
   );
 });

@@ -9,6 +9,11 @@ export interface OpenCodeModelInfo {
   supportsImages: boolean;
 }
 
+export interface OpenCodeModelCatalog {
+  models: OpenCodeModelInfo[];
+  defaultModel?: string;
+}
+
 export interface OpenCodeStartOptions {
   cwd: string;
   model?: string;

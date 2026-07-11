@@ -2,14 +2,18 @@ import { describe, expect, it } from "vitest";
 import type { SlashCommand } from "@/types";
 import {
   LOCAL_CLEAR_COMMAND,
+  LOCAL_COMPACT_COMMAND,
   getAvailableSlashCommands,
+  getCommandPrefix,
   getSlashCommandReplacement,
+  isCompactCommandText,
   isClearCommandText,
 } from "./input-bar";
 import {
   getMentionResults,
   type IndexedMentionEntry,
 } from "./input-bar/useMentionAutocomplete";
+import { getCommandAutocompleteResults } from "./input-bar/CommandPicker";
 
 describe("InputBar slash command helpers", () => {
   it("always includes the local clear command first", () => {
@@ -35,6 +39,19 @@ describe("InputBar slash command helpers", () => {
     ]);
   });
 
+  it("adds local compact when supported and deduplicates slash commands only", () => {
+    const commands: SlashCommand[] = [
+      { name: "compact", description: "Engine compact", source: "codex" },
+      { name: "compact", description: "Skill compact", source: "codex-skill" },
+    ];
+
+    expect(getAvailableSlashCommands(commands, { includeCompact: true })).toEqual([
+      LOCAL_CLEAR_COMMAND,
+      LOCAL_COMPACT_COMMAND,
+      commands[1],
+    ]);
+  });
+
   it("detects the exact /clear command text", () => {
     expect(isClearCommandText("/clear")).toBe(true);
     expect(isClearCommandText("  /clear  ")).toBe(true);
@@ -42,13 +59,37 @@ describe("InputBar slash command helpers", () => {
     expect(isClearCommandText("/compact")).toBe(false);
   });
 
+  it("detects the exact /compact command text", () => {
+    expect(isCompactCommandText("/compact")).toBe(true);
+    expect(isCompactCommandText("  /compact  ")).toBe(true);
+    expect(isCompactCommandText("/compact now")).toBe(false);
+  });
+
   it("builds replacement text for local and engine commands", () => {
     expect(getSlashCommandReplacement(LOCAL_CLEAR_COMMAND)).toBe("/clear");
     expect(getSlashCommandReplacement({ name: "compact", description: "", source: "claude" })).toBe("/compact ");
+    expect(getSlashCommandReplacement({ name: "compact", description: "", source: "codex" })).toBe("/compact ");
     expect(getSlashCommandReplacement({ name: "open", description: "", source: "codex-app", appSlug: "jira" })).toBe("$jira ");
     expect(
       getSlashCommandReplacement({ name: "fix", description: "", source: "codex-skill", defaultPrompt: "bug" }),
     ).toBe("$fix bug");
+  });
+
+  it("uses dollar prefix only for Codex skills and apps", () => {
+    expect(getCommandPrefix({ name: "compact", description: "", source: "codex" })).toBe("/");
+    expect(getCommandPrefix({ name: "fix", description: "", source: "codex-skill" })).toBe("$");
+    expect(getCommandPrefix({ name: "jira", description: "", source: "codex-app" })).toBe("$");
+  });
+
+  it("filters slash and dollar commands by the typed prefix", () => {
+    const commands: SlashCommand[] = [
+      LOCAL_CLEAR_COMMAND,
+      { name: "compact", description: "Compact context", source: "local" },
+      { name: "bananapro-image-gen", description: "Logo design", source: "codex-skill" },
+    ];
+
+    expect(getCommandAutocompleteResults(commands, "/", "go")).toEqual([]);
+    expect(getCommandAutocompleteResults(commands, "$", "go")).toEqual([commands[2]]);
   });
 });
 

@@ -28,10 +28,17 @@ import type {
   CodexInitializeResponse,
   CodexItemStartedNotification,
   CodexItemCompletedNotification,
+  CodexThreadGoal,
+  CodexThreadGoalStatus,
+  CodexReviewTarget,
 } from "@shared/types/codex";
 import type { SkillsListResponse } from "@shared/types/codex-protocol/v2/SkillsListResponse";
 import type { AppsListResponse } from "@shared/types/codex-protocol/v2/AppsListResponse";
 import type { ConfigReadResponse } from "@shared/types/codex-protocol/v2/ConfigReadResponse";
+import type { ThreadGoalClearResponse } from "@shared/types/codex-protocol/v2/ThreadGoalClearResponse";
+import type { ThreadGoalGetResponse } from "@shared/types/codex-protocol/v2/ThreadGoalGetResponse";
+import type { ThreadGoalSetResponse } from "@shared/types/codex-protocol/v2/ThreadGoalSetResponse";
+import type { ReviewStartResponse } from "@shared/types/codex-protocol/v2/ReviewStartResponse";
 import { mergeConfiguredCodexModel } from "@shared/lib/codex-configured-model";
 
 // ── Session state ──
@@ -79,6 +86,34 @@ async function listCodexModelsWithConfiguredFallback(
   } catch (error) {
     log("codex", ` config/read unavailable for cwd=${cwd}: ${error instanceof Error ? error.message : String(error)}`);
     return models;
+  }
+}
+
+async function ensureCodexThread(
+  session: CodexSession,
+  sessionId: string,
+): Promise<{ threadId?: string; error?: string }> {
+  if (session.threadId) return { threadId: session.threadId };
+
+  try {
+    const threadParams: Record<string, unknown> = {
+      cwd: session.cwd,
+      experimentalRawEvents: false,
+      persistExtendedHistory: false,
+    };
+    if (session.model) threadParams.model = session.model;
+    if (session.approvalPolicy) threadParams.approvalPolicy = session.approvalPolicy;
+    if (session.sandbox) threadParams.sandbox = session.sandbox;
+
+    const threadResult = await session.rpc.request<CodexThreadStartResponse>("thread/start", threadParams);
+    session.threadId = threadResult.thread.id;
+    log(
+      "codex",
+      ` Thread lazily started: session=${shortId(sessionId, 12)} thread=${shortId(session.threadId, 12)}`,
+    );
+    return { threadId: session.threadId };
+  } catch (err) {
+    return { error: reportError("CODEX_THREAD_START_ERR", err, { engine: "codex", sessionId }) };
   }
 }
 
@@ -415,27 +450,8 @@ export function register(getMainWindow: () => BrowserWindow | null): void {
         log("codex", ` Send rejected: session not found id=${shortId(data.sessionId, 12)}`);
         return { error: "Session not found" };
       }
-      if (!session.threadId) {
-        try {
-          const threadParams: Record<string, unknown> = {
-            cwd: session.cwd,
-            experimentalRawEvents: false,
-            persistExtendedHistory: false,
-          };
-          if (session.model) threadParams.model = session.model;
-          if (session.approvalPolicy) threadParams.approvalPolicy = session.approvalPolicy;
-          if (session.sandbox) threadParams.sandbox = session.sandbox;
-          const threadResult = await session.rpc.request<CodexThreadStartResponse>("thread/start", threadParams);
-          session.threadId = threadResult.thread.id;
-          log(
-            "codex",
-            ` Thread lazily started: session=${shortId(data.sessionId, 12)} thread=${shortId(session.threadId, 12)}`,
-          );
-        } catch (err) {
-          const msg = reportError("CODEX_THREAD_START_ERR", err, { engine: "codex", sessionId: data.sessionId });
-          return { error: msg };
-        }
-      }
+      const thread = await ensureCodexThread(session, data.sessionId);
+      if (thread.error) return { error: thread.error };
 
       log(
         "codex",
@@ -611,15 +627,106 @@ export function register(getMainWindow: () => BrowserWindow | null): void {
   // ─── codex:compact ───
   ipcMain.handle("codex:compact", async (_, sessionId: string) => {
     const session = codexSessions.get(sessionId);
-    if (!session?.threadId) return { error: "No active thread" };
+    if (!session) return { error: "Session not found" };
+
+    const thread = await ensureCodexThread(session, sessionId);
+    if (thread.error) return { error: thread.error };
 
     try {
-      await session.rpc.request("thread/compact/start", { threadId: session.threadId });
+      await session.rpc.request("thread/compact/start", { threadId: thread.threadId! });
       return {};
     } catch (err) {
       return { error: reportError("CODEX_COMPACT_ERR", err, { engine: "codex", sessionId }) };
     }
   });
+
+  // ─── codex:goal ───
+  ipcMain.handle(
+    "codex:goal",
+    async (
+      _,
+      data: {
+        sessionId: string;
+        action: "get" | "set" | "clear";
+        objective?: string | null;
+        status?: CodexThreadGoalStatus | null;
+        tokenBudget?: number | null;
+      },
+    ): Promise<{ goal?: CodexThreadGoal | null; cleared?: boolean; error?: string }> => {
+      const session = codexSessions.get(data.sessionId);
+      if (!session) return { error: "Session not found" };
+
+      const thread = await ensureCodexThread(session, data.sessionId);
+      if (thread.error) return { error: thread.error };
+      const threadId = thread.threadId!;
+
+      try {
+        if (data.action === "get") {
+          const result = await session.rpc.request<ThreadGoalGetResponse>("thread/goal/get", { threadId });
+          return { goal: result.goal };
+        }
+
+        if (data.action === "clear") {
+          const result = await session.rpc.request<ThreadGoalClearResponse>("thread/goal/clear", { threadId });
+          return { cleared: result.cleared };
+        }
+
+        const params: Record<string, unknown> = { threadId };
+        if (data.objective !== undefined) params.objective = data.objective;
+        if (data.status !== undefined) params.status = data.status;
+        if (data.tokenBudget !== undefined) params.tokenBudget = data.tokenBudget;
+        const result = await session.rpc.request<ThreadGoalSetResponse>("thread/goal/set", params);
+        return { goal: result.goal };
+      } catch (err) {
+        return { error: reportError("CODEX_GOAL_ERR", err, { engine: "codex", sessionId: data.sessionId }) };
+      }
+    },
+  );
+
+  // ─── codex:review ───
+  ipcMain.handle(
+    "codex:review",
+    async (
+      _,
+      data: {
+        sessionId: string;
+        target: CodexReviewTarget;
+      },
+    ) => {
+      const session = codexSessions.get(data.sessionId);
+      if (!session) return { error: "Session not found" };
+
+      const thread = await ensureCodexThread(session, data.sessionId);
+      if (thread.error) return { error: thread.error };
+      const threadId = thread.threadId!;
+
+      try {
+        session.pendingTurnStart = true;
+        const result = await session.rpc.request<ReviewStartResponse>("review/start", {
+          threadId,
+          target: data.target,
+          delivery: "inline",
+        });
+        session.pendingTurnStart = false;
+        session.activeTurnId = result.turn.id;
+        if (session.interruptWhenStarted) {
+          session.interruptWhenStarted = false;
+          try {
+            await session.rpc.request("turn/interrupt", {
+              threadId,
+              turnId: result.turn.id,
+            });
+          } catch (err) {
+            reportError("CODEX_REVIEW_DEFERRED_INTERRUPT_ERR", err, { engine: "codex", sessionId: data.sessionId });
+          }
+        }
+        return { turnId: result.turn.id, reviewThreadId: result.reviewThreadId };
+      } catch (err) {
+        session.pendingTurnStart = false;
+        return { error: reportError("CODEX_REVIEW_ERR", err, { engine: "codex", sessionId: data.sessionId }) };
+      }
+    },
+  );
 
   // ─── codex:list-skills ───
   ipcMain.handle("codex:list-skills", async (_, sessionId: string) => {

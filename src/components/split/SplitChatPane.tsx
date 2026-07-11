@@ -269,6 +269,7 @@ function SplitChatPaneInner({
               onRespondPermission={paneState.engine.respondPermission}
               onSend={paneController.handlePaneSend}
               onClear={paneController.handlePaneClear}
+              onSlashCommand={paneController.handlePaneSlashCommand}
               onStop={paneController.handlePaneStop}
               isProcessing={paneState.isProcessing}
               queuedCount={isActiveSessionPane ? queuedCount : 0}

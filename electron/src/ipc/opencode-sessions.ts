@@ -3,7 +3,7 @@ import os from "os";
 import path from "path";
 import { promises as fs } from "fs";
 import { ipcMain, type BrowserWindow } from "electron";
-import type { Event, OpencodeClient, Permission, Provider } from "@opencode-ai/sdk";
+import type { Event, OpencodeClient, Permission } from "@opencode-ai/sdk";
 import type {
   OpenCodeModelInfo,
   OpenCodePermissionReply,
@@ -14,7 +14,7 @@ import { safeSend } from "../lib/safe-send";
 import { log } from "../lib/logger";
 import { getOpenCodeBinaryStatus, getOpenCodeVersion, resolveOpenCodeBinaryPath } from "../lib/opencode-binary";
 import { startOpenCodeServer, type OpenCodeServerHandle } from "../lib/opencode-client";
-import { loadFilteredOpenCodeModels } from "../lib/opencode-model-filter";
+import { loadOpenCodeModelCatalog } from "../lib/opencode-model-filter";
 
 interface OpenCodeSessionState {
   internalId: string;
@@ -34,12 +34,6 @@ interface OpenCodeEventSubscription {
 
 const sessions = new Map<string, OpenCodeSessionState>();
 const pendingStarts = new Map<string, AbortController>();
-
-function unwrapResult<T>(result: { data?: T; error?: unknown }, label: string): T {
-  if (result.error !== undefined) throw new Error(`${label}: ${extractErrorMessage(result.error)}`);
-  if (result.data === undefined) throw new Error(`${label}: empty response`);
-  return result.data;
-}
 
 function splitModel(model: string | undefined): { providerID: string; modelID: string } | undefined {
   if (!model) return undefined;
@@ -69,16 +63,16 @@ function permissionToolName(permission: Permission): string {
   return permission.title || permission.type;
 }
 
-async function getModels(client: OpencodeClient, cwd: string, signal?: AbortSignal): Promise<OpenCodeModelInfo[]> {
-  const response = await client.config.providers({ query: { directory: cwd }, signal });
-  const data = unwrapResult(response, "OpenCode provider list");
-  const providers = data.providers as Provider[];
-  if (providers.length === 0) {
-    throw new Error("OpenCode has no configured providers. Run `opencode auth login` in a terminal first.");
+async function getModels(
+  client: OpencodeClient,
+  cwd: string,
+  signal?: AbortSignal,
+): Promise<{ models: OpenCodeModelInfo[]; defaultModel?: string }> {
+  const catalog = await loadOpenCodeModelCatalog(client, cwd, signal);
+  if (catalog.models.length === 0) {
+    throw new Error("OpenCode's effective configuration has no matching selectable models.");
   }
-  const models = await loadFilteredOpenCodeModels(cwd, providers);
-  if (models.length === 0) throw new Error("OpenCode returned no available models for this project.");
-  return models;
+  return catalog;
 }
 
 async function destroySession(state: OpenCodeSessionState, abortNative: boolean): Promise<void> {
@@ -174,11 +168,11 @@ async function startSession(
       cwd: options.cwd,
       signal: startAbort.signal,
     });
-    const models = await getModels(server.client, options.cwd, startAbort.signal);
+    const { models, defaultModel } = await getModels(server.client, options.cwd, startAbort.signal);
     if (startAbort.signal.aborted) throw new DOMException("OpenCode start canceled", "AbortError");
     const selectedModel = options.model && models.some((model) => model.id === options.model)
       ? options.model
-      : models[0]?.id;
+      : defaultModel ?? models[0]?.id;
 
     let opencodeSessionId: string;
     if (options.resumeSessionId) {
@@ -333,7 +327,7 @@ export function register(getMainWindow: () => BrowserWindow | null): void {
     let server: OpenCodeServerHandle | null = null;
     try {
       server = await startOpenCodeServer({ binaryPath: resolveOpenCodeBinaryPath(), cwd, signal: abort.signal });
-      return { models: await getModels(server.client, cwd) };
+      return await getModels(server.client, cwd);
     } catch (error) {
       return { models: [], error: reportError("OPENCODE_MODELS_ERR", error, { cwd }) };
     } finally {

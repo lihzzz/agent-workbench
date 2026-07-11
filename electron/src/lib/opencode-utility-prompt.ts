@@ -1,8 +1,8 @@
-import type { Event, Provider } from "@opencode-ai/sdk";
+import type { Event } from "@opencode-ai/sdk";
 import { extractErrorMessage } from "./error-utils";
 import { resolveOpenCodeBinaryPath } from "./opencode-binary";
 import { startOpenCodeServer, type OpenCodeServerHandle } from "./opencode-client";
-import { loadFilteredOpenCodeModels } from "./opencode-model-filter";
+import { loadOpenCodeModelCatalog } from "./opencode-model-filter";
 
 function unwrap<T>(result: { data?: T; error?: unknown }, label: string): T {
   if (result.error !== undefined) throw new Error(`${label}: ${extractErrorMessage(result.error)}`);
@@ -44,12 +44,11 @@ export async function openCodeUtilityPrompt(
       cwd,
       signal: abort.signal,
     });
-    const providerData = unwrap(await server.client.config.providers({ query: { directory: cwd } }), "OpenCode providers");
-    const models = await loadFilteredOpenCodeModels(cwd, providerData.providers as Provider[]);
+    const { models, defaultModel } = await loadOpenCodeModelCatalog(server.client, cwd, abort.signal);
     if (models.length === 0) throw new Error("OpenCode has no configured provider models");
     const selected = options?.model && models.some((model) => model.id === options.model)
       ? options.model
-      : models[0].id;
+      : defaultModel ?? models[0].id;
     const nativeModel = splitModel(selected);
     if (!nativeModel) throw new Error(`Invalid OpenCode model ID: ${selected}`);
 

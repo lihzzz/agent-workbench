@@ -8,7 +8,22 @@
 
 import { useState, useCallback, useEffect, useRef } from "react";
 import { toast } from "sonner";
-import type { TodoItem, AppPermissionBehavior, ModelInfo, ImageAttachment, SessionInfo, BackgroundSessionSnapshot, SlashCommand, CodexSessionEvent, CodexServerRequest, CodexExitEvent, CodexTokenUsageNotification } from "@/types";
+import type {
+  TodoItem,
+  AppPermissionBehavior,
+  ModelInfo,
+  ImageAttachment,
+  SessionInfo,
+  BackgroundSessionSnapshot,
+  SlashCommand,
+  CodexSessionEvent,
+  CodexServerRequest,
+  CodexExitEvent,
+  CodexTokenUsageNotification,
+  CodexThreadGoal,
+  CodexThreadGoalStatus,
+  CodexReviewTarget,
+} from "@/types";
 import type { CollaborationMode } from "@/types/codex-protocol/CollaborationMode";
 import type { ItemStartedNotification } from "@/types/codex-protocol/v2/ItemStartedNotification";
 import type { ItemCompletedNotification } from "@/types/codex-protocol/v2/ItemCompletedNotification";
@@ -83,6 +98,119 @@ interface CodexQuestionInput {
   isSecret: boolean;
   options?: CodexQuestionOption[];
   multiSelect: boolean;
+}
+
+const CODEX_NATIVE_SLASH_COMMANDS: SlashCommand[] = [
+  {
+    name: "compact",
+    description: "Compact the current conversation context",
+    argumentHint: "",
+    source: "codex",
+  },
+  {
+    name: "goal",
+    description: "Create, view, edit, pause, resume, or clear a thread goal",
+    argumentHint: "[objective|clear|edit|pause|resume]",
+    source: "codex",
+  },
+  {
+    name: "review",
+    description: "Review uncommitted changes, a base branch, a commit, or custom instructions",
+    argumentHint: "[base <branch>|commit <sha>|<custom instructions>]",
+    source: "codex",
+  },
+];
+
+const CODEX_GOAL_USAGE = "Usage: /goal [<objective>|clear|edit|pause|resume]";
+
+function parseSlashCommandText(text: string): { name: string; args: string } | null {
+  const match = text.trim().match(/^\/([A-Za-z][\w-]*)(?:\s+([\s\S]*))?$/);
+  if (!match) return null;
+  return {
+    name: match[1].toLowerCase(),
+    args: match[2]?.trim() ?? "",
+  };
+}
+
+function splitFirstWord(text: string): { first: string; rest: string } {
+  const trimmed = text.trim();
+  const match = trimmed.match(/^(\S+)(?:\s+([\s\S]*))?$/);
+  return {
+    first: match?.[1]?.toLowerCase() ?? "",
+    rest: match?.[2]?.trim() ?? "",
+  };
+}
+
+function parseGoalObjective(raw: string): { objective: string; tokenBudget?: number; error?: string } {
+  const budgetMatch = raw.match(/(?:^|\s)--(?:token-)?budget(?:=|\s+)(\d+)(?=\s|$)/i);
+  const tokenBudget = budgetMatch ? Number(budgetMatch[1]) : undefined;
+  if (tokenBudget !== undefined && (!Number.isSafeInteger(tokenBudget) || tokenBudget <= 0)) {
+    return { objective: "", error: "Goal token budget must be a positive integer." };
+  }
+
+  const objective = raw
+    .replace(/\s*--(?:token-)?budget(?:=|\s+)\d+(?=\s|$)/i, "")
+    .trim();
+  return { objective, tokenBudget };
+}
+
+function formatGoalStatus(status: CodexThreadGoalStatus): string {
+  switch (status) {
+    case "usageLimited":
+      return "usage limited";
+    case "budgetLimited":
+      return "budget limited";
+    default:
+      return status;
+  }
+}
+
+function formatGoalDuration(totalSeconds: number): string {
+  const seconds = Math.max(0, Math.floor(totalSeconds));
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = seconds % 60;
+  if (minutes <= 0) return `${remainingSeconds}s`;
+  const hours = Math.floor(minutes / 60);
+  const remainingMinutes = minutes % 60;
+  if (hours <= 0) return `${minutes}m ${remainingSeconds}s`;
+  return `${hours}h ${remainingMinutes}m`;
+}
+
+function formatGoal(goal: CodexThreadGoal): string {
+  const tokenBudget = goal.tokenBudget == null
+    ? `${goal.tokensUsed}`
+    : `${goal.tokensUsed} / ${goal.tokenBudget}`;
+  return [
+    `Goal: ${goal.objective}`,
+    `Status: ${formatGoalStatus(goal.status)}`,
+    `Tokens: ${tokenBudget}`,
+    `Time: ${formatGoalDuration(goal.timeUsedSeconds)}`,
+  ].join("\n");
+}
+
+function parseReviewTarget(args: string): { target?: CodexReviewTarget; error?: string } {
+  const trimmed = args.trim();
+  if (!trimmed) return { target: { type: "uncommittedChanges" } };
+
+  const { first, rest } = splitFirstWord(trimmed);
+  if (first === "base" || first === "branch") {
+    const branch = rest.trim();
+    if (!branch) return { error: "Usage: /review base <branch>" };
+    return { target: { type: "baseBranch", branch } };
+  }
+
+  if (first === "commit") {
+    const { first: sha, rest: title } = splitFirstWord(rest);
+    if (!sha) return { error: "Usage: /review commit <sha>" };
+    return { target: { type: "commit", sha, title: title || null } };
+  }
+
+  if (first === "custom") {
+    if (!rest) return { error: "Usage: /review custom <instructions>" };
+    return { target: { type: "custom", instructions: rest } };
+  }
+
+  return { target: { type: "custom", instructions: trimmed } };
 }
 
 export function useCodex({
@@ -846,13 +974,15 @@ export function useCodex({
     const unsubEvent = window.claude.codex.onEvent(handleNotification);
     const unsubApproval = window.claude.codex.onApprovalRequest(handleApproval);
     const unsubExit = window.claude.codex.onExit(handleExit);
+    setSlashCommands(CODEX_NATIVE_SLASH_COMMANDS);
 
     // Fetch available skills and apps for slash command autocomplete
     Promise.all([
       window.claude.codex.listSkills(sessionId).catch(() => ({ skills: [] as never[] })),
       window.claude.codex.listApps(sessionId).catch(() => ({ apps: [] as never[] })),
     ]).then(([skillsResult, appsResult]) => {
-      const commands: SlashCommand[] = [];
+      if (sessionId !== sessionIdRef.current) return;
+      const commands: SlashCommand[] = [...CODEX_NATIVE_SLASH_COMMANDS];
       for (const entry of skillsResult.skills ?? []) {
         for (const skill of entry.skills) {
           if (!skill.enabled) continue;
@@ -875,7 +1005,7 @@ export function useCodex({
           iconUrl: app.logoUrl ?? undefined,
         });
       }
-      if (commands.length > 0) setSlashCommands(commands);
+      setSlashCommands(commands);
     });
 
     return () => {
@@ -963,6 +1093,117 @@ export function useCodex({
       ]);
     }
   }, [sessionId]);
+
+  const runSlashCommand = useCallback(async (text: string, targetSessionId?: string): Promise<boolean> => {
+    const parsed = parseSlashCommandText(text);
+    const commandSessionId = targetSessionId ?? sessionId;
+    if (!parsed || !commandSessionId) return false;
+
+    if (parsed.name === "compact") {
+      if (targetSessionId) {
+        setIsCompacting(true);
+        const result = await window.claude.codex.compact(targetSessionId);
+        if (result?.error) {
+          setIsCompacting(false);
+          setMessages((prev) => [
+            ...prev,
+            createSystemMessage(`Codex compact error: ${result.error}`, true),
+          ]);
+        }
+      } else {
+        await compact();
+      }
+      return true;
+    }
+
+    if (parsed.name === "goal") {
+      setMessages((prev) => [...prev, createUserMessage(text)]);
+
+      const { first, rest } = splitFirstWord(parsed.args);
+      if (!first) {
+        const result = await window.claude.codex.goal(commandSessionId, { action: "get" });
+        setMessages((prev) => [
+          ...prev,
+          result.error
+            ? createSystemMessage(`Codex goal error: ${result.error}`, true)
+            : createSystemMessage(result.goal ? formatGoal(result.goal) : "No goal is currently set."),
+        ]);
+        return true;
+      }
+
+      if (first === "clear") {
+        const result = await window.claude.codex.goal(commandSessionId, { action: "clear" });
+        setMessages((prev) => [
+          ...prev,
+          result.error
+            ? createSystemMessage(`Codex goal error: ${result.error}`, true)
+            : createSystemMessage(result.cleared ? "Goal cleared." : "No goal is currently set."),
+        ]);
+        return true;
+      }
+
+      if (first === "pause" || first === "resume") {
+        const status: CodexThreadGoalStatus = first === "pause" ? "paused" : "active";
+        const result = await window.claude.codex.goal(commandSessionId, { action: "set", status });
+        setMessages((prev) => [
+          ...prev,
+          result.error
+            ? createSystemMessage(`Codex goal error: ${result.error}`, true)
+            : createSystemMessage(result.goal ? formatGoal(result.goal) : "No goal is currently set."),
+        ]);
+        return true;
+      }
+
+      const rawObjective = first === "edit" ? rest : parsed.args;
+      const parsedGoal = parseGoalObjective(rawObjective);
+      if (parsedGoal.error || !parsedGoal.objective) {
+        setMessages((prev) => [
+          ...prev,
+          createSystemMessage(parsedGoal.error ?? CODEX_GOAL_USAGE, true),
+        ]);
+        return true;
+      }
+
+      const result = await window.claude.codex.goal(commandSessionId, {
+        action: "set",
+        objective: parsedGoal.objective,
+        status: "active",
+        tokenBudget: parsedGoal.tokenBudget,
+      });
+      setMessages((prev) => [
+        ...prev,
+        result.error
+          ? createSystemMessage(`Codex goal error: ${result.error}`, true)
+          : createSystemMessage(result.goal ? formatGoal(result.goal) : "Goal updated."),
+      ]);
+      return true;
+    }
+
+    if (parsed.name === "review") {
+      const { target, error } = parseReviewTarget(parsed.args);
+      setMessages((prev) => [...prev, createUserMessage(text)]);
+      if (error || !target) {
+        setMessages((prev) => [
+          ...prev,
+          createSystemMessage(error ?? "Usage: /review [base <branch>|commit <sha>|<custom instructions>]", true),
+        ]);
+        return true;
+      }
+
+      setIsProcessing(true);
+      const result = await window.claude.codex.review(commandSessionId, target);
+      if (result?.error) {
+        setIsProcessing(false);
+        setMessages((prev) => [
+          ...prev,
+          createSystemMessage(`Codex review error: ${result.error}`, true),
+        ]);
+      }
+      return true;
+    }
+
+    return false;
+  }, [compact, sessionId, setIsProcessing, setMessages]);
 
   const respondPermission = useCallback(
     async (behavior: AppPermissionBehavior, _updatedInput?: Record<string, unknown>, _newPermissionMode?: string) => {
@@ -1116,7 +1357,7 @@ export function useCodex({
     contextUsage,
     isCompacting,
     modelUsage,
-    send, sendRaw, stop, interrupt, compact,
+    send, sendRaw, stop, interrupt, compact, runSlashCommand,
     pendingPermission, respondPermission,
     setPermissionMode,
     todoItems,

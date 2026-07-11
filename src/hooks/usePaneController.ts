@@ -81,6 +81,7 @@ export interface PaneControllerContext {
     acpConfigOptions: ACPConfigOption[];
     acpConfigOptionsLoading: boolean;
     setACPConfig: (key: string, value: string) => void;
+    runSlashCommand?: (text: string) => Promise<boolean>;
   };
   // Split-view helpers (optional — absent in single-chat mode)
   splitView?: {
@@ -280,6 +281,17 @@ export function usePaneController(
       }
     };
 
+    const handlePaneSlashCommand = paneEngine === "codex"
+      ? async (text: string): Promise<boolean> => {
+          ctx.splitView?.setFocusedSession(sessionId);
+          if (isActiveSessionPane) {
+            return ctx.manager.runSlashCommand?.(text) ?? false;
+          }
+          if (!session || !paneState.isConnected) return false;
+          return paneState.codex.runSlashCommand(text);
+        }
+      : undefined;
+
     const handlePaneStop = async () => {
       ctx.splitView?.setFocusedSession(sessionId);
       if (isActiveSessionPane) {
@@ -311,6 +323,7 @@ export function usePaneController(
       handlePaneAgentChange,
       handlePaneClear,
       handlePaneSend,
+      handlePaneSlashCommand,
       handlePaneStop,
       handlePaneAcpConfigChange: isActiveSessionPane ? ctx.manager.setACPConfig : paneState.acp.setConfig,
     };

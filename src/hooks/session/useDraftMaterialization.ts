@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useRef } from "react";
 import { toast } from "sonner";
 import type { UIMessage, ChatSession, McpServerConfig, Project, ImageAttachment, EngineId } from "../../types";
 import { toMcpStatusState } from "../../lib/mcp-utils";
@@ -34,6 +34,9 @@ export function useDraftMaterialization({
   generateSessionTitle,
   applyCodexModelDefaultEffort,
 }: UseDraftMaterializationParams) {
+  const openCodeModelRequestRef = useRef(0);
+  const openCodeModelLoadingCwdRef = useRef<string | null>(null);
+  const openCodePreferredModelRef = useRef<string | undefined>(undefined);
   const { claude, acp, codex, opencode } = engines;
   const {
     setSessions,
@@ -294,22 +297,61 @@ export function useDraftMaterialization({
     const project = projectId
       ? refs.projectsRef.current.find((entry) => entry.id === projectId)
       : undefined;
-    if (!project) return;
-    const result = await window.claude.opencode.listModels(getProjectCwd(project));
-    if (result.error || result.models.length === 0) {
-      if (result.error) toast.error("Failed to load OpenCode models", { description: result.error });
+    if (!project) {
+      openCodeModelRequestRef.current += 1;
+      openCodeModelLoadingCwdRef.current = null;
+      openCodePreferredModelRef.current = undefined;
+      opencode.setModels([]);
       return;
     }
-    opencode.setModels(result.models);
-    const selected = result.models.some((model) => model.id === preferredModel)
-      ? preferredModel
-      : result.models[0]?.id;
-    if (selected) {
+
+    const cwd = getProjectCwd(project);
+    if (openCodeModelLoadingCwdRef.current === cwd) {
+      if (preferredModel) openCodePreferredModelRef.current = preferredModel;
+      return;
+    }
+    openCodePreferredModelRef.current = preferredModel;
+
+    const requestId = ++openCodeModelRequestRef.current;
+    openCodeModelLoadingCwdRef.current = cwd;
+    opencode.setModels([]);
+    try {
+      const result = await window.claude.opencode.listModels(cwd);
+      if (requestId !== openCodeModelRequestRef.current) return;
+      if (result.error || result.models.length === 0) {
+        if (result.error) toast.error("Failed to load OpenCode models", { description: result.error });
+        setStartOptions((previous) =>
+          (previous.engine ?? "claude") === "opencode"
+            ? { ...previous, model: undefined }
+            : previous,
+        );
+        return;
+      }
+
+      opencode.setModels(result.models);
+      const latestPreferredModel = openCodePreferredModelRef.current;
+      const selected = result.models.some((model) => model.id === latestPreferredModel)
+        ? latestPreferredModel
+        : result.defaultModel ?? result.models[0]?.id;
+      if (!selected) return;
       setStartOptions((previous) =>
         (previous.engine ?? "claude") === "opencode"
           ? { ...previous, model: selected }
           : previous,
       );
+    } catch (error) {
+      if (requestId !== openCodeModelRequestRef.current) return;
+      const message = error instanceof Error ? error.message : String(error);
+      toast.error("Failed to load OpenCode models", { description: message });
+      setStartOptions((previous) =>
+        (previous.engine ?? "claude") === "opencode"
+          ? { ...previous, model: undefined }
+          : previous,
+      );
+    } finally {
+      if (requestId === openCodeModelRequestRef.current) {
+        openCodeModelLoadingCwdRef.current = null;
+      }
     }
   }, [activeSessionIdRef, draftProjectIdRef, getProjectCwd, opencode.setModels, refs.projectsRef, refs.sessionsRef, setStartOptions]);
 

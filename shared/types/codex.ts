@@ -32,6 +32,9 @@ export type { TurnInterruptParams as CodexTurnInterruptParams } from "./codex-pr
 export type { TurnStatus as CodexTurnStatus } from "./codex-protocol/v2/TurnStatus";
 export type { Turn as CodexTurn } from "./codex-protocol/v2/Turn";
 export type { Thread as CodexThread } from "./codex-protocol/v2/Thread";
+export type { ThreadGoal as CodexThreadGoal } from "./codex-protocol/v2/ThreadGoal";
+export type { ThreadGoalStatus as CodexThreadGoalStatus } from "./codex-protocol/v2/ThreadGoalStatus";
+export type { ReviewTarget as CodexReviewTarget } from "./codex-protocol/v2/ReviewTarget";
 export type { UserInput as CodexUserInput } from "./codex-protocol/v2/UserInput";
 export type { Model as CodexModel } from "./codex-protocol/v2/Model";
 export type { ModelListParams as CodexModelListParams } from "./codex-protocol/v2/ModelListParams";

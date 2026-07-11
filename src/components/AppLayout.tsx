@@ -903,6 +903,7 @@ export function AppLayout() {
       acpConfigOptions: manager.acpConfigOptions,
       acpConfigOptionsLoading: manager.acpConfigOptionsLoading,
       setACPConfig: manager.setACPConfig,
+      runSlashCommand: manager.runSlashCommand,
     },
     splitView: {
       setFocusedSession: splitView.setFocusedSession,
@@ -1594,6 +1595,7 @@ export function AppLayout() {
                   onRespondPermission={manager.respondPermission}
                   onSend={wrappedHandleSend}
                   onClear={handleComposerClear}
+                  onSlashCommand={activePaneCtrl ? activePaneCtrl.handlePaneSlashCommand : manager.runSlashCommand}
                   onStop={handleStop}
                   isProcessing={manager.isProcessing}
                   queuedCount={manager.queuedCount}

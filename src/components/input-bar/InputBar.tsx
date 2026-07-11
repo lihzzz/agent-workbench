@@ -50,6 +50,8 @@ import {
   stripVoicePlaceholderText,
   extractEditableContent,
   getAvailableSlashCommands,
+  getCommandPrefix,
+  isCompactCommandText,
   isClearCommandText,
   setEditableText,
   isCaretOnFirstLine,
@@ -75,6 +77,7 @@ const ImageAnnotationEditor = lazy(() =>
 export interface InputBarProps {
   onSend: (text: string, images?: ImageAttachment[], displayText?: string) => void;
   onClear?: () => void | Promise<void>;
+  onSlashCommand?: (text: string) => boolean | Promise<boolean>;
   onStop: () => void;
   isProcessing: boolean;
   model: string;
@@ -131,6 +134,7 @@ export interface InputBarProps {
 export const InputBar = memo(function InputBar({
   onSend,
   onClear,
+  onSlashCommand,
   onStop,
   isProcessing,
   model,
@@ -195,16 +199,20 @@ export const InputBar = memo(function InputBar({
   const hasContentRef = useRef(false);
 
   // ── Derived engine state ──
-  const isACPAgent = selectedAgent != null && selectedAgent.engine === "acp";
-  const isCodexAgent = selectedAgent != null && selectedAgent.engine === "codex";
+  const isACPAgent = selectedAgent?.engine === "acp" || lockedEngine === "acp";
+  const isCodexAgent = selectedAgent?.engine === "codex" || lockedEngine === "codex";
   const isOpenCodeAgent = selectedAgent?.engine === "opencode" || lockedEngine === "opencode";
+  const canRunCompactCommand = !!onCompact && !isACPAgent && !isOpenCodeAgent;
+  const shouldAddLocalCompactCommand = false;
   const showACPConfigOptions = isACPAgent && (acpConfigOptions?.length ?? 0) > 0;
   const isAwaitingAcpOptions = isACPAgent && !!acpConfigOptionsLoading;
 
   const { promptTemplates } = useAgentContext();
 
   const availableSlashCommands = useMemo(() => {
-    const base = getAvailableSlashCommands(slashCommands);
+    const base = getAvailableSlashCommands(slashCommands, {
+      includeCompact: shouldAddLocalCompactCommand,
+    });
     const templateCmds: SlashCommand[] = promptTemplates
       .filter((t) => t.enabled !== false)
       .map((t) => {
@@ -218,7 +226,12 @@ export const InputBar = memo(function InputBar({
         };
       });
     return [...base, ...templateCmds];
-  }, [slashCommands, promptTemplates]);
+  }, [slashCommands, promptTemplates, shouldAddLocalCompactCommand]);
+
+  const hasDollarCommands = useMemo(
+    () => availableSlashCommands.some((cmd) => getCommandPrefix(cmd) === "$"),
+    [availableSlashCommands],
+  );
 
   // ── Derived model state ──
   const modelList = useMemo(
@@ -487,6 +500,23 @@ export const InputBar = memo(function InputBar({
       return;
     }
 
+    if (onSlashCommand && trimmed.startsWith("/")) {
+      const handled = await onSlashCommand(trimmed);
+      if (handled) {
+        clearComposer(el);
+        return;
+      }
+    }
+
+    if (canRunCompactCommand && isCompactCommandText(trimmed)) {
+      try {
+        await onCompact?.();
+      } finally {
+        clearComposer(el);
+      }
+      return;
+    }
+
     // Check if we need to warn about deep folder size
     if (deepMentionPaths.size > 0 && projectPath) {
       try {
@@ -521,6 +551,9 @@ export const InputBar = memo(function InputBar({
     isSending,
     projectPath,
     onClear,
+    onSlashCommand,
+    onCompact,
+    canRunCompactCommand,
     grabbedElements,
     performSend,
     clearComposer,
@@ -807,7 +840,9 @@ export const InputBar = memo(function InputBar({
       : isProcessing
         ? `${selectedAgent?.name ?? "Claude"} is responding... (messages will be queued)`
         : availableSlashCommands.length > 0
-          ? "Ask anything, @ to tag files, / for commands"
+          ? hasDollarCommands
+            ? "Ask anything, @ to tag files, / for commands, $ for skills"
+            : "Ask anything, @ to tag files, / for commands"
           : "Ask anything, @ to tag files";
 
   // ── Send button disabled state ──

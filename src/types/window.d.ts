@@ -21,7 +21,14 @@ import type {
   ACPStatusInfo,
 } from "./acp";
 import type { EngineId, AppPermissionBehavior } from "./engine";
-import type { CodexSessionEvent, CodexServerRequest, CodexExitEvent } from "./codex";
+import type {
+  CodexSessionEvent,
+  CodexServerRequest,
+  CodexExitEvent,
+  CodexThreadGoal,
+  CodexThreadGoalStatus,
+  CodexReviewTarget,
+} from "./codex";
 import type {
   OpenCodeExitEvent,
   OpenCodeModelInfo,
@@ -353,6 +360,19 @@ declare global {
           message: string,
         ) => Promise<IpcResult>;
         compact: (sessionId: string) => Promise<{ error?: string }>;
+        goal: (
+          sessionId: string,
+          request: {
+            action: "get" | "set" | "clear";
+            objective?: string | null;
+            status?: CodexThreadGoalStatus | null;
+            tokenBudget?: number | null;
+          },
+        ) => Promise<{ goal?: CodexThreadGoal | null; cleared?: boolean; error?: string }>;
+        review: (
+          sessionId: string,
+          target: CodexReviewTarget,
+        ) => Promise<{ turnId?: string; reviewThreadId?: string; error?: string }>;
         listSkills: (sessionId: string) => Promise<{
           skills: SkillsListEntry[];
           error?: string;
@@ -387,7 +407,11 @@ declare global {
           requestId: string,
           reply: OpenCodePermissionReply,
         ) => Promise<IpcResult>;
-        listModels: (cwd: string) => Promise<{ models: OpenCodeModelInfo[]; error?: string }>;
+        listModels: (cwd: string) => Promise<{
+          models: OpenCodeModelInfo[];
+          defaultModel?: string;
+          error?: string;
+        }>;
         version: () => Promise<{ version?: string; error?: string }>;
         binaryStatus: () => Promise<{ installed: boolean; path?: string; error?: string }>;
         onEvent: (callback: (data: OpenCodeSessionEvent) => void) => () => void;

@@ -192,6 +192,9 @@ export type {
   CodexAuthRequiredNotification,
   CodexTokenUsageNotification,
   CodexThreadItem,
+  CodexThreadGoal,
+  CodexThreadGoalStatus,
+  CodexReviewTarget,
 } from "./codex";
 
 // ── OpenCode types ──

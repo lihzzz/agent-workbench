@@ -1,0 +1,15 @@
+{
+  "generatedAt": "2026-07-10T13:24:45.604Z",
+  "status": "no-input",
+  "input": {
+    "sourceFreezeDir": null,
+    "sourceFreezeArchive": null,
+    "outputDir": "/Users/lh/git/harnss/parity/frozen/source",
+    "force": false
+  },
+  "importedFreeze": null,
+  "validation": null,
+  "files": [],
+  "commands": [],
+  "note": "No source freeze directory or archive was provided."
+}

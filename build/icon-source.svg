@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024" role="img" aria-label="Harnss app icon">
+  <!--
+    Base glyph: Lucide "network" icon, ISC License.
+    Source: https://lucide.dev/icons/network
+  -->
+  <defs>
+    <linearGradient id="bg" x1="156" y1="122" x2="868" y2="902" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#111827"/>
+      <stop offset="0.46" stop-color="#312E81"/>
+      <stop offset="1" stop-color="#047857"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(315 224) rotate(51.2) scale(708 826)">
+      <stop offset="0" stop-color="#A7F3D0" stop-opacity="0.74"/>
+      <stop offset="0.42" stop-color="#8B5CF6" stop-opacity="0.32"/>
+      <stop offset="1" stop-color="#020617" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="softShadow" x="-22%" y="-22%" width="144%" height="144%" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="24" stdDeviation="30" flood-color="#020617" flood-opacity="0.38"/>
+    </filter>
+    <filter id="glyphShadow" x="-30%" y="-30%" width="160%" height="160%" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="18" stdDeviation="18" flood-color="#020617" flood-opacity="0.34"/>
+    </filter>
+  </defs>
+
+  <rect x="64" y="64" width="896" height="896" rx="224" fill="url(#bg)" filter="url(#softShadow)"/>
+  <rect x="64" y="64" width="896" height="896" rx="224" fill="url(#glow)"/>
+  <path d="M181 155c89-61 231-88 362-67 164 26 301 128 348 268" fill="none" stroke="#FFFFFF" stroke-opacity="0.14" stroke-width="36" stroke-linecap="round"/>
+  <path d="M151 829c96 68 241 103 379 84 170-24 307-127 356-271" fill="none" stroke="#A7F3D0" stroke-opacity="0.16" stroke-width="34" stroke-linecap="round"/>
+
+  <g transform="translate(192 182) scale(26.6666667)" fill="none" stroke="#FFFFFF" stroke-width="2.05" stroke-linecap="round" stroke-linejoin="round" filter="url(#glyphShadow)">
+    <rect x="16" y="16" width="6" height="6" rx="1"/>
+    <rect x="2" y="16" width="6" height="6" rx="1"/>
+    <rect x="9" y="2" width="6" height="6" rx="1"/>
+    <path d="M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3"/>
+    <path d="M12 12V8"/>
+  </g>
+</svg>

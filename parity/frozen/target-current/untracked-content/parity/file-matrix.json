@@ -1,0 +1,622 @@
+{
+  "generatedAt": "2026-07-10T13:20:25.157Z",
+  "sourceStatus": "source-pending",
+  "entries": [
+    {
+      "path": "electron-builder.config.js",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "electron/src/ipc/claude-sessions.ts",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "electron/src/ipc/files.ts",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "electron/src/ipc/prompt-templates.ts",
+      "targetStatus": "A",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "electron/src/ipc/sessions.ts",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": true,
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "electron/src/ipc/subagents.ts",
+      "targetStatus": "A",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "electron/src/ipc/terminal.ts",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "electron/src/lib/__tests__/claude-model-cache.test.ts",
+      "targetStatus": "A",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "electron/src/lib/__tests__/prompt-template-registry.test.ts",
+      "targetStatus": "A",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "electron/src/lib/__tests__/subagent-registry.test.ts",
+      "targetStatus": "A",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "electron/src/lib/claude-model-cache.ts",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "electron/src/lib/prompt-template-registry.ts",
+      "targetStatus": "A",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "electron/src/lib/subagent-registry.ts",
+      "targetStatus": "A",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "electron/src/main.ts",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "electron/src/preload.ts",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": true,
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "pnpm-lock.yaml",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": true,
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "shared/lib/session-persistence.ts",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": true,
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "shared/types/builtin-prompt-templates.ts",
+      "targetStatus": "A",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "shared/types/builtin-subagents.ts",
+      "targetStatus": "A",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "shared/types/engine.ts",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": true,
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "shared/types/prompt-template.ts",
+      "targetStatus": "A",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "shared/types/subagent.ts",
+      "targetStatus": "A",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/components/AgentContext.tsx",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/components/AppLayout.tsx",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": true,
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/components/AppSidebar.tsx",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": true,
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/components/MessageBubble.tsx",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/components/SettingsView.tsx",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": true,
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/components/ToolCall.tsx",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/components/input-bar/BranchIndicator.tsx",
+      "targetStatus": "A",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/components/input-bar/InputBar.tsx",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/components/input-bar/TemplateVarForm.tsx",
+      "targetStatus": "A",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/components/input-bar/input-bar-utils.ts",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/components/input-bar/useInputHistory.ts",
+      "targetStatus": "A",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/components/settings/ArchivedSettings.tsx",
+      "targetStatus": "A",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/components/settings/CostDashboardSettings.tsx",
+      "targetStatus": "A",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/components/settings/MiniBarChart.tsx",
+      "targetStatus": "A",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/components/settings/PromptTemplateSettings.tsx",
+      "targetStatus": "A",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/components/settings/SkillsSettings.tsx",
+      "targetStatus": "A",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/components/settings/SubagentSettings.tsx",
+      "targetStatus": "A",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/components/sidebar/BranchSection.tsx",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/components/sidebar/FolderSection.tsx",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/components/sidebar/PinnedSection.tsx",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/components/sidebar/ProjectSection.tsx",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/components/sidebar/SessionItem.tsx",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/components/sidebar/SidebarActionsContext.tsx",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/hooks/app-layout/useAppSessionActions.ts",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/hooks/session/types.ts",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/hooks/session/useSessionCrud.ts",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/hooks/session/useSessionPane.ts",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/hooks/session/useSessionPersistence.ts",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": true,
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/hooks/session/useSessionRestart.ts",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/hooks/session/useSessionRevival.ts",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/hooks/useACP.ts",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/hooks/useAppOrchestrator.ts",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/hooks/useClaude.ts",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/hooks/useCodex.ts",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/hooks/useEngineBase.ts",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": true,
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/hooks/useFolderManager.ts",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/hooks/usePromptTemplates.ts",
+      "targetStatus": "A",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/hooks/useSessionManager.ts",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": true,
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/hooks/useSkills.ts",
+      "targetStatus": "A",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/hooks/useSubagents.ts",
+      "targetStatus": "A",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/hooks/useUsageData.ts",
+      "targetStatus": "A",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/lib/background/claude-handler.ts",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/lib/background/codex-web-search.test.ts",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/lib/background/context-usage.test.ts",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/lib/background/session-store.ts",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/lib/engine-colors.ts",
+      "targetStatus": "A",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/lib/engine/leaked-tool-parse.test.ts",
+      "targetStatus": "A",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/lib/engine/leaked-tool-parse.ts",
+      "targetStatus": "A",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/lib/model-utils.test.ts",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/lib/model-utils.ts",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/lib/prompt-template.test.ts",
+      "targetStatus": "A",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/lib/session/model-usage.test.ts",
+      "targetStatus": "A",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/lib/session/model-usage.ts",
+      "targetStatus": "A",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/lib/session/records.ts",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/lib/session/session-export.test.ts",
+      "targetStatus": "A",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/lib/session/session-export.ts",
+      "targetStatus": "A",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/lib/session/usage-aggregation.test.ts",
+      "targetStatus": "A",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/lib/session/usage-aggregation.ts",
+      "targetStatus": "A",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/lib/sidebar/grouping.ts",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/stores/settings-store.ts",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": true,
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/types/engine-hook.ts",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/types/index.ts",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/types/prompt-template.ts",
+      "targetStatus": "A",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/types/session.ts",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/types/subagent.ts",
+      "targetStatus": "A",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/types/window.d.ts",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": true,
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    }
+  ]
+}

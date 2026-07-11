@@ -1,0 +1,31 @@
+{
+  "generatedAt": "2026-07-10T13:24:46.687Z",
+  "status": "source-unavailable",
+  "expected": {
+    "branch": "hy_dev",
+    "headPrefix": "0e1dab7"
+  },
+  "evidence": {
+    "localBranchCommit": null,
+    "expectedCommitAvailable": false,
+    "remoteHeads": [],
+    "sourceWorkspace": null,
+    "importedSourceFreeze": null,
+    "sourceCandidates": [
+      {
+        "path": "/Users/lihzz/PycharmProjects/code/harnss",
+        "exists": false,
+        "git": false
+      }
+    ]
+  },
+  "missingM0Inputs": [
+    "source HEAD archive",
+    "source git diff --binary HEAD",
+    "source untracked file list",
+    "source git status --porcelain=v1",
+    "source SHA-256 manifest",
+    "electron/src/ipc/codex-sessions.ts source patch and patch SHA-256"
+  ],
+  "note": "This file records source availability only until the frozen source workspace is imported."
+}

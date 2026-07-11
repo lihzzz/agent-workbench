@@ -1,0 +1,133 @@
+{
+  "generatedAt": "2026-07-10T13:20:36.436Z",
+  "status": "not-ready",
+  "passedCount": 2,
+  "failedCount": 6,
+  "checks": [
+    {
+      "name": "source baseline is available",
+      "status": "fail",
+      "details": {
+        "status": "source-unavailable",
+        "missingM0Inputs": [
+          "source HEAD archive",
+          "source git diff --binary HEAD",
+          "source untracked file list",
+          "source git status --porcelain=v1",
+          "source SHA-256 manifest",
+          "electron/src/ipc/codex-sessions.ts source patch and patch SHA-256"
+        ]
+      }
+    },
+    {
+      "name": "workspace freeze comparison has no runtime drift",
+      "status": "fail",
+      "details": {
+        "status": "missing-input",
+        "missing": [
+          "parity/frozen/source/freeze-summary.json",
+          "parity/frozen/source/manifest.json"
+        ],
+        "summary": {
+          "total": 0,
+          "sourceOnly": 0,
+          "targetOnly": 0,
+          "bothModified": 0,
+          "identical": 0,
+          "runtimeOpen": 0
+        }
+      }
+    },
+    {
+      "name": "contract snapshots are equal",
+      "status": "fail",
+      "details": {
+        "diffStatus": "not-equal",
+        "targetMissing": [],
+        "sourceMissing": [
+          "preload-api.json",
+          "ipc-channels.json",
+          "settings-defaults.json",
+          "shared-types.json",
+          "session-serialization.json",
+          "package-dependencies.json",
+          "build-config.json",
+          "default-surface.json"
+        ],
+        "comparedFiles": 8
+      }
+    },
+    {
+      "name": "parity ledger P01-P10 are closed",
+      "status": "fail",
+      "details": {
+        "missingIds": [],
+        "openIds": [
+          "P01",
+          "P02",
+          "P03",
+          "P04",
+          "P05",
+          "P06",
+          "P07",
+          "P08",
+          "P09",
+          "P10"
+        ],
+        "validationStatus": "valid"
+      }
+    },
+    {
+      "name": "closed ledger items include closure evidence",
+      "status": "pass",
+      "details": {
+        "incomplete": [],
+        "closedCount": 0
+      }
+    },
+    {
+      "name": "per-ledger source and target artifacts are complete",
+      "status": "fail",
+      "details": {
+        "missingBySide": {
+          "source": [
+            "parity/artifacts/P01/source.json",
+            "parity/artifacts/P02/source.json",
+            "parity/artifacts/P03/source.json",
+            "parity/artifacts/P04/source.json",
+            "parity/artifacts/P05/source.json",
+            "parity/artifacts/P06/source.json",
+            "parity/artifacts/P07/source.json",
+            "parity/artifacts/P08/source.json",
+            "parity/artifacts/P09/source.json",
+            "parity/artifacts/P10/source.json"
+          ],
+          "target": []
+        },
+        "incompleteBySide": {
+          "source": [],
+          "target": []
+        },
+        "missingCount": 10,
+        "incompleteCount": 0
+      }
+    },
+    {
+      "name": "target diff index has no unmapped files",
+      "status": "pass",
+      "details": {
+        "total": 88,
+        "unmappedContractReview": 0
+      }
+    },
+    {
+      "name": "final parity report exists",
+      "status": "fail",
+      "details": {
+        "missing": [
+          "parity/final-report.md"
+        ]
+      }
+    }
+  ]
+}

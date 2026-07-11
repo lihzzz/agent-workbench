@@ -1,0 +1,193 @@
+{
+  "generatedAt": "2026-07-10T13:20:36.419Z",
+  "status": "not-ready",
+  "failedCount": 4,
+  "passedCount": 10,
+  "checks": [
+    {
+      "name": "required M0 files exist",
+      "status": "pass",
+      "details": {
+        "missing": []
+      }
+    },
+    {
+      "name": "source intake recorded",
+      "status": "pass",
+      "details": {
+        "status": "no-input",
+        "sourceBundle": null,
+        "preparedWorkspace": null,
+        "failureReason": null
+      }
+    },
+    {
+      "name": "source freeze intake recorded",
+      "status": "pass",
+      "details": {
+        "status": "no-input",
+        "sourceFreezeDir": null,
+        "sourceFreezeArchive": null,
+        "importedHead": null,
+        "failureReason": null
+      }
+    },
+    {
+      "name": "source snapshot intake recorded",
+      "status": "pass",
+      "details": {
+        "status": "no-input",
+        "sourceSnapshotDir": null,
+        "sourceSnapshotArchive": null,
+        "importedFileCount": null,
+        "failureReason": null
+      }
+    },
+    {
+      "name": "source baseline available",
+      "status": "fail",
+      "details": {
+        "status": "source-unavailable",
+        "missingM0Inputs": [
+          "source HEAD archive",
+          "source git diff --binary HEAD",
+          "source untracked file list",
+          "source git status --porcelain=v1",
+          "source SHA-256 manifest",
+          "electron/src/ipc/codex-sessions.ts source patch and patch SHA-256"
+        ],
+        "evidence": {
+          "localBranchCommit": null,
+          "expectedCommitAvailable": false,
+          "remoteHeads": [],
+          "sourceWorkspace": null,
+          "importedSourceFreeze": null,
+          "sourceCandidates": [
+            {
+              "path": "/Users/lihzz/PycharmProjects/code/harnss",
+              "exists": false,
+              "git": false
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "target baseline complete",
+      "status": "pass",
+      "details": {
+        "branch": "hy_dev1",
+        "head": "fffd46b3da457c65ebdd5a479e4350eb1c1cbe36",
+        "statusCount": 92,
+        "runtimeDiffCount": 88,
+        "manifestCount": 960
+      }
+    },
+    {
+      "name": "target workspace freeze complete",
+      "status": "pass",
+      "details": {
+        "branch": "hy_dev1",
+        "head": "fffd46b3da457c65ebdd5a479e4350eb1c1cbe36",
+        "statusCount": 92,
+        "manifestCount": 1153,
+        "copiedUntracked": 70,
+        "missing": [],
+        "hashMismatches": []
+      }
+    },
+    {
+      "name": "source workspace freeze exists",
+      "status": "fail",
+      "details": {
+        "missing": [
+          "parity/frozen/source/freeze-summary.json"
+        ]
+      }
+    },
+    {
+      "name": "file matrix matches target diff",
+      "status": "pass",
+      "details": {
+        "entries": 88,
+        "expectedCount": 88,
+        "sourcePending": 88,
+        "sourceStatus": "source-pending"
+      }
+    },
+    {
+      "name": "target diff index covers file matrix",
+      "status": "pass",
+      "details": {
+        "total": 88,
+        "expectedCount": 88,
+        "unmappedContractReview": 0,
+        "byLedgerId": {
+          "P01": 0,
+          "P02": 1,
+          "P03": 6,
+          "P04": 32,
+          "P05": 4,
+          "P06": 0,
+          "P07": 0,
+          "P08": 0,
+          "P09": 6,
+          "P10": 84
+        }
+      }
+    },
+    {
+      "name": "freeze comparison has no open runtime differences",
+      "status": "fail",
+      "details": {
+        "status": "missing-input",
+        "missing": [
+          "parity/frozen/source/freeze-summary.json",
+          "parity/frozen/source/manifest.json"
+        ],
+        "summary": {
+          "total": 0,
+          "sourceOnly": 0,
+          "targetOnly": 0,
+          "bothModified": 0,
+          "identical": 0,
+          "runtimeOpen": 0
+        }
+      }
+    },
+    {
+      "name": "parity ledger has valid open P01-P10",
+      "status": "pass",
+      "details": {
+        "missingIds": [],
+        "closedIds": [],
+        "validationStatus": "valid"
+      }
+    },
+    {
+      "name": "contract snapshots ready for comparison",
+      "status": "fail",
+      "details": {
+        "targetMissing": [],
+        "sourceMissing": [
+          "preload-api.json",
+          "ipc-channels.json",
+          "settings-defaults.json",
+          "shared-types.json",
+          "session-serialization.json",
+          "package-dependencies.json",
+          "build-config.json",
+          "default-surface.json"
+        ],
+        "diffStatus": "not-equal"
+      }
+    },
+    {
+      "name": "target command results recorded",
+      "status": "pass",
+      "details": {
+        "missing": []
+      }
+    }
+  ]
+}

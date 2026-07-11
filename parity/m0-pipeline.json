@@ -1,0 +1,200 @@
+{
+  "generatedAt": "2026-07-10T13:24:48.395Z",
+  "status": "complete-with-open-gates",
+  "repoRoot": "/Users/lh/git/harnss",
+  "targetRepoRoot": "/Users/lh/git/harnss",
+  "sourceRepoRoot": null,
+  "sourceEvidence": {
+    "status": "not-provided",
+    "dir": null,
+    "manifestPath": null,
+    "manifestStatus": "not-provided",
+    "paths": {},
+    "missing": []
+  },
+  "sourceIntakeStatus": "no-input",
+  "sourceFreezeIntakeStatus": "no-input",
+  "sourceSnapshotIntakeStatus": "no-input",
+  "sourceBundleRequested": null,
+  "effectiveSourceBundle": null,
+  "sourceFreezeDirRequested": null,
+  "sourceFreezeArchiveRequested": null,
+  "effectiveSourceFreezeArchive": null,
+  "sourceSnapshotDirRequested": null,
+  "sourceSnapshotArchiveRequested": null,
+  "effectiveSourceSnapshotArchive": null,
+  "sourceFreezeImported": false,
+  "sourceFreezeAvailable": false,
+  "sourceSnapshotsImported": false,
+  "sourceSnapshotsAvailable": false,
+  "preparedSourceWorkspace": null,
+  "sourceWorkspaceRequested": null,
+  "effectiveSourceWorkspace": null,
+  "steps": [
+    {
+      "label": "prepare source workspace",
+      "status": "pass",
+      "startedAt": "2026-07-10T13:24:45.552Z",
+      "durationMs": 30,
+      "command": "/Users/lh/.nvm/versions/node/v24.13.0/bin/node /Users/lh/git/harnss/scripts/parity/prepare-source-workspace.mjs",
+      "stdout": "Source intake: no-input",
+      "stderr": ""
+    },
+    {
+      "label": "import source freeze",
+      "status": "pass",
+      "startedAt": "2026-07-10T13:24:45.583Z",
+      "durationMs": 25,
+      "command": "/Users/lh/.nvm/versions/node/v24.13.0/bin/node /Users/lh/git/harnss/scripts/parity/import-source-freeze.mjs --output-dir /Users/lh/git/harnss/parity/frozen/source",
+      "stdout": "Source freeze intake: no-input",
+      "stderr": ""
+    },
+    {
+      "label": "import source contract snapshots",
+      "status": "pass",
+      "startedAt": "2026-07-10T13:24:45.608Z",
+      "durationMs": 21,
+      "command": "/Users/lh/.nvm/versions/node/v24.13.0/bin/node /Users/lh/git/harnss/scripts/parity/import-source-snapshots.mjs --output-dir /Users/lh/git/harnss/parity/snapshots/source",
+      "stdout": "Source snapshot intake: no-input",
+      "stderr": ""
+    },
+    {
+      "label": "resolve source workspace",
+      "status": "pass",
+      "startedAt": "2026-07-10T13:24:45.630Z",
+      "durationMs": 803,
+      "command": "/Users/lh/.nvm/versions/node/v24.13.0/bin/node /Users/lh/git/harnss/scripts/parity/resolve-source-workspace.mjs",
+      "stdout": "Source workspace resolution: unavailable",
+      "stderr": ""
+    },
+    {
+      "label": "freeze target workspace",
+      "status": "pass",
+      "startedAt": "2026-07-10T13:24:46.433Z",
+      "durationMs": 218,
+      "command": "/Users/lh/.nvm/versions/node/v24.13.0/bin/node /Users/lh/git/harnss/scripts/parity/freeze-workspace.mjs --workspace /Users/lh/git/harnss --label target-current --output /Users/lh/git/harnss/parity/frozen/target-current",
+      "stdout": "Frozen target-current workspace to /Users/lh/git/harnss/parity/frozen/target-current\nManifest entries: 1153\nStatus entries: 92",
+      "stderr": ""
+    },
+    {
+      "label": "freeze source workspace",
+      "status": "skipped",
+      "startedAt": "2026-07-10T13:24:46.651Z",
+      "durationMs": 0,
+      "command": null,
+      "reason": "no source workspace available from --source-bundle or --source-workspace, and no source freeze was imported",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "label": "collect M0 baseline",
+      "status": "pass",
+      "startedAt": "2026-07-10T13:24:46.651Z",
+      "durationMs": 1309,
+      "command": "/Users/lh/.nvm/versions/node/v24.13.0/bin/node /Users/lh/git/harnss/scripts/parity/collect-m0-baseline.mjs --target-workspace /Users/lh/git/harnss --output-dir /Users/lh/git/harnss/parity",
+      "stdout": "Wrote M0 parity artifacts to parity",
+      "stderr": ""
+    },
+    {
+      "label": "collect target contract snapshots",
+      "status": "pass",
+      "startedAt": "2026-07-10T13:24:47.960Z",
+      "durationMs": 243,
+      "command": "/Users/lh/.nvm/versions/node/v24.13.0/bin/node /Users/lh/git/harnss/scripts/parity/collect-contract-snapshots.mjs --workspace /Users/lh/git/harnss --target target",
+      "stdout": "Wrote target contract snapshots from /Users/lh/git/harnss to /Users/lh/git/harnss/parity/snapshots/target",
+      "stderr": ""
+    },
+    {
+      "label": "collect source contract snapshots",
+      "status": "skipped",
+      "startedAt": "2026-07-10T13:24:48.203Z",
+      "durationMs": 0,
+      "command": null,
+      "reason": "source workspace unavailable",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "label": "compare contract snapshots",
+      "status": "pass",
+      "startedAt": "2026-07-10T13:24:48.203Z",
+      "durationMs": 21,
+      "command": "/Users/lh/.nvm/versions/node/v24.13.0/bin/node /Users/lh/git/harnss/scripts/parity/compare-contract-snapshots.mjs",
+      "stdout": "Contract snapshots differ or are missing: preload-api.json, ipc-channels.json, settings-defaults.json, shared-types.json, session-serialization.json, package-dependencies.json, build-config.json, default-surface.json",
+      "stderr": ""
+    },
+    {
+      "label": "compare workspace freezes",
+      "status": "pass",
+      "startedAt": "2026-07-10T13:24:48.224Z",
+      "durationMs": 22,
+      "command": "/Users/lh/.nvm/versions/node/v24.13.0/bin/node /Users/lh/git/harnss/scripts/parity/compare-freezes.mjs",
+      "stdout": "Freeze comparison: missing-input (0 runtime open)",
+      "stderr": ""
+    },
+    {
+      "label": "index target diff",
+      "status": "pass",
+      "startedAt": "2026-07-10T13:24:48.246Z",
+      "durationMs": 27,
+      "command": "/Users/lh/.nvm/versions/node/v24.13.0/bin/node /Users/lh/git/harnss/scripts/parity/index-target-diff.mjs",
+      "stdout": "Target diff index: 88 files, 0 unmapped",
+      "stderr": ""
+    },
+    {
+      "label": "collect target ledger artifacts",
+      "status": "pass",
+      "startedAt": "2026-07-10T13:24:48.273Z",
+      "durationMs": 30,
+      "command": "/Users/lh/.nvm/versions/node/v24.13.0/bin/node /Users/lh/git/harnss/scripts/parity/collect-ledger-artifacts.mjs --side target --output-dir /Users/lh/git/harnss/parity/artifacts --snapshot-dir /Users/lh/git/harnss/parity/snapshots/target --freeze-dir /Users/lh/git/harnss/parity/frozen/target-current",
+      "stdout": "Wrote target ledger artifacts to /Users/lh/git/harnss/parity/artifacts",
+      "stderr": ""
+    },
+    {
+      "label": "collect source ledger artifacts",
+      "status": "skipped",
+      "startedAt": "2026-07-10T13:24:48.303Z",
+      "durationMs": 0,
+      "command": null,
+      "reason": "source workspace unavailable",
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "label": "validate parity ledger",
+      "status": "pass",
+      "startedAt": "2026-07-10T13:24:48.303Z",
+      "durationMs": 20,
+      "command": "/Users/lh/.nvm/versions/node/v24.13.0/bin/node /Users/lh/git/harnss/scripts/parity/validate-ledger.mjs --strict",
+      "stdout": "Parity ledger validation: valid (10 open, 0 closed)",
+      "stderr": ""
+    },
+    {
+      "label": "validate M8 readiness",
+      "status": "pass",
+      "startedAt": "2026-07-10T13:24:48.323Z",
+      "durationMs": 21,
+      "command": "/Users/lh/.nvm/versions/node/v24.13.0/bin/node /Users/lh/git/harnss/scripts/parity/validate-m8-readiness.mjs",
+      "stdout": "M8 readiness: not-ready (2 pass, 6 fail)",
+      "stderr": ""
+    },
+    {
+      "label": "generate draft final report",
+      "status": "pass",
+      "startedAt": "2026-07-10T13:24:48.344Z",
+      "durationMs": 23,
+      "command": "/Users/lh/.nvm/versions/node/v24.13.0/bin/node /Users/lh/git/harnss/scripts/parity/generate-final-report.mjs --draft",
+      "stdout": "Wrote draft parity report to parity/final-report.draft.md",
+      "stderr": ""
+    },
+    {
+      "label": "validate M0",
+      "status": "pass",
+      "startedAt": "2026-07-10T13:24:48.367Z",
+      "durationMs": 28,
+      "command": "/Users/lh/.nvm/versions/node/v24.13.0/bin/node /Users/lh/git/harnss/scripts/parity/validate-m0.mjs",
+      "stdout": "M0 validation: not-ready (10 pass, 4 fail)",
+      "stderr": ""
+    }
+  ]
+}

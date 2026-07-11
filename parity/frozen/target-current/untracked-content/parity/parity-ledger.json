@@ -1,0 +1,378 @@
+{
+  "version": 1,
+  "generatedFrom": "功能对齐实施计划.md",
+  "items": [
+    {
+      "id": "P01",
+      "class": "P",
+      "status": "open",
+      "functionContract": "Logging governance",
+      "sourceEvidence": {
+        "status": "missing",
+        "files": [],
+        "functions": [],
+        "artifacts": [],
+        "hashes": []
+      },
+      "targetCurrent": {
+        "status": "source-pending",
+        "notes": "Needs comparison with frozen source logger and engine event call sites."
+      },
+      "expectedBehavior": [
+        "Debug/full-event switches, truncation limits, sensitive-field redaction, and default persistence behavior match frozen source."
+      ],
+      "implementation": {
+        "targetCommit": null,
+        "sourceCommit": null,
+        "hardeningCommit": null
+      },
+      "automatedTests": [],
+      "manualScenarios": [],
+      "crossPlatform": {
+        "macos": "pending",
+        "windows": "pending",
+        "linux": "pending"
+      },
+      "deviations": [],
+      "ownerSignoff": null,
+      "closeBlockers": [
+        "Frozen source snapshot is unavailable."
+      ]
+    },
+    {
+      "id": "P02",
+      "class": "P",
+      "status": "open",
+      "functionContract": "File read/write and File Preview",
+      "sourceEvidence": {
+        "status": "missing",
+        "files": [],
+        "functions": [],
+        "artifacts": [],
+        "hashes": []
+      },
+      "targetCurrent": {
+        "status": "source-pending",
+        "notes": "Needs source file:read, file:write, File Preview, and hardening behavior evidence."
+      },
+      "expectedBehavior": [
+        "File read limits, edit interactions, write results, and H safety strategy match the accepted source/target contract."
+      ],
+      "implementation": {
+        "targetCommit": null,
+        "sourceCommit": null,
+        "hardeningCommit": null
+      },
+      "automatedTests": [],
+      "manualScenarios": [],
+      "crossPlatform": {
+        "macos": "pending",
+        "windows": "pending",
+        "linux": "pending"
+      },
+      "deviations": [],
+      "ownerSignoff": null,
+      "closeBlockers": [
+        "Frozen source snapshot is unavailable."
+      ]
+    },
+    {
+      "id": "P03",
+      "class": "P",
+      "status": "open",
+      "functionContract": "Input history and archived preview",
+      "sourceEvidence": {
+        "status": "missing",
+        "files": [],
+        "functions": [],
+        "artifacts": [],
+        "hashes": []
+      },
+      "targetCurrent": {
+        "status": "source-pending",
+        "notes": "Needs history hook/dialog and archived preview source evidence."
+      },
+      "expectedBehavior": [
+        "Storage key, 100-entry behavior, search refill, archived loading states, and message rendering match frozen source."
+      ],
+      "implementation": {
+        "targetCommit": null,
+        "sourceCommit": null,
+        "hardeningCommit": null
+      },
+      "automatedTests": [],
+      "manualScenarios": [],
+      "crossPlatform": {
+        "macos": "pending",
+        "windows": "pending",
+        "linux": "pending"
+      },
+      "deviations": [],
+      "ownerSignoff": null,
+      "closeBlockers": [
+        "Frozen source snapshot is unavailable."
+      ]
+    },
+    {
+      "id": "P04",
+      "class": "P",
+      "status": "open",
+      "functionContract": "Session restore and persistence",
+      "sourceEvidence": {
+        "status": "missing",
+        "files": [],
+        "functions": [],
+        "artifacts": [],
+        "hashes": []
+      },
+      "targetCurrent": {
+        "status": "source-pending",
+        "notes": "Needs source Space restore, delayed hydration, unload save, and atomic write evidence."
+      },
+      "expectedBehavior": [
+        "Cold restore, delayed hydration, atomic writes, unload save, and H write queue behavior match the accepted source/target contract."
+      ],
+      "implementation": {
+        "targetCommit": null,
+        "sourceCommit": null,
+        "hardeningCommit": null
+      },
+      "automatedTests": [],
+      "manualScenarios": [],
+      "crossPlatform": {
+        "macos": "pending",
+        "windows": "pending",
+        "linux": "pending"
+      },
+      "deviations": [],
+      "ownerSignoff": null,
+      "closeBlockers": [
+        "Frozen source snapshot is unavailable."
+      ]
+    },
+    {
+      "id": "P05",
+      "class": "P",
+      "status": "open",
+      "functionContract": "Todo / Checklist",
+      "sourceEvidence": {
+        "status": "missing",
+        "files": [],
+        "functions": [],
+        "artifacts": [],
+        "hashes": []
+      },
+      "targetCurrent": {
+        "status": "source-pending",
+        "notes": "Needs source todo utils, TodoPanel, main area, and split wiring evidence."
+      },
+      "expectedBehavior": [
+        "Status aliases, spinner semantics, close actions, and Checklist labeling match frozen source."
+      ],
+      "implementation": {
+        "targetCommit": null,
+        "sourceCommit": null,
+        "hardeningCommit": null
+      },
+      "automatedTests": [],
+      "manualScenarios": [],
+      "crossPlatform": {
+        "macos": "pending",
+        "windows": "pending",
+        "linux": "pending"
+      },
+      "deviations": [],
+      "ownerSignoff": null,
+      "closeBlockers": [
+        "Frozen source snapshot is unavailable."
+      ]
+    },
+    {
+      "id": "P06",
+      "class": "P",
+      "status": "open",
+      "functionContract": "Long-session virtualization",
+      "sourceEvidence": {
+        "status": "missing",
+        "files": [],
+        "functions": [],
+        "artifacts": [],
+        "hashes": []
+      },
+      "targetCurrent": {
+        "status": "source-pending",
+        "notes": "Needs source ChatView, virtualization utilities, and fixture evidence."
+      },
+      "expectedBehavior": [
+        "Tail boundary, overscan, measurement cache, search jump, and UI state retention match frozen source."
+      ],
+      "implementation": {
+        "targetCommit": null,
+        "sourceCommit": null,
+        "hardeningCommit": null
+      },
+      "automatedTests": [],
+      "manualScenarios": [],
+      "crossPlatform": {
+        "macos": "pending",
+        "windows": "pending",
+        "linux": "pending"
+      },
+      "deviations": [],
+      "ownerSignoff": null,
+      "closeBlockers": [
+        "Frozen source snapshot is unavailable."
+      ]
+    },
+    {
+      "id": "P07",
+      "class": "P",
+      "status": "open",
+      "functionContract": "OpenCode engine",
+      "sourceEvidence": {
+        "status": "missing",
+        "files": [],
+        "functions": [],
+        "artifacts": [],
+        "hashes": []
+      },
+      "targetCurrent": {
+        "status": "source-pending",
+        "notes": "Needs source binary/client/IPC/adapter/hook/lifecycle/settings evidence."
+      },
+      "expectedBehavior": [
+        "Normal, cancel, error, restore, background, split, permission, usage, and resource cleanup behavior match frozen source."
+      ],
+      "implementation": {
+        "targetCommit": null,
+        "sourceCommit": null,
+        "hardeningCommit": null
+      },
+      "automatedTests": [],
+      "manualScenarios": [],
+      "crossPlatform": {
+        "macos": "pending",
+        "windows": "pending",
+        "linux": "pending"
+      },
+      "deviations": [],
+      "ownerSignoff": null,
+      "closeBlockers": [
+        "Frozen source snapshot is unavailable."
+      ]
+    },
+    {
+      "id": "P08",
+      "class": "P",
+      "status": "open",
+      "functionContract": "Relay collaboration",
+      "sourceEvidence": {
+        "status": "missing",
+        "files": [],
+        "functions": [],
+        "artifacts": [],
+        "hashes": []
+      },
+      "targetCurrent": {
+        "status": "source-pending",
+        "notes": "Needs source recipe, orchestration, handoff, UI, and persistence evidence."
+      },
+      "expectedBehavior": [
+        "First-lane manual input, handoff confirmation, 4000-character truncation, restart persistence, and default entry visibility match frozen source."
+      ],
+      "implementation": {
+        "targetCommit": null,
+        "sourceCommit": null,
+        "hardeningCommit": null
+      },
+      "automatedTests": [],
+      "manualScenarios": [],
+      "crossPlatform": {
+        "macos": "pending",
+        "windows": "pending",
+        "linux": "pending"
+      },
+      "deviations": [],
+      "ownerSignoff": null,
+      "closeBlockers": [
+        "Frozen source snapshot is unavailable."
+      ]
+    },
+    {
+      "id": "P09",
+      "class": "P",
+      "status": "open",
+      "functionContract": "Codex configured model fallback",
+      "sourceEvidence": {
+        "status": "missing",
+        "files": [],
+        "functions": [],
+        "artifacts": [],
+        "hashes": []
+      },
+      "targetCurrent": {
+        "status": "source-pending",
+        "notes": "Needs dual-side conservative config/read fallback evidence."
+      },
+      "expectedBehavior": [
+        "cwd config/read, dedupe, failure fallback, and conservative capability metadata match the dual-side H contract."
+      ],
+      "implementation": {
+        "targetCommit": null,
+        "sourceCommit": null,
+        "hardeningCommit": null
+      },
+      "automatedTests": [],
+      "manualScenarios": [],
+      "crossPlatform": {
+        "macos": "pending",
+        "windows": "pending",
+        "linux": "pending"
+      },
+      "deviations": [],
+      "ownerSignoff": null,
+      "closeBlockers": [
+        "Frozen source snapshot is unavailable.",
+        "M6 requires a dual-side conservative H implementation before closure."
+      ]
+    },
+    {
+      "id": "P10",
+      "class": "P",
+      "status": "open",
+      "functionContract": "Defaults and contracts",
+      "sourceEvidence": {
+        "status": "missing",
+        "files": [],
+        "functions": [],
+        "artifacts": [],
+        "hashes": []
+      },
+      "targetCurrent": {
+        "status": "source-pending",
+        "notes": "Needs Sidebar, Settings, store, preload, type, IPC, and serialization snapshot comparison."
+      },
+      "expectedBehavior": [
+        "Default visibility, feature flags, migrations, preload keys, IPC channels, and session serialization match frozen source or approved dual-side H contract."
+      ],
+      "implementation": {
+        "targetCommit": null,
+        "sourceCommit": null,
+        "hardeningCommit": null
+      },
+      "automatedTests": [],
+      "manualScenarios": [],
+      "crossPlatform": {
+        "macos": "pending",
+        "windows": "pending",
+        "linux": "pending"
+      },
+      "deviations": [],
+      "ownerSignoff": null,
+      "closeBlockers": [
+        "Frozen source snapshot is unavailable.",
+        "Source contract snapshots are unavailable."
+      ]
+    }
+  ]
+}

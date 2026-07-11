@@ -1,0 +1,986 @@
+{
+  "registeredModules": [
+    "acpSessionsIpc",
+    "agentRegistryIpc",
+    "ccImportIpc",
+    "claudeSessionsIpc",
+    "codexSessionsIpc",
+    "filesIpc",
+    "foldersIpc",
+    "gitIpc",
+    "jiraIpc",
+    "mcpIpc",
+    "projectsIpc",
+    "promptTemplatesIpc",
+    "sessionsIpc",
+    "settingsIpc",
+    "spacesIpc",
+    "subagentsIpc",
+    "terminalIpc",
+    "titleGenIpc"
+  ],
+  "ipcMainChannels": [
+    {
+      "channel": "acp:abort-pending-start",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "acp:authenticate",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "acp:cancel",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "acp:get-available-commands",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "acp:get-config-options",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "acp:log",
+      "direction": "renderer-to-main",
+      "method": "on"
+    },
+    {
+      "channel": "acp:permission_response",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "acp:prompt",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "acp:reload-session",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "acp:revive-session",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "acp:set-config",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "acp:start",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "acp:stop",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "agents:check-binaries",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "agents:delete",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "agents:get-platform-keys",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "agents:list",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "agents:save",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "agents:update-cached-config",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "analytics:capture",
+      "direction": "renderer-to-main",
+      "method": "on"
+    },
+    {
+      "channel": "app:get-mac-background-effect-support",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "app:getGlassSupported",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "app:relaunch",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "app:set-mac-background-effect",
+      "direction": "renderer-to-main",
+      "method": "on"
+    },
+    {
+      "channel": "app:set-min-width",
+      "direction": "renderer-to-main",
+      "method": "on"
+    },
+    {
+      "channel": "app:set-theme-source",
+      "direction": "renderer-to-main",
+      "method": "on"
+    },
+    {
+      "channel": "browser:set-color-scheme",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "cc-sessions:import",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "cc-sessions:list",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "claude:binary-status",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "claude:generate-title",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "claude:interrupt",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "claude:log",
+      "direction": "renderer-to-main",
+      "method": "on"
+    },
+    {
+      "channel": "claude:mcp-reconnect",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "claude:mcp-status",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "claude:models-cache:get",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "claude:models-cache:revalidate",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "claude:permission_response",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "claude:read-agent-output",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "claude:restart-session",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "claude:revert-files",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "claude:send",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "claude:set-model",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "claude:set-permission-mode",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "claude:set-thinking",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "claude:slash-commands",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "claude:start",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "claude:stop",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "claude:stop-task",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "claude:supported-models",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "claude:version",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "clipboard:write-text",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "codex:approval_response",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "codex:auth-status",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "codex:binary-status",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "codex:compact",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "codex:interrupt",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "codex:list-apps",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "codex:list-models",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "codex:list-skills",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "codex:log",
+      "direction": "renderer-to-main",
+      "method": "on"
+    },
+    {
+      "channel": "codex:login",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "codex:resume",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "codex:send",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "codex:server_request_error",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "codex:set-model",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "codex:start",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "codex:stop",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "codex:user_input_response",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "codex:version",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "file:new-file",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "file:new-folder",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "file:open-in-editor",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "file:read",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "file:rename",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "file:trash",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "files:calculate-deep-size",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "files:list",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "files:list-all",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "files:read-multiple",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "files:unwatch",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "files:watch",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "folders:create",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "folders:delete",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "folders:list",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "folders:pin",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "folders:rename",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "git:branches",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "git:checkout",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "git:commit",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "git:create-branch",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "git:create-worktree",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "git:diff-file",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "git:diff-stat",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "git:discard",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "git:discover-repos",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "git:fetch",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "git:generate-commit-message",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "git:log",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "git:prune-worktrees",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "git:pull",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "git:push",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "git:remove-worktree",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "git:stage",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "git:stage-all",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "git:status",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "git:unstage",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "git:unstage-all",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "glass:set-theme",
+      "direction": "renderer-to-main",
+      "method": "on"
+    },
+    {
+      "channel": "glass:set-tint-color",
+      "direction": "renderer-to-main",
+      "method": "on"
+    },
+    {
+      "channel": "jira:auth-status",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "jira:authenticate",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "jira:delete-config",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "jira:get-board-configuration",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "jira:get-boards",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "jira:get-comments",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "jira:get-config",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "jira:get-issues",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "jira:get-projects",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "jira:get-sprints",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "jira:get-transitions",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "jira:logout",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "jira:save-config",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "jira:transition-issue",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "mcp:add",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "mcp:auth-status",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "mcp:authenticate",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "mcp:list",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "mcp:probe",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "mcp:remove",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "projects:create",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "projects:create-dev",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "projects:delete",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "projects:list",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "projects:rename",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "projects:reorder",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "projects:update-icon",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "projects:update-space",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "prompt-templates:delete",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "prompt-templates:list",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "prompt-templates:save",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "sessions:delete",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "sessions:export",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "sessions:list",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "sessions:load",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "sessions:save",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "sessions:search",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "sessions:update-meta",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "settings:get",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "settings:set",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "shell:open-external",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "shell:show-item-in-folder",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "spaces:list",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "spaces:save",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "speech:get-platform",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "speech:request-mic-permission",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "speech:start-native-dictation",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "subagents:delete",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "subagents:list",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "subagents:save",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "terminal:create",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "terminal:destroy",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "terminal:destroy-space",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "terminal:list",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "terminal:resize",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "terminal:snapshot",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "terminal:write",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "updater:check",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "updater:current-version",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "updater:download",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "updater:install",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    },
+    {
+      "channel": "updater:is-prerelease",
+      "direction": "renderer-to-main",
+      "method": "handle"
+    }
+  ],
+  "emittedEvents": [
+    {
+      "channel": "acp:event",
+      "direction": "main-to-renderer",
+      "method": "safeSend"
+    },
+    {
+      "channel": "acp:exit",
+      "direction": "main-to-renderer",
+      "method": "safeSend"
+    },
+    {
+      "channel": "acp:permission_request",
+      "direction": "main-to-renderer",
+      "method": "safeSend"
+    },
+    {
+      "channel": "acp:turn_complete",
+      "direction": "main-to-renderer",
+      "method": "safeSend"
+    },
+    {
+      "channel": "claude:event",
+      "direction": "main-to-renderer",
+      "method": "safeSend"
+    },
+    {
+      "channel": "claude:exit",
+      "direction": "main-to-renderer",
+      "method": "safeSend"
+    },
+    {
+      "channel": "claude:permission_request",
+      "direction": "main-to-renderer",
+      "method": "safeSend"
+    },
+    {
+      "channel": "claude:stderr",
+      "direction": "main-to-renderer",
+      "method": "safeSend"
+    },
+    {
+      "channel": "codex:approval_request",
+      "direction": "main-to-renderer",
+      "method": "safeSend"
+    },
+    {
+      "channel": "codex:event",
+      "direction": "main-to-renderer",
+      "method": "safeSend"
+    },
+    {
+      "channel": "codex:exit",
+      "direction": "main-to-renderer",
+      "method": "safeSend"
+    },
+    {
+      "channel": "files:changed",
+      "direction": "main-to-renderer",
+      "method": "safeSend"
+    },
+    {
+      "channel": "settings:changed",
+      "direction": "main-to-renderer",
+      "method": "safeSend"
+    },
+    {
+      "channel": "terminal:data",
+      "direction": "main-to-renderer",
+      "method": "safeSend"
+    },
+    {
+      "channel": "terminal:exit",
+      "direction": "main-to-renderer",
+      "method": "safeSend"
+    },
+    {
+      "channel": "updater:download-progress",
+      "direction": "main-to-renderer",
+      "method": "webContents.send"
+    },
+    {
+      "channel": "updater:install-error",
+      "direction": "main-to-renderer",
+      "method": "webContents.send"
+    },
+    {
+      "channel": "updater:prerelease-status",
+      "direction": "main-to-renderer",
+      "method": "webContents.send"
+    },
+    {
+      "channel": "updater:update-available",
+      "direction": "main-to-renderer",
+      "method": "webContents.send"
+    },
+    {
+      "channel": "updater:update-downloaded",
+      "direction": "main-to-renderer",
+      "method": "webContents.send"
+    }
+  ]
+}

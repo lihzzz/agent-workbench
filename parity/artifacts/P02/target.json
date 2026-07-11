@@ -1,0 +1,115 @@
+{
+  "generatedAt": "2026-07-10T13:24:48.293Z",
+  "side": "target",
+  "ledgerId": "P02",
+  "functionContract": "File read/write and File Preview",
+  "ledgerStatus": "open",
+  "evidenceStatus": "target-artifact-only",
+  "evidenceRule": "This artifact packages one side of evidence only. It does not prove parity or close a ledger item.",
+  "completeness": {
+    "complete": true,
+    "freezeAvailable": true,
+    "snapshotFilesPresent": 8,
+    "snapshotFilesExpected": 8,
+    "missingSnapshots": []
+  },
+  "freeze": {
+    "available": true,
+    "dir": "/Users/lh/git/harnss/parity/frozen/target-current",
+    "label": "target-current",
+    "branch": "hy_dev1",
+    "head": "fffd46b3da457c65ebdd5a479e4350eb1c1cbe36",
+    "statusCount": 92,
+    "manifestCount": 1153,
+    "artifacts": {
+      "headArchive": "4f5690b9bedb2d437fa83bb0e31cb2bd697cd8ee544f03cf421878a0e53458d7",
+      "binaryDiff": "c4c3e8349ab41a26daabcc0a4673c91d83622beccd73436dac6a4c58e9c1758b",
+      "manifest": "c4db765c2c39977c61f80490a49dcde70e27afc142b6fef1ee35f7d956ff430a",
+      "codexSessionsPatch": null
+    }
+  },
+  "contractSnapshots": [
+    {
+      "file": "preload-api.json",
+      "exists": true,
+      "path": "/Users/lh/git/harnss/parity/snapshots/target/preload-api.json",
+      "size": 56189,
+      "sha256": "4cd60c9528084a1ca720ea23e2d87e2ea7b6d6122a89ef4c22452998f018fc99"
+    },
+    {
+      "file": "ipc-channels.json",
+      "exists": true,
+      "path": "/Users/lh/git/harnss/parity/snapshots/target/ipc-channels.json",
+      "size": 22435,
+      "sha256": "24279b6aca220bd276ae0c8340a80ba28ceaa503eafb7d57660c1029ac93742b"
+    },
+    {
+      "file": "settings-defaults.json",
+      "exists": true,
+      "path": "/Users/lh/git/harnss/parity/snapshots/target/settings-defaults.json",
+      "size": 1299,
+      "sha256": "48d29e266de1b2c6f79589e2fe8ad853ae095e82a1118c94e1083b7ccab528e2"
+    },
+    {
+      "file": "shared-types.json",
+      "exists": true,
+      "path": "/Users/lh/git/harnss/parity/snapshots/target/shared-types.json",
+      "size": 81741,
+      "sha256": "b512e0652a2d836d50c472ffc333da136a828faa2fad57fce6344e2b4b01db4c"
+    },
+    {
+      "file": "session-serialization.json",
+      "exists": true,
+      "path": "/Users/lh/git/harnss/parity/snapshots/target/session-serialization.json",
+      "size": 14286,
+      "sha256": "3bd1b849a7afb41933ca016080a8742e6f2dbf67fb2b1afd411a5447b35fecee"
+    },
+    {
+      "file": "package-dependencies.json",
+      "exists": true,
+      "path": "/Users/lh/git/harnss/parity/snapshots/target/package-dependencies.json",
+      "size": 2095,
+      "sha256": "1108bd6dad7c19d5c56aa71c6600f402fa919c9031e25c963d994c37e7e0bf8f"
+    },
+    {
+      "file": "build-config.json",
+      "exists": true,
+      "path": "/Users/lh/git/harnss/parity/snapshots/target/build-config.json",
+      "size": 7456,
+      "sha256": "82ab0b518a83e4e6ceef09dea0c094fd9614a734242e62b31c3a2881b1b6c600"
+    },
+    {
+      "file": "default-surface.json",
+      "exists": true,
+      "path": "/Users/lh/git/harnss/parity/snapshots/target/default-surface.json",
+      "size": 16785,
+      "sha256": "ff26145a2e9cf78e2ae1ac126d1d5ca6316a51aac611b1b11fb959fe84676baf"
+    }
+  ],
+  "targetDiffContext": {
+    "available": true,
+    "evidenceRule": "Target-side routing only. This index does not prove source parity or close ledger items.",
+    "sourceStatus": "source-pending",
+    "entries": [
+      {
+        "path": "electron/src/ipc/files.ts",
+        "targetStatus": "M",
+        "matrixClass": "source-pending",
+        "featureTags": [
+          "file-io"
+        ],
+        "evidenceStatus": "target-index-only",
+        "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+      }
+    ],
+    "featureTags": {
+      "file-io": 1
+    }
+  },
+  "expectedBehavior": [
+    "File read limits, edit interactions, write results, and H safety strategy match the accepted source/target contract."
+  ],
+  "closeBlockers": [
+    "Frozen source snapshot is unavailable."
+  ]
+}

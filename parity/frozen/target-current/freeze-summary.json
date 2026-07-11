@@ -1,0 +1,43 @@
+{
+  "generatedAt": "2026-07-10T13:24:46.647Z",
+  "label": "target-current",
+  "repoRoot": "/Users/lh/git/harnss",
+  "outputDir": "/Users/lh/git/harnss/parity/frozen/target-current",
+  "branch": "hy_dev1",
+  "head": "fffd46b3da457c65ebdd5a479e4350eb1c1cbe36",
+  "packageVersion": "0.22.0-beta.2",
+  "statusCount": 92,
+  "manifestCount": 1153,
+  "untrackedContent": {
+    "path": "/Users/lh/git/harnss/parity/frozen/target-current/untracked-content",
+    "copied": 70
+  },
+  "artifacts": {
+    "headArchive": {
+      "path": "/Users/lh/git/harnss/parity/frozen/target-current/head.tar",
+      "size": 12513280,
+      "sha256": "4f5690b9bedb2d437fa83bb0e31cb2bd697cd8ee544f03cf421878a0e53458d7"
+    },
+    "binaryDiff": {
+      "path": "/Users/lh/git/harnss/parity/frozen/target-current/worktree.diff",
+      "size": 319509,
+      "sha256": "c4c3e8349ab41a26daabcc0a4673c91d83622beccd73436dac6a4c58e9c1758b"
+    },
+    "codexSessionsPatch": null,
+    "statusPorcelain": {
+      "path": "/Users/lh/git/harnss/parity/frozen/target-current/status-porcelain.txt",
+      "size": 3428,
+      "sha256": "af7b159286562df2e2ac1f31a16e952b99247c6aa320f982dd4974deae7c0232"
+    },
+    "untrackedFiles": {
+      "path": "/Users/lh/git/harnss/parity/frozen/target-current/untracked-files.txt",
+      "size": 2360,
+      "sha256": "899101fdc76a5fda9036991607ff38433583d2c5e3c452a20e9eae9597e12a32"
+    },
+    "manifest": {
+      "path": "/Users/lh/git/harnss/parity/frozen/target-current/manifest.json",
+      "size": 265808,
+      "sha256": "c4db765c2c39977c61f80490a49dcde70e27afc142b6fef1ee35f7d956ff430a"
+    }
+  }
+}

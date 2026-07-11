@@ -1,0 +1,113 @@
+import type { TodoItem } from "@/types";
+import { isRecord } from "@/lib/utils";
+
+export function normalizeTodoStatus(value: unknown): TodoItem["status"] | null {
+  if (typeof value !== "string") return null;
+  const normalized = value.trim().toLowerCase().replace(/[\s-]+/g, "_");
+  if (normalized === "completed" || normalized === "complete" || normalized === "done") {
+    return "completed";
+  }
+  if (
+    normalized === "in_progress" ||
+    normalized === "inprogress" ||
+    normalized === "running" ||
+    normalized === "active"
+  ) {
+    return "in_progress";
+  }
+  if (normalized === "pending" || normalized === "queued" || normalized === "todo") {
+    return "pending";
+  }
+  return null;
+}
+
+function normalizeTodoArray(value: unknown[]): TodoItem[] {
+  const todos: TodoItem[] = [];
+
+  for (const item of value) {
+    if (!isRecord(item) || typeof item.content !== "string") {
+      continue;
+    }
+    const status = normalizeTodoStatus(item.status);
+    if (!status) continue;
+
+    const todo: TodoItem = {
+      content: item.content,
+      status,
+    };
+
+    if (typeof item.activeForm === "string" && item.activeForm) {
+      todo.activeForm = item.activeForm;
+    }
+
+    todos.push(todo);
+  }
+
+  return todos;
+}
+
+function parseMarkdownTodos(value: string): TodoItem[] | null {
+  const todos: TodoItem[] = [];
+
+  for (const line of value.split("\n")) {
+    const match = line.match(/^\s*-\s*\[(x|X| )\]\s+(.+)$/);
+    if (!match) continue;
+
+    todos.push({
+      content: match[2].trim(),
+      status: match[1].toLowerCase() === "x" ? "completed" : "pending",
+    });
+  }
+
+  return todos.length > 0 ? todos : null;
+}
+
+function parseTodoItems(value: unknown): TodoItem[] | null {
+  if (Array.isArray(value)) {
+    return normalizeTodoArray(value);
+  }
+
+  if (typeof value !== "string") {
+    return null;
+  }
+
+  const trimmed = value.trim();
+  if (!trimmed) {
+    return [];
+  }
+
+  try {
+    const parsed = JSON.parse(trimmed) as unknown;
+    if (Array.isArray(parsed)) {
+      return normalizeTodoArray(parsed);
+    }
+  } catch {
+    // Fall through to the markdown checklist parser.
+  }
+
+  return parseMarkdownTodos(trimmed);
+}
+
+export function getTodoItems(value: unknown): TodoItem[] {
+  return parseTodoItems(value) ?? [];
+}
+
+export function normalizeTodoToolInput(toolName: string, input: unknown): Record<string, unknown> {
+  if (!isRecord(input)) {
+    return {};
+  }
+
+  if (toolName !== "TodoWrite") {
+    return input;
+  }
+
+  const todos = parseTodoItems(input.todos);
+  if (todos === null) {
+    return input;
+  }
+
+  return {
+    ...input,
+    todos,
+  };
+}

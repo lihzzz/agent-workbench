@@ -1,0 +1,29 @@
+{
+  "status": "missing-input",
+  "generatedAt": "2026-07-10T13:20:25.450Z",
+  "missing": [
+    "parity/frozen/source/freeze-summary.json",
+    "parity/frozen/source/manifest.json"
+  ],
+  "source": {
+    "dir": "parity/frozen/source",
+    "available": false
+  },
+  "target": {
+    "dir": "parity/frozen/target-current",
+    "available": true,
+    "branch": "hy_dev1",
+    "head": "fffd46b3da457c65ebdd5a479e4350eb1c1cbe36",
+    "manifestCount": 1153,
+    "statusCount": 92
+  },
+  "summary": {
+    "total": 0,
+    "sourceOnly": 0,
+    "targetOnly": 0,
+    "bothModified": 0,
+    "identical": 0,
+    "runtimeOpen": 0
+  },
+  "entries": []
+}

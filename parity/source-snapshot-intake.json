@@ -1,0 +1,14 @@
+{
+  "generatedAt": "2026-07-10T13:24:45.627Z",
+  "status": "no-input",
+  "input": {
+    "sourceSnapshotDir": null,
+    "sourceSnapshotArchive": null,
+    "outputDir": "/Users/lh/git/harnss/parity/snapshots/source",
+    "force": false
+  },
+  "importedSnapshots": null,
+  "validation": null,
+  "commands": [],
+  "note": "No source snapshot directory or archive was provided."
+}

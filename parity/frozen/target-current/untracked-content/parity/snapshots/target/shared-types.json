@@ -1,0 +1,2857 @@
+{
+  "declarations": [
+    {
+      "file": "shared/lib/session-persistence.ts",
+      "kind": "interface",
+      "name": "SessionMeta",
+      "heritage": [],
+      "properties": [
+        {
+          "name": "id",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "projectId",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "title",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "createdAt",
+          "optional": false,
+          "type": "number"
+        },
+        {
+          "name": "lastMessageAt",
+          "optional": false,
+          "type": "number"
+        },
+        {
+          "name": "model",
+          "optional": true,
+          "type": "string"
+        },
+        {
+          "name": "effort",
+          "optional": true,
+          "type": "string"
+        },
+        {
+          "name": "permissionMode",
+          "optional": true,
+          "type": "string"
+        },
+        {
+          "name": "planMode",
+          "optional": true,
+          "type": "boolean"
+        },
+        {
+          "name": "totalCost",
+          "optional": true,
+          "type": "number"
+        },
+        {
+          "name": "engine",
+          "optional": true,
+          "type": "\"claude\" | \"acp\" | \"codex\""
+        },
+        {
+          "name": "codexThreadId",
+          "optional": true,
+          "type": "string"
+        },
+        {
+          "name": "folderId",
+          "optional": true,
+          "type": "string"
+        },
+        {
+          "name": "pinned",
+          "optional": true,
+          "type": "boolean"
+        },
+        {
+          "name": "archived",
+          "optional": true,
+          "type": "boolean"
+        },
+        {
+          "name": "branch",
+          "optional": true,
+          "type": "string"
+        },
+        {
+          "name": "agentId",
+          "optional": true,
+          "type": "string"
+        },
+        {
+          "name": "modelUsage",
+          "optional": true,
+          "type": "Record<string, SessionMetaModelUsage>"
+        }
+      ]
+    },
+    {
+      "file": "shared/lib/session-persistence.ts",
+      "kind": "interface",
+      "name": "SessionMetaModelUsage",
+      "heritage": [],
+      "properties": [
+        {
+          "name": "inputTokens",
+          "optional": false,
+          "type": "number"
+        },
+        {
+          "name": "outputTokens",
+          "optional": false,
+          "type": "number"
+        },
+        {
+          "name": "cacheReadInputTokens",
+          "optional": false,
+          "type": "number"
+        },
+        {
+          "name": "cacheCreationInputTokens",
+          "optional": false,
+          "type": "number"
+        },
+        {
+          "name": "webSearchRequests",
+          "optional": false,
+          "type": "number"
+        },
+        {
+          "name": "costUSD",
+          "optional": false,
+          "type": "number"
+        },
+        {
+          "name": "contextWindow",
+          "optional": false,
+          "type": "number"
+        },
+        {
+          "name": "maxOutputTokens",
+          "optional": true,
+          "type": "number"
+        }
+      ]
+    },
+    {
+      "file": "shared/types/acp.ts",
+      "kind": "interface",
+      "name": "ACPAgentMessageChunk",
+      "heritage": [],
+      "properties": [
+        {
+          "name": "sessionUpdate",
+          "optional": false,
+          "type": "\"agent_message_chunk\""
+        },
+        {
+          "name": "content",
+          "optional": false,
+          "type": "{ type: string; text?: string }"
+        }
+      ]
+    },
+    {
+      "file": "shared/types/acp.ts",
+      "kind": "interface",
+      "name": "ACPAgentThoughtChunk",
+      "heritage": [],
+      "properties": [
+        {
+          "name": "sessionUpdate",
+          "optional": false,
+          "type": "\"agent_thought_chunk\""
+        },
+        {
+          "name": "content",
+          "optional": false,
+          "type": "{ type: string; text?: string }"
+        }
+      ]
+    },
+    {
+      "file": "shared/types/acp.ts",
+      "kind": "interface",
+      "name": "ACPAuthenticateResult",
+      "heritage": [],
+      "properties": [
+        {
+          "name": "ok",
+          "optional": true,
+          "type": "boolean"
+        },
+        {
+          "name": "authRequired",
+          "optional": true,
+          "type": "boolean"
+        },
+        {
+          "name": "sessionId",
+          "optional": true,
+          "type": "string"
+        },
+        {
+          "name": "agentSessionId",
+          "optional": true,
+          "type": "string"
+        },
+        {
+          "name": "agentName",
+          "optional": true,
+          "type": "string"
+        },
+        {
+          "name": "authMethods",
+          "optional": true,
+          "type": "ACPAuthMethod[]"
+        },
+        {
+          "name": "configOptions",
+          "optional": true,
+          "type": "ACPConfigOption[]"
+        },
+        {
+          "name": "mcpStatuses",
+          "optional": true,
+          "type": "ACPStatusInfo[]"
+        },
+        {
+          "name": "error",
+          "optional": true,
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "file": "shared/types/acp.ts",
+      "kind": "interface",
+      "name": "ACPAuthEnvVar",
+      "heritage": [],
+      "properties": [
+        {
+          "name": "name",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "label",
+          "optional": true,
+          "type": "string | null"
+        },
+        {
+          "name": "optional",
+          "optional": true,
+          "type": "boolean"
+        },
+        {
+          "name": "secret",
+          "optional": true,
+          "type": "boolean"
+        }
+      ]
+    },
+    {
+      "file": "shared/types/acp.ts",
+      "kind": "type",
+      "name": "ACPAuthMethod",
+      "type": "| ACPAuthMethodAgent | ACPAuthMethodEnvVar | ACPAuthMethodTerminal"
+    },
+    {
+      "file": "shared/types/acp.ts",
+      "kind": "interface",
+      "name": "ACPAuthMethodAgent",
+      "heritage": [
+        "extends ACPAuthMethodBase"
+      ],
+      "properties": [
+        {
+          "name": "type",
+          "optional": true,
+          "type": "\"agent\""
+        }
+      ]
+    },
+    {
+      "file": "shared/types/acp.ts",
+      "kind": "interface",
+      "name": "ACPAuthMethodBase",
+      "heritage": [],
+      "properties": [
+        {
+          "name": "id",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "name",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "description",
+          "optional": true,
+          "type": "string | null"
+        }
+      ]
+    },
+    {
+      "file": "shared/types/acp.ts",
+      "kind": "interface",
+      "name": "ACPAuthMethodEnvVar",
+      "heritage": [
+        "extends ACPAuthMethodBase"
+      ],
+      "properties": [
+        {
+          "name": "type",
+          "optional": false,
+          "type": "\"env_var\""
+        },
+        {
+          "name": "vars",
+          "optional": false,
+          "type": "ACPAuthEnvVar[]"
+        },
+        {
+          "name": "link",
+          "optional": true,
+          "type": "string | null"
+        }
+      ]
+    },
+    {
+      "file": "shared/types/acp.ts",
+      "kind": "interface",
+      "name": "ACPAuthMethodTerminal",
+      "heritage": [
+        "extends ACPAuthMethodBase"
+      ],
+      "properties": [
+        {
+          "name": "type",
+          "optional": false,
+          "type": "\"terminal\""
+        },
+        {
+          "name": "args",
+          "optional": true,
+          "type": "string[]"
+        },
+        {
+          "name": "env",
+          "optional": true,
+          "type": "Record<string, string>"
+        }
+      ]
+    },
+    {
+      "file": "shared/types/acp.ts",
+      "kind": "interface",
+      "name": "ACPAvailableCommand",
+      "heritage": [],
+      "properties": [
+        {
+          "name": "name",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "description",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "input",
+          "optional": true,
+          "type": "{ hint?: string }"
+        }
+      ]
+    },
+    {
+      "file": "shared/types/acp.ts",
+      "kind": "interface",
+      "name": "ACPAvailableCommandsUpdate",
+      "heritage": [],
+      "properties": [
+        {
+          "name": "sessionUpdate",
+          "optional": false,
+          "type": "\"available_commands_update\""
+        },
+        {
+          "name": "availableCommands",
+          "optional": false,
+          "type": "ACPAvailableCommand[]"
+        }
+      ]
+    },
+    {
+      "file": "shared/types/acp.ts",
+      "kind": "interface",
+      "name": "ACPConfigOption",
+      "heritage": [],
+      "properties": [
+        {
+          "name": "id",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "name",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "category",
+          "optional": true,
+          "type": "\"model\" | \"mode\" | \"thought_level\" | string | null"
+        },
+        {
+          "name": "type",
+          "optional": false,
+          "type": "\"select\""
+        },
+        {
+          "name": "currentValue",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "options",
+          "optional": false,
+          "type": "ACPConfigSelectOption[] | ACPConfigSelectGroup[]"
+        }
+      ]
+    },
+    {
+      "file": "shared/types/acp.ts",
+      "kind": "interface",
+      "name": "ACPConfigOptionUpdate",
+      "heritage": [],
+      "properties": [
+        {
+          "name": "sessionUpdate",
+          "optional": false,
+          "type": "\"config_option_update\""
+        },
+        {
+          "name": "configOptions",
+          "optional": false,
+          "type": "ACPConfigOption[]"
+        }
+      ]
+    },
+    {
+      "file": "shared/types/acp.ts",
+      "kind": "interface",
+      "name": "ACPConfigSelectGroup",
+      "heritage": [],
+      "properties": [
+        {
+          "name": "group",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "name",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "options",
+          "optional": false,
+          "type": "ACPConfigSelectOption[]"
+        }
+      ]
+    },
+    {
+      "file": "shared/types/acp.ts",
+      "kind": "interface",
+      "name": "ACPConfigSelectOption",
+      "heritage": [],
+      "properties": [
+        {
+          "name": "value",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "name",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "description",
+          "optional": true,
+          "type": "string | null"
+        }
+      ]
+    },
+    {
+      "file": "shared/types/acp.ts",
+      "kind": "interface",
+      "name": "ACPCurrentModeUpdate",
+      "heritage": [],
+      "properties": [
+        {
+          "name": "sessionUpdate",
+          "optional": false,
+          "type": "\"current_mode_update\""
+        },
+        {
+          "name": "currentModeId",
+          "optional": false,
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "file": "shared/types/acp.ts",
+      "kind": "interface",
+      "name": "ACPPermissionEvent",
+      "heritage": [],
+      "properties": [
+        {
+          "name": "_sessionId",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "requestId",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "sessionId",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "toolCall",
+          "optional": false,
+          "type": "{ toolCallId: string; title: string; kind?: string; status?: string; rawInput?: unknown; }"
+        },
+        {
+          "name": "options",
+          "optional": false,
+          "type": "Array<{ optionId: string; name: string; kind: \"allow_once\" | \"allow_always\" | \"reject_once\" | \"reject_always\"; }>"
+        }
+      ]
+    },
+    {
+      "file": "shared/types/acp.ts",
+      "kind": "interface",
+      "name": "ACPPlan",
+      "heritage": [],
+      "properties": [
+        {
+          "name": "sessionUpdate",
+          "optional": false,
+          "type": "\"plan\""
+        },
+        {
+          "name": "entries",
+          "optional": false,
+          "type": "Array<{ content: string; status: string; priority?: string }>"
+        }
+      ]
+    },
+    {
+      "file": "shared/types/acp.ts",
+      "kind": "interface",
+      "name": "ACPSessionEvent",
+      "heritage": [],
+      "properties": [
+        {
+          "name": "_sessionId",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "sessionId",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "update",
+          "optional": false,
+          "type": "ACPSessionUpdate"
+        }
+      ]
+    },
+    {
+      "file": "shared/types/acp.ts",
+      "kind": "interface",
+      "name": "ACPSessionInfoUpdate",
+      "heritage": [],
+      "properties": [
+        {
+          "name": "sessionUpdate",
+          "optional": false,
+          "type": "\"session_info_update\""
+        },
+        {
+          "name": "title",
+          "optional": true,
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "file": "shared/types/acp.ts",
+      "kind": "type",
+      "name": "ACPSessionUpdate",
+      "type": "| ACPAgentMessageChunk | ACPAgentThoughtChunk | ACPUserMessageChunk | ACPToolCall | ACPToolCallUpdate | ACPPlan | ACPUsageUpdate | ACPSessionInfoUpdate | ACPCurrentModeUpdate | ACPConfigOptionUpdate | ACPAvailableCommandsUpdate"
+    },
+    {
+      "file": "shared/types/acp.ts",
+      "kind": "interface",
+      "name": "ACPStartAuthRequiredResult",
+      "heritage": [],
+      "properties": [
+        {
+          "name": "authRequired",
+          "optional": false,
+          "type": "true"
+        },
+        {
+          "name": "sessionId",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "agentName",
+          "optional": true,
+          "type": "string"
+        },
+        {
+          "name": "authMethods",
+          "optional": false,
+          "type": "ACPAuthMethod[]"
+        }
+      ]
+    },
+    {
+      "file": "shared/types/acp.ts",
+      "kind": "interface",
+      "name": "ACPStartErrorResult",
+      "heritage": [],
+      "properties": [
+        {
+          "name": "error",
+          "optional": true,
+          "type": "string"
+        },
+        {
+          "name": "cancelled",
+          "optional": true,
+          "type": "boolean"
+        }
+      ]
+    },
+    {
+      "file": "shared/types/acp.ts",
+      "kind": "type",
+      "name": "ACPStartResult",
+      "type": "| ACPStartSuccessResult | ACPStartAuthRequiredResult | ACPStartErrorResult"
+    },
+    {
+      "file": "shared/types/acp.ts",
+      "kind": "interface",
+      "name": "ACPStartSuccessResult",
+      "heritage": [],
+      "properties": [
+        {
+          "name": "sessionId",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "agentSessionId",
+          "optional": true,
+          "type": "string"
+        },
+        {
+          "name": "agentName",
+          "optional": true,
+          "type": "string"
+        },
+        {
+          "name": "configOptions",
+          "optional": true,
+          "type": "ACPConfigOption[]"
+        },
+        {
+          "name": "mcpStatuses",
+          "optional": true,
+          "type": "ACPStatusInfo[]"
+        }
+      ]
+    },
+    {
+      "file": "shared/types/acp.ts",
+      "kind": "interface",
+      "name": "ACPStatusInfo",
+      "heritage": [],
+      "properties": [
+        {
+          "name": "name",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "status",
+          "optional": false,
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "file": "shared/types/acp.ts",
+      "kind": "interface",
+      "name": "ACPToolCall",
+      "heritage": [],
+      "properties": [
+        {
+          "name": "sessionUpdate",
+          "optional": false,
+          "type": "\"tool_call\""
+        },
+        {
+          "name": "toolCallId",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "title",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "kind",
+          "optional": true,
+          "type": "string"
+        },
+        {
+          "name": "status",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "locations",
+          "optional": true,
+          "type": "Array<{ path: string; line?: number }>"
+        },
+        {
+          "name": "content",
+          "optional": true,
+          "type": "unknown[]"
+        },
+        {
+          "name": "rawInput",
+          "optional": true,
+          "type": "unknown"
+        },
+        {
+          "name": "rawOutput",
+          "optional": true,
+          "type": "unknown"
+        }
+      ]
+    },
+    {
+      "file": "shared/types/acp.ts",
+      "kind": "interface",
+      "name": "ACPToolCallUpdate",
+      "heritage": [],
+      "properties": [
+        {
+          "name": "sessionUpdate",
+          "optional": false,
+          "type": "\"tool_call_update\""
+        },
+        {
+          "name": "toolCallId",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "status",
+          "optional": true,
+          "type": "string"
+        },
+        {
+          "name": "content",
+          "optional": true,
+          "type": "unknown[]"
+        },
+        {
+          "name": "rawOutput",
+          "optional": true,
+          "type": "unknown"
+        },
+        {
+          "name": "locations",
+          "optional": true,
+          "type": "Array<{ path: string; line?: number }>"
+        },
+        {
+          "name": "rawInput",
+          "optional": true,
+          "type": "unknown"
+        },
+        {
+          "name": "kind",
+          "optional": true,
+          "type": "string"
+        },
+        {
+          "name": "title",
+          "optional": true,
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "file": "shared/types/acp.ts",
+      "kind": "interface",
+      "name": "ACPTurnCompleteEvent",
+      "heritage": [],
+      "properties": [
+        {
+          "name": "_sessionId",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "stopReason",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "usage",
+          "optional": true,
+          "type": "{ inputTokens?: number; outputTokens?: number } | null"
+        }
+      ]
+    },
+    {
+      "file": "shared/types/acp.ts",
+      "kind": "interface",
+      "name": "ACPUsageUpdate",
+      "heritage": [],
+      "properties": [
+        {
+          "name": "sessionUpdate",
+          "optional": false,
+          "type": "\"usage_update\""
+        },
+        {
+          "name": "size",
+          "optional": true,
+          "type": "number"
+        },
+        {
+          "name": "used",
+          "optional": true,
+          "type": "number"
+        },
+        {
+          "name": "cost",
+          "optional": true,
+          "type": "{ amount: number; currency: string }"
+        }
+      ]
+    },
+    {
+      "file": "shared/types/acp.ts",
+      "kind": "interface",
+      "name": "ACPUserMessageChunk",
+      "heritage": [],
+      "properties": [
+        {
+          "name": "sessionUpdate",
+          "optional": false,
+          "type": "\"user_message_chunk\""
+        },
+        {
+          "name": "content",
+          "optional": false,
+          "type": "{ type: string; text?: string }"
+        }
+      ]
+    },
+    {
+      "file": "shared/types/builtin-prompt-templates.ts",
+      "kind": "const",
+      "name": "BUILTIN_PROMPT_TEMPLATES",
+      "type": "PromptTemplate[]"
+    },
+    {
+      "file": "shared/types/builtin-prompt-templates.ts",
+      "kind": "const",
+      "name": "BUILTIN_TEMPLATE_IDS",
+      "type": null
+    },
+    {
+      "file": "shared/types/builtin-subagents.ts",
+      "kind": "const",
+      "name": "BUILTIN_SUBAGENT_IDS",
+      "type": null
+    },
+    {
+      "file": "shared/types/builtin-subagents.ts",
+      "kind": "const",
+      "name": "BUILTIN_SUBAGENTS",
+      "type": "CustomSubagent[]"
+    },
+    {
+      "file": "shared/types/codex.ts",
+      "kind": "interface",
+      "name": "CodexApprovalRequest",
+      "heritage": [],
+      "properties": [
+        {
+          "name": "_sessionId",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "rpcId",
+          "optional": false,
+          "type": "string | number"
+        },
+        {
+          "name": "method",
+          "optional": false,
+          "type": "\"item/commandExecution/requestApproval\" | \"item/fileChange/requestApproval\""
+        },
+        {
+          "name": "threadId",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "turnId",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "itemId",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "reason",
+          "optional": true,
+          "type": "string | null"
+        }
+      ]
+    },
+    {
+      "file": "shared/types/codex.ts",
+      "kind": "interface",
+      "name": "CodexAuthRequiredNotification",
+      "heritage": [],
+      "properties": [
+        {
+          "name": "method",
+          "optional": false,
+          "type": "\"codex:auth_required\""
+        },
+        {
+          "name": "params",
+          "optional": false,
+          "type": "{ requiresOpenaiAuth: boolean }"
+        }
+      ]
+    },
+    {
+      "file": "shared/types/codex.ts",
+      "kind": "interface",
+      "name": "CodexExitEvent",
+      "heritage": [],
+      "properties": [
+        {
+          "name": "_sessionId",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "code",
+          "optional": false,
+          "type": "number | null"
+        },
+        {
+          "name": "signal",
+          "optional": false,
+          "type": "string | null"
+        }
+      ]
+    },
+    {
+      "file": "shared/types/codex.ts",
+      "kind": "interface",
+      "name": "CodexRequestUserInputRequest",
+      "heritage": [],
+      "properties": [
+        {
+          "name": "_sessionId",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "rpcId",
+          "optional": false,
+          "type": "string | number"
+        },
+        {
+          "name": "method",
+          "optional": false,
+          "type": "\"item/tool/requestUserInput\""
+        },
+        {
+          "name": "threadId",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "turnId",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "itemId",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "questions",
+          "optional": false,
+          "type": "Array<CodexToolRequestUserInputQuestion>"
+        }
+      ]
+    },
+    {
+      "file": "shared/types/codex.ts",
+      "kind": "type",
+      "name": "CodexServerRequest",
+      "type": "CodexApprovalRequest | CodexRequestUserInputRequest"
+    },
+    {
+      "file": "shared/types/codex.ts",
+      "kind": "type",
+      "name": "CodexSessionEvent",
+      "type": "{ _sessionId: string } & (CodexServerNotification | CodexAuthRequiredNotification)"
+    },
+    {
+      "file": "shared/types/engine.ts",
+      "kind": "type",
+      "name": "AppPermissionBehavior",
+      "type": "\"allow\" | \"deny\" | \"allowForSession\""
+    },
+    {
+      "file": "shared/types/engine.ts",
+      "kind": "type",
+      "name": "EngineId",
+      "type": "\"claude\" | \"acp\" | \"codex\""
+    },
+    {
+      "file": "shared/types/engine.ts",
+      "kind": "type",
+      "name": "RespondPermissionFn",
+      "type": "( behavior: AppPermissionBehavior, updatedInput?: Record<string, unknown>, newPermissionMode?: string, updatedPermissions?: unknown[], ) => Promise<void>"
+    },
+    {
+      "file": "shared/types/engine.ts",
+      "kind": "interface",
+      "name": "SlashCommand",
+      "heritage": [],
+      "properties": [
+        {
+          "name": "name",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "description",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "argumentHint",
+          "optional": true,
+          "type": "string"
+        },
+        {
+          "name": "source",
+          "optional": false,
+          "type": "\"claude\" | \"acp\" | \"codex-skill\" | \"codex-app\" | \"local\" | \"template\""
+        },
+        {
+          "name": "defaultPrompt",
+          "optional": true,
+          "type": "string"
+        },
+        {
+          "name": "appSlug",
+          "optional": true,
+          "type": "string"
+        },
+        {
+          "name": "iconUrl",
+          "optional": true,
+          "type": "string"
+        },
+        {
+          "name": "templateBody",
+          "optional": true,
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "file": "shared/types/git.ts",
+      "kind": "interface",
+      "name": "GitBranch",
+      "heritage": [],
+      "properties": [
+        {
+          "name": "name",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "isCurrent",
+          "optional": false,
+          "type": "boolean"
+        },
+        {
+          "name": "isRemote",
+          "optional": false,
+          "type": "boolean"
+        },
+        {
+          "name": "upstream",
+          "optional": true,
+          "type": "string"
+        },
+        {
+          "name": "ahead",
+          "optional": true,
+          "type": "number"
+        },
+        {
+          "name": "behind",
+          "optional": true,
+          "type": "number"
+        }
+      ]
+    },
+    {
+      "file": "shared/types/git.ts",
+      "kind": "interface",
+      "name": "GitFileChange",
+      "heritage": [],
+      "properties": [
+        {
+          "name": "path",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "oldPath",
+          "optional": true,
+          "type": "string"
+        },
+        {
+          "name": "status",
+          "optional": false,
+          "type": "GitFileStatus"
+        },
+        {
+          "name": "group",
+          "optional": false,
+          "type": "GitFileGroup"
+        }
+      ]
+    },
+    {
+      "file": "shared/types/git.ts",
+      "kind": "type",
+      "name": "GitFileGroup",
+      "type": "\"staged\" | \"unstaged\" | \"untracked\""
+    },
+    {
+      "file": "shared/types/git.ts",
+      "kind": "type",
+      "name": "GitFileStatus",
+      "type": "| \"modified\" | \"added\" | \"deleted\" | \"renamed\" | \"copied\" | \"untracked\" | \"unmerged\""
+    },
+    {
+      "file": "shared/types/git.ts",
+      "kind": "interface",
+      "name": "GitLogEntry",
+      "heritage": [],
+      "properties": [
+        {
+          "name": "hash",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "shortHash",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "subject",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "author",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "date",
+          "optional": false,
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "file": "shared/types/git.ts",
+      "kind": "interface",
+      "name": "GitRepoInfo",
+      "heritage": [],
+      "properties": [
+        {
+          "name": "path",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "name",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "isSubRepo",
+          "optional": false,
+          "type": "boolean"
+        },
+        {
+          "name": "isWorktree",
+          "optional": false,
+          "type": "boolean"
+        },
+        {
+          "name": "isPrimaryWorktree",
+          "optional": false,
+          "type": "boolean"
+        }
+      ]
+    },
+    {
+      "file": "shared/types/git.ts",
+      "kind": "interface",
+      "name": "GitStatus",
+      "heritage": [],
+      "properties": [
+        {
+          "name": "branch",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "upstream",
+          "optional": true,
+          "type": "string"
+        },
+        {
+          "name": "ahead",
+          "optional": false,
+          "type": "number"
+        },
+        {
+          "name": "behind",
+          "optional": false,
+          "type": "number"
+        },
+        {
+          "name": "files",
+          "optional": false,
+          "type": "GitFileChange[]"
+        }
+      ]
+    },
+    {
+      "file": "shared/types/jira.ts",
+      "kind": "interface",
+      "name": "JiraAuthResult",
+      "heritage": [],
+      "properties": [
+        {
+          "name": "ok",
+          "optional": true,
+          "type": "boolean"
+        },
+        {
+          "name": "error",
+          "optional": true,
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "file": "shared/types/jira.ts",
+      "kind": "interface",
+      "name": "JiraBoard",
+      "heritage": [],
+      "properties": [
+        {
+          "name": "id",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "name",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "type",
+          "optional": false,
+          "type": "\"scrum\" | \"kanban\" | \"simple\""
+        },
+        {
+          "name": "projectKey",
+          "optional": true,
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "file": "shared/types/jira.ts",
+      "kind": "interface",
+      "name": "JiraBoardColumn",
+      "heritage": [],
+      "properties": [
+        {
+          "name": "id",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "name",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "statusIds",
+          "optional": false,
+          "type": "string[]"
+        },
+        {
+          "name": "min",
+          "optional": true,
+          "type": "number"
+        },
+        {
+          "name": "max",
+          "optional": true,
+          "type": "number"
+        }
+      ]
+    },
+    {
+      "file": "shared/types/jira.ts",
+      "kind": "interface",
+      "name": "JiraBoardConfiguration",
+      "heritage": [],
+      "properties": [
+        {
+          "name": "id",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "name",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "columns",
+          "optional": false,
+          "type": "JiraBoardColumn[]"
+        }
+      ]
+    },
+    {
+      "file": "shared/types/jira.ts",
+      "kind": "interface",
+      "name": "JiraComment",
+      "heritage": [],
+      "properties": [
+        {
+          "name": "id",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "author",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "authorAvatarUrl",
+          "optional": true,
+          "type": "string"
+        },
+        {
+          "name": "body",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "created",
+          "optional": false,
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "file": "shared/types/jira.ts",
+      "kind": "interface",
+      "name": "JiraGetBoardsParams",
+      "heritage": [],
+      "properties": [
+        {
+          "name": "instanceUrl",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "projectKey",
+          "optional": true,
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "file": "shared/types/jira.ts",
+      "kind": "interface",
+      "name": "JiraGetCommentsParams",
+      "heritage": [],
+      "properties": [
+        {
+          "name": "instanceUrl",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "issueKey",
+          "optional": false,
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "file": "shared/types/jira.ts",
+      "kind": "interface",
+      "name": "JiraGetIssuesParams",
+      "heritage": [],
+      "properties": [
+        {
+          "name": "instanceUrl",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "boardId",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "sprintId",
+          "optional": true,
+          "type": "string"
+        },
+        {
+          "name": "maxResults",
+          "optional": true,
+          "type": "number"
+        }
+      ]
+    },
+    {
+      "file": "shared/types/jira.ts",
+      "kind": "interface",
+      "name": "JiraGetSprintsParams",
+      "heritage": [],
+      "properties": [
+        {
+          "name": "instanceUrl",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "boardId",
+          "optional": false,
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "file": "shared/types/jira.ts",
+      "kind": "interface",
+      "name": "JiraGetTransitionsParams",
+      "heritage": [],
+      "properties": [
+        {
+          "name": "instanceUrl",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "issueKey",
+          "optional": false,
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "file": "shared/types/jira.ts",
+      "kind": "interface",
+      "name": "JiraIssue",
+      "heritage": [],
+      "properties": [
+        {
+          "name": "id",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "key",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "summary",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "description",
+          "optional": true,
+          "type": "string"
+        },
+        {
+          "name": "status",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "statusId",
+          "optional": true,
+          "type": "string"
+        },
+        {
+          "name": "statusCategory",
+          "optional": true,
+          "type": "\"todo\" | \"indeterminate\" | \"done\""
+        },
+        {
+          "name": "assignee",
+          "optional": true,
+          "type": "{ displayName: string; emailAddress?: string; avatarUrl?: string; }"
+        },
+        {
+          "name": "priority",
+          "optional": true,
+          "type": "{ name: string; iconUrl?: string; }"
+        },
+        {
+          "name": "issueType",
+          "optional": true,
+          "type": "{ name: string; iconUrl?: string; }"
+        },
+        {
+          "name": "url",
+          "optional": false,
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "file": "shared/types/jira.ts",
+      "kind": "interface",
+      "name": "JiraOAuthData",
+      "heritage": [],
+      "properties": [
+        {
+          "name": "accessToken",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "email",
+          "optional": true,
+          "type": "string"
+        },
+        {
+          "name": "refreshToken",
+          "optional": true,
+          "type": "string"
+        },
+        {
+          "name": "expiresAt",
+          "optional": true,
+          "type": "number"
+        },
+        {
+          "name": "instanceUrl",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "storedAt",
+          "optional": false,
+          "type": "number"
+        }
+      ]
+    },
+    {
+      "file": "shared/types/jira.ts",
+      "kind": "interface",
+      "name": "JiraProjectConfig",
+      "heritage": [],
+      "properties": [
+        {
+          "name": "instanceUrl",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "projectKey",
+          "optional": true,
+          "type": "string"
+        },
+        {
+          "name": "boardId",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "boardName",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "authMethod",
+          "optional": false,
+          "type": "\"oauth\" | \"apitoken\""
+        },
+        {
+          "name": "isAuthenticated",
+          "optional": false,
+          "type": "boolean"
+        },
+        {
+          "name": "createdAt",
+          "optional": false,
+          "type": "number"
+        },
+        {
+          "name": "lastSync",
+          "optional": true,
+          "type": "number"
+        }
+      ]
+    },
+    {
+      "file": "shared/types/jira.ts",
+      "kind": "interface",
+      "name": "JiraProjectSummary",
+      "heritage": [],
+      "properties": [
+        {
+          "name": "id",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "key",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "name",
+          "optional": false,
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "file": "shared/types/jira.ts",
+      "kind": "interface",
+      "name": "JiraSprint",
+      "heritage": [],
+      "properties": [
+        {
+          "name": "id",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "name",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "state",
+          "optional": false,
+          "type": "\"active\" | \"closed\" | \"future\""
+        },
+        {
+          "name": "startDate",
+          "optional": true,
+          "type": "string"
+        },
+        {
+          "name": "endDate",
+          "optional": true,
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "file": "shared/types/jira.ts",
+      "kind": "interface",
+      "name": "JiraTransition",
+      "heritage": [],
+      "properties": [
+        {
+          "name": "id",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "name",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "toStatus",
+          "optional": false,
+          "type": "{ id: string; name: string; category?: \"todo\" | \"indeterminate\" | \"done\"; }"
+        }
+      ]
+    },
+    {
+      "file": "shared/types/jira.ts",
+      "kind": "interface",
+      "name": "JiraTransitionIssueParams",
+      "heritage": [
+        "extends JiraGetTransitionsParams"
+      ],
+      "properties": [
+        {
+          "name": "transitionId",
+          "optional": false,
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "file": "shared/types/prompt-template.ts",
+      "kind": "interface",
+      "name": "PromptTemplate",
+      "heritage": [],
+      "properties": [
+        {
+          "name": "id",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "name",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "description",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "body",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "icon",
+          "optional": true,
+          "type": "string"
+        },
+        {
+          "name": "enabled",
+          "optional": true,
+          "type": "boolean"
+        },
+        {
+          "name": "builtIn",
+          "optional": true,
+          "type": "boolean"
+        }
+      ]
+    },
+    {
+      "file": "shared/types/registry.ts",
+      "kind": "interface",
+      "name": "BinaryCheckResult",
+      "heritage": [],
+      "properties": [
+        {
+          "name": "path",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "args",
+          "optional": true,
+          "type": "string[]"
+        }
+      ]
+    },
+    {
+      "file": "shared/types/registry.ts",
+      "kind": "interface",
+      "name": "InstalledAgent",
+      "heritage": [],
+      "properties": [
+        {
+          "name": "id",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "name",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "engine",
+          "optional": false,
+          "type": "EngineId"
+        },
+        {
+          "name": "binary",
+          "optional": true,
+          "type": "string"
+        },
+        {
+          "name": "args",
+          "optional": true,
+          "type": "string[]"
+        },
+        {
+          "name": "env",
+          "optional": true,
+          "type": "Record<string, string>"
+        },
+        {
+          "name": "icon",
+          "optional": true,
+          "type": "string"
+        },
+        {
+          "name": "builtIn",
+          "optional": true,
+          "type": "boolean"
+        },
+        {
+          "name": "registryId",
+          "optional": true,
+          "type": "string"
+        },
+        {
+          "name": "registryVersion",
+          "optional": true,
+          "type": "string"
+        },
+        {
+          "name": "description",
+          "optional": true,
+          "type": "string"
+        },
+        {
+          "name": "cachedConfigOptions",
+          "optional": true,
+          "type": "ACPConfigOption[]"
+        }
+      ]
+    },
+    {
+      "file": "shared/types/registry.ts",
+      "kind": "interface",
+      "name": "RegistryAgent",
+      "heritage": [],
+      "properties": [
+        {
+          "name": "id",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "name",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "version",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "description",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "repository",
+          "optional": true,
+          "type": "string"
+        },
+        {
+          "name": "authors",
+          "optional": false,
+          "type": "string[]"
+        },
+        {
+          "name": "license",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "icon",
+          "optional": true,
+          "type": "string"
+        },
+        {
+          "name": "distribution",
+          "optional": false,
+          "type": "RegistryDistribution"
+        }
+      ]
+    },
+    {
+      "file": "shared/types/registry.ts",
+      "kind": "interface",
+      "name": "RegistryBinaryTarget",
+      "heritage": [],
+      "properties": [
+        {
+          "name": "archive",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "cmd",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "args",
+          "optional": true,
+          "type": "string[]"
+        }
+      ]
+    },
+    {
+      "file": "shared/types/registry.ts",
+      "kind": "interface",
+      "name": "RegistryData",
+      "heritage": [],
+      "properties": [
+        {
+          "name": "version",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "agents",
+          "optional": false,
+          "type": "RegistryAgent[]"
+        }
+      ]
+    },
+    {
+      "file": "shared/types/registry.ts",
+      "kind": "interface",
+      "name": "RegistryDistribution",
+      "heritage": [],
+      "properties": [
+        {
+          "name": "npx",
+          "optional": true,
+          "type": "RegistryNpxDistribution"
+        },
+        {
+          "name": "binary",
+          "optional": true,
+          "type": "Record<string, RegistryBinaryTarget>"
+        }
+      ]
+    },
+    {
+      "file": "shared/types/registry.ts",
+      "kind": "interface",
+      "name": "RegistryNpxDistribution",
+      "heritage": [],
+      "properties": [
+        {
+          "name": "package",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "args",
+          "optional": true,
+          "type": "string[]"
+        },
+        {
+          "name": "env",
+          "optional": true,
+          "type": "Record<string, string>"
+        }
+      ]
+    },
+    {
+      "file": "shared/types/settings.ts",
+      "kind": "interface",
+      "name": "AppSettings",
+      "heritage": [],
+      "properties": [
+        {
+          "name": "allowPrereleaseUpdates",
+          "optional": false,
+          "type": "boolean"
+        },
+        {
+          "name": "defaultChatLimit",
+          "optional": false,
+          "type": "number"
+        },
+        {
+          "name": "preferredEditor",
+          "optional": false,
+          "type": "PreferredEditor"
+        },
+        {
+          "name": "voiceDictation",
+          "optional": false,
+          "type": "VoiceDictationMode"
+        },
+        {
+          "name": "notifications",
+          "optional": false,
+          "type": "NotificationSettings"
+        },
+        {
+          "name": "codexClientName",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "codexBinarySource",
+          "optional": false,
+          "type": "CodexBinarySource"
+        },
+        {
+          "name": "codexCustomBinaryPath",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "claudeBinarySource",
+          "optional": false,
+          "type": "ClaudeBinarySource"
+        },
+        {
+          "name": "claudeCustomBinaryPath",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "showDevFillInChatTitleBar",
+          "optional": false,
+          "type": "boolean"
+        },
+        {
+          "name": "showJiraBoard",
+          "optional": false,
+          "type": "boolean"
+        },
+        {
+          "name": "macBackgroundEffect",
+          "optional": false,
+          "type": "MacBackgroundEffect"
+        },
+        {
+          "name": "analyticsEnabled",
+          "optional": false,
+          "type": "boolean"
+        },
+        {
+          "name": "analyticsUserId",
+          "optional": true,
+          "type": "string"
+        },
+        {
+          "name": "analyticsLastDailyActiveDate",
+          "optional": true,
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "file": "shared/types/settings.ts",
+      "kind": "type",
+      "name": "ClaudeBinarySource",
+      "type": "\"auto\" | \"managed\" | \"custom\""
+    },
+    {
+      "file": "shared/types/settings.ts",
+      "kind": "type",
+      "name": "CodexBinarySource",
+      "type": "\"auto\" | \"managed\" | \"custom\""
+    },
+    {
+      "file": "shared/types/settings.ts",
+      "kind": "type",
+      "name": "MacBackgroundEffect",
+      "type": "\"liquid-glass\" | \"vibrancy\" | \"off\""
+    },
+    {
+      "file": "shared/types/settings.ts",
+      "kind": "interface",
+      "name": "NotificationEventSettings",
+      "heritage": [],
+      "properties": [
+        {
+          "name": "osNotification",
+          "optional": false,
+          "type": "NotificationTrigger"
+        },
+        {
+          "name": "sound",
+          "optional": false,
+          "type": "NotificationTrigger"
+        }
+      ]
+    },
+    {
+      "file": "shared/types/settings.ts",
+      "kind": "interface",
+      "name": "NotificationSettings",
+      "heritage": [],
+      "properties": [
+        {
+          "name": "exitPlanMode",
+          "optional": false,
+          "type": "NotificationEventSettings"
+        },
+        {
+          "name": "permissions",
+          "optional": false,
+          "type": "NotificationEventSettings"
+        },
+        {
+          "name": "askUserQuestion",
+          "optional": false,
+          "type": "NotificationEventSettings"
+        },
+        {
+          "name": "sessionComplete",
+          "optional": false,
+          "type": "NotificationEventSettings"
+        }
+      ]
+    },
+    {
+      "file": "shared/types/settings.ts",
+      "kind": "type",
+      "name": "NotificationTrigger",
+      "type": "\"always\" | \"unfocused\" | \"never\""
+    },
+    {
+      "file": "shared/types/settings.ts",
+      "kind": "type",
+      "name": "PreferredEditor",
+      "type": "\"auto\" | \"cursor\" | \"code\" | \"zed\""
+    },
+    {
+      "file": "shared/types/settings.ts",
+      "kind": "type",
+      "name": "ThemeOption",
+      "type": "\"light\" | \"dark\" | \"system\""
+    },
+    {
+      "file": "shared/types/settings.ts",
+      "kind": "type",
+      "name": "VoiceDictationMode",
+      "type": "\"native\" | \"whisper\""
+    },
+    {
+      "file": "shared/types/subagent.ts",
+      "kind": "interface",
+      "name": "CustomSubagent",
+      "heritage": [],
+      "properties": [
+        {
+          "name": "id",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "name",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "description",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "prompt",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "tools",
+          "optional": true,
+          "type": "string[]"
+        },
+        {
+          "name": "disallowedTools",
+          "optional": true,
+          "type": "string[]"
+        },
+        {
+          "name": "model",
+          "optional": true,
+          "type": "string"
+        },
+        {
+          "name": "icon",
+          "optional": true,
+          "type": "string"
+        },
+        {
+          "name": "enabled",
+          "optional": true,
+          "type": "boolean"
+        },
+        {
+          "name": "builtIn",
+          "optional": true,
+          "type": "boolean"
+        }
+      ]
+    },
+    {
+      "file": "shared/types/subagent.ts",
+      "kind": "const",
+      "name": "SELECTABLE_TOOLS",
+      "type": null
+    },
+    {
+      "file": "shared/types/subagent.ts",
+      "kind": "type",
+      "name": "SelectableTool",
+      "type": "(typeof SELECTABLE_TOOLS)[number]"
+    },
+    {
+      "file": "src/types/session.ts",
+      "kind": "interface",
+      "name": "CCSessionInfo",
+      "heritage": [],
+      "properties": [
+        {
+          "name": "sessionId",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "preview",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "model",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "timestamp",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "fileModified",
+          "optional": false,
+          "type": "number"
+        }
+      ]
+    },
+    {
+      "file": "src/types/session.ts",
+      "kind": "interface",
+      "name": "ChatFolder",
+      "heritage": [],
+      "properties": [
+        {
+          "name": "id",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "projectId",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "name",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "createdAt",
+          "optional": false,
+          "type": "number"
+        },
+        {
+          "name": "order",
+          "optional": false,
+          "type": "number"
+        },
+        {
+          "name": "pinned",
+          "optional": true,
+          "type": "boolean"
+        }
+      ]
+    },
+    {
+      "file": "src/types/session.ts",
+      "kind": "interface",
+      "name": "ChatSession",
+      "heritage": [
+        "extends SessionBase"
+      ],
+      "properties": [
+        {
+          "name": "lastMessageAt",
+          "optional": true,
+          "type": "number"
+        },
+        {
+          "name": "isActive",
+          "optional": false,
+          "type": "boolean"
+        },
+        {
+          "name": "isProcessing",
+          "optional": true,
+          "type": "boolean"
+        },
+        {
+          "name": "hasPendingPermission",
+          "optional": true,
+          "type": "boolean"
+        },
+        {
+          "name": "hasUnreadCompletion",
+          "optional": true,
+          "type": "boolean"
+        },
+        {
+          "name": "titleGenerating",
+          "optional": true,
+          "type": "boolean"
+        }
+      ]
+    },
+    {
+      "file": "src/types/session.ts",
+      "kind": "type",
+      "name": "ClaudeEffort",
+      "type": "\"low\" | \"medium\" | \"high\" | \"max\""
+    },
+    {
+      "file": "src/types/session.ts",
+      "kind": "interface",
+      "name": "PersistedSession",
+      "heritage": [
+        "extends SessionBase"
+      ],
+      "properties": [
+        {
+          "name": "messages",
+          "optional": false,
+          "type": "UIMessage[]"
+        },
+        {
+          "name": "contextUsage",
+          "optional": true,
+          "type": "ContextUsage | null"
+        },
+        {
+          "name": "modelUsage",
+          "optional": true,
+          "type": "SessionModelUsage"
+        }
+      ]
+    },
+    {
+      "file": "src/types/session.ts",
+      "kind": "interface",
+      "name": "Project",
+      "heritage": [],
+      "properties": [
+        {
+          "name": "id",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "name",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "path",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "createdAt",
+          "optional": false,
+          "type": "number"
+        },
+        {
+          "name": "spaceId",
+          "optional": true,
+          "type": "string"
+        },
+        {
+          "name": "icon",
+          "optional": true,
+          "type": "string"
+        },
+        {
+          "name": "iconType",
+          "optional": true,
+          "type": "\"emoji\" | \"lucide\""
+        }
+      ]
+    },
+    {
+      "file": "src/types/session.ts",
+      "kind": "interface",
+      "name": "SessionBase",
+      "heritage": [],
+      "properties": [
+        {
+          "name": "id",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "projectId",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "title",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "createdAt",
+          "optional": false,
+          "type": "number"
+        },
+        {
+          "name": "model",
+          "optional": true,
+          "type": "string"
+        },
+        {
+          "name": "effort",
+          "optional": true,
+          "type": "ClaudeEffort"
+        },
+        {
+          "name": "permissionMode",
+          "optional": true,
+          "type": "string"
+        },
+        {
+          "name": "planMode",
+          "optional": true,
+          "type": "boolean"
+        },
+        {
+          "name": "totalCost",
+          "optional": false,
+          "type": "number"
+        },
+        {
+          "name": "engine",
+          "optional": true,
+          "type": "EngineId"
+        },
+        {
+          "name": "agentSessionId",
+          "optional": true,
+          "type": "string"
+        },
+        {
+          "name": "agentId",
+          "optional": true,
+          "type": "string"
+        },
+        {
+          "name": "codexThreadId",
+          "optional": true,
+          "type": "string"
+        },
+        {
+          "name": "folderId",
+          "optional": true,
+          "type": "string"
+        },
+        {
+          "name": "pinned",
+          "optional": true,
+          "type": "boolean"
+        },
+        {
+          "name": "archived",
+          "optional": true,
+          "type": "boolean"
+        },
+        {
+          "name": "branch",
+          "optional": true,
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "file": "src/types/session.ts",
+      "kind": "interface",
+      "name": "SessionInfo",
+      "heritage": [],
+      "properties": [
+        {
+          "name": "sessionId",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "model",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "cwd",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "tools",
+          "optional": false,
+          "type": "string[]"
+        },
+        {
+          "name": "version",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "permissionMode",
+          "optional": true,
+          "type": "string"
+        },
+        {
+          "name": "agentName",
+          "optional": true,
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "file": "src/types/session.ts",
+      "kind": "interface",
+      "name": "SubagentToolStep",
+      "heritage": [],
+      "properties": [
+        {
+          "name": "toolName",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "toolInput",
+          "optional": false,
+          "type": "Record<string, unknown>"
+        },
+        {
+          "name": "toolResult",
+          "optional": true,
+          "type": "ToolUseResult"
+        },
+        {
+          "name": "toolUseId",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "toolError",
+          "optional": true,
+          "type": "boolean"
+        }
+      ]
+    },
+    {
+      "file": "src/types/session.ts",
+      "kind": "interface",
+      "name": "TodoItem",
+      "heritage": [],
+      "properties": [
+        {
+          "name": "content",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "status",
+          "optional": false,
+          "type": "\"pending\" | \"in_progress\" | \"completed\""
+        },
+        {
+          "name": "activeForm",
+          "optional": true,
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "file": "src/types/session.ts",
+      "kind": "interface",
+      "name": "UIMessage",
+      "heritage": [],
+      "properties": [
+        {
+          "name": "id",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "role",
+          "optional": false,
+          "type": "\"user\" | \"assistant\" | \"tool_call\" | \"tool_result\" | \"system\" | \"summary\""
+        },
+        {
+          "name": "content",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "toolName",
+          "optional": true,
+          "type": "string"
+        },
+        {
+          "name": "toolInput",
+          "optional": true,
+          "type": "Record<string, unknown>"
+        },
+        {
+          "name": "toolResult",
+          "optional": true,
+          "type": "ToolUseResult"
+        },
+        {
+          "name": "thinking",
+          "optional": true,
+          "type": "string"
+        },
+        {
+          "name": "thinkingComplete",
+          "optional": true,
+          "type": "boolean"
+        },
+        {
+          "name": "isStreaming",
+          "optional": true,
+          "type": "boolean"
+        },
+        {
+          "name": "timestamp",
+          "optional": false,
+          "type": "number"
+        },
+        {
+          "name": "subagentId",
+          "optional": true,
+          "type": "string"
+        },
+        {
+          "name": "subagentSteps",
+          "optional": true,
+          "type": "SubagentToolStep[]"
+        },
+        {
+          "name": "subagentStatus",
+          "optional": true,
+          "type": "\"running\" | \"completed\""
+        },
+        {
+          "name": "subagentDurationMs",
+          "optional": true,
+          "type": "number"
+        },
+        {
+          "name": "subagentTokens",
+          "optional": true,
+          "type": "number"
+        },
+        {
+          "name": "toolError",
+          "optional": true,
+          "type": "boolean"
+        },
+        {
+          "name": "images",
+          "optional": true,
+          "type": "ImageAttachment[]"
+        },
+        {
+          "name": "displayContent",
+          "optional": true,
+          "type": "string"
+        },
+        {
+          "name": "compactTrigger",
+          "optional": true,
+          "type": "\"manual\" | \"auto\""
+        },
+        {
+          "name": "compactPreTokens",
+          "optional": true,
+          "type": "number"
+        },
+        {
+          "name": "isError",
+          "optional": true,
+          "type": "boolean"
+        },
+        {
+          "name": "checkpointId",
+          "optional": true,
+          "type": "string"
+        },
+        {
+          "name": "isQueued",
+          "optional": true,
+          "type": "boolean"
+        },
+        {
+          "name": "isLeakedToolCall",
+          "optional": true,
+          "type": "boolean"
+        }
+      ]
+    },
+    {
+      "file": "src/types/window.d.ts",
+      "kind": "type",
+      "name": "CodexImageInput",
+      "type": "{ type: \"image\"; url: string } | { type: \"localImage\"; path: string }"
+    },
+    {
+      "file": "src/types/window.d.ts",
+      "kind": "interface",
+      "name": "IpcResult",
+      "heritage": [],
+      "properties": [
+        {
+          "name": "ok",
+          "optional": true,
+          "type": "boolean"
+        },
+        {
+          "name": "error",
+          "optional": true,
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "file": "src/types/window.d.ts",
+      "kind": "interface",
+      "name": "PreReleaseInfo",
+      "heritage": [],
+      "properties": [
+        {
+          "name": "isPreRelease",
+          "optional": false,
+          "type": "boolean"
+        },
+        {
+          "name": "version",
+          "optional": false,
+          "type": "string"
+        },
+        {
+          "name": "releaseUrl",
+          "optional": false,
+          "type": "string | null"
+        }
+      ]
+    },
+    {
+      "file": "src/types/window.d.ts",
+      "kind": "interface",
+      "name": "Window",
+      "heritage": [],
+      "properties": [
+        {
+          "name": "claude",
+          "optional": false,
+          "type": "{ getGlassSupported: () => Promise<boolean>; getMacBackgroundEffectSupport: () => Promise<{ liquidGlass: boolean; vibrancy: boolean }>; setThemeSource: (themeSource: ThemeOption) => void; setMacBackgroundEffect: (effect: MacBackgroundEffect) => void; relaunchApp: () => Promise<IpcResult>; setMinWidth: (width: number) => void; glass: { setTintColor: (tintColor: string | null) => void; setTheme: (theme: \"light\" | \"dark\" | \"system\") => void; }; start: (options?: { cwd?: string; model?: string; permissionMode?: string; thinkingEnabled?: boolean; effort?: ClaudeEffort; resume?: string; /** Fork to a new session ID when resuming (model forgets messages after resumeSessionAt) */ forkSession?: boolean; /** Resume at a specific message UUID — used with forkSession to truncate history */ resumeSessionAt?: string; mcpServers?: McpServerConfig[]; }) => Promise<{ sessionId: string; pid: number; error?: string }>; send: ( sessionId: string, message: { type: string; message: { role: string; content: string | Array<{ type: string; [key: string]: unknown }> } }, ) => Promise<IpcResult>; stop: (sessionId: string, reason?: string) => Promise<{ ok: boolean }>; interrupt: (sessionId: string) => Promise<IpcResult>; stopTask: (sessionId: string, taskId: string) => Promise<IpcResult>; readAgentOutput: (outputFile: string) => Promise<{ messages?: unknown[]; error?: string }>; supportedModels: (sessionId: string) => Promise<{ models: ModelInfo[]; error?: string }>; slashCommands: (sessionId: string) => Promise<{ commands: Array<{ name: string; description?: string; argumentHint?: string }>; error?: string; }>; modelsCacheGet: () => Promise<{ models: ModelInfo[]; updatedAt?: number; error?: string }>; modelsCacheRevalidate: (options?: { cwd?: string }) => Promise<{ models: ModelInfo[]; updatedAt?: number; error?: string }>; mcpStatus: (sessionId: string) => Promise<{ servers: McpServerStatus[]; error?: string }>; mcpReconnect: (sessionId: string, serverName: string) => Promise<IpcResult & { restarted?: boolean }>; revertFiles: (sessionId: string, checkpointId: string) => Promise<IpcResult>; restartSession: (sessionId: string, mcpServers?: McpServerConfig[], cwd?: string, effort?: ClaudeEffort, model?: string) => Promise<IpcResult & { restarted?: boolean }>; readFile: (filePath: string) => Promise<{ content?: string; error?: string }>; renameFile: (oldPath: string, newPath: string) => Promise<IpcResult>; trashItem: (filePath: string) => Promise<IpcResult>; newFile: (filePath: string) => Promise<IpcResult>; newFolder: (folderPath: string) => Promise<IpcResult>; writeClipboardText: (text: string) => Promise<IpcResult>; setBrowserColorScheme: ( targetWebContentsId: number, colorScheme: \"light\" | \"dark\", ) => Promise<IpcResult>; openInEditor: (filePath: string, line?: number, editor?: string) => Promise<IpcResult & { editor?: string }>; openExternal: (url: string) => Promise<IpcResult>; showItemInFolder: (filePath: string) => Promise<IpcResult>; generateTitle: ( message: string, cwd?: string, engine?: EngineId, sessionId?: string, ) => Promise<{ title?: string; error?: string }>; log: (label: string, data: unknown) => void; onEvent: (callback: (event: ClaudeEvent & { _sessionId: string }) => void) => () => void; onStderr: (callback: (data: { data: string; _sessionId: string }) => void) => () => void; onExit: (callback: (data: { code: number | null; _sessionId: string; error?: string }) => void) => () => void; onPermissionRequest: ( callback: (data: { _sessionId: string; requestId: string; toolName: string; toolInput: Record<string, unknown>; toolUseId: string; suggestions?: PermissionUpdate[]; decisionReason?: string; }) => void, ) => () => void; respondPermission: ( sessionId: string, requestId: string, behavior: AppPermissionBehavior, toolUseId: string, toolInput: Record<string, unknown>, newPermissionMode?: string, updatedPermissions?: unknown[], ) => Promise<IpcResult>; setPermissionMode: ( sessionId: string, permissionMode: string, ) => Promise<IpcResult>; setModel: ( sessionId: string, model?: string, ) => Promise<IpcResult>; setThinking: ( sessionId: string, thinkingEnabled: boolean, ) => Promise<IpcResult>; version: () => Promise<{ version?: string | null; error?: string }>; binaryStatus: () => Promise<{ installed: boolean; installing: boolean }>; projects: { list: () => Promise<Project[]>; create: (spaceId?: string) => Promise<Project | null>; createDev: (name: string, spaceId?: string) => Promise<Project | null>; delete: (projectId: string) => Promise<IpcResult>; rename: (projectId: string, name: string) => Promise<IpcResult>; updateSpace: (projectId: string, spaceId: string) => Promise<IpcResult>; updateIcon: (projectId: string, icon: string | null, iconType: \"emoji\" | \"lucide\" | null) => Promise<IpcResult>; reorder: (projectId: string, targetProjectId: string) => Promise<IpcResult>; }; sessions: { save: (data: PersistedSession) => Promise<IpcResult>; load: (projectId: string, sessionId: string) => Promise<PersistedSession | null>; list: (projectId: string) => Promise<SessionListItem[]>; delete: (projectId: string, sessionId: string) => Promise<IpcResult>; search: (projectIds: string[], query: string) => Promise<{ messageResults: SearchMessageResult[]; sessionResults: SearchSessionResult[]; }>; export: (args: { format: \"markdown\" | \"json\" | \"html\"; content: string; defaultFileName: string }) => Promise<{ ok?: true; filePath?: string; canceled?: true; error?: string; }>; updateMeta: (projectId: string, sessionId: string, patch: { pinned?: boolean; folderId?: string | null; branch?: string; archived?: boolean; }) => Promise<IpcResult>; }; folders: { list: (projectId: string) => Promise<ChatFolder[]>; create: (projectId: string, name: string) => Promise<ChatFolder>; delete: (projectId: string, folderId: string) => Promise<IpcResult>; rename: (projectId: string, folderId: string, name: string) => Promise<IpcResult>; pin: (projectId: string, folderId: string, pinned: boolean) => Promise<IpcResult>; }; spaces: { list: () => Promise<Space[]>; save: (spaces: Space[]) => Promise<IpcResult>; }; ccSessions: { list: (projectPath: string) => Promise<CCSessionInfo[]>; import: (projectPath: string, ccSessionId: string) => Promise<{ messages?: UIMessage[]; ccSessionId?: string; error?: string; }>; }; files: { list: (cwd: string) => Promise<{ files: string[]; dirs: string[] }>; listAll: (cwd: string) => Promise<{ files: string[]; dirs: string[] }>; watch: (cwd: string) => Promise<IpcResult>; unwatch: (cwd: string) => Promise<IpcResult>; calculateDeepSize: ( cwd: string, paths: string[], ) => Promise<{ totalSize: number; fileCount: number; estimatedTokens: number; warnings: string[]; }>; readMultiple: ( cwd: string, paths: string[], deepPaths?: Set<string>, ) => Promise< Array< | { path: string; content: string; isDir?: false; error?: undefined } | { path: string; isDir: true; tree: string; error?: undefined } | { path: string; error: string; content?: undefined; isDir?: undefined } > >; onChanged: (callback: (data: { cwd: string }) => void) => () => void; }; git: { discoverRepos: (projectPath: string) => Promise<GitRepoInfo[]>; status: (cwd: string) => Promise<GitStatus | { error: string }>; stage: (cwd: string, files: string[]) => Promise<IpcResult>; unstage: (cwd: string, files: string[]) => Promise<IpcResult>; stageAll: (cwd: string) => Promise<IpcResult>; unstageAll: (cwd: string) => Promise<IpcResult>; discard: (cwd: string, files: string[]) => Promise<IpcResult>; commit: (cwd: string, message: string) => Promise<IpcResult & { output?: string }>; branches: (cwd: string) => Promise<GitBranch[] | { error: string }>; checkout: (cwd: string, branch: string) => Promise<IpcResult>; createBranch: (cwd: string, name: string) => Promise<IpcResult>; createWorktree: (cwd: string, path: string, branch: string, fromRef?: string) => Promise<IpcResult & { path?: string; output?: string; setupResults?: Array<{ command: string; ok: boolean; output?: string; error?: string }> }>; removeWorktree: (cwd: string, path: string, force?: boolean) => Promise<IpcResult & { output?: string }>; pruneWorktrees: (cwd: string) => Promise<IpcResult & { output?: string }>; push: (cwd: string) => Promise<IpcResult & { output?: string }>; pull: (cwd: string) => Promise<IpcResult & { output?: string }>; fetch: (cwd: string) => Promise<IpcResult & { output?: string }>; diffFile: (cwd: string, file: string, staged: boolean) => Promise<{ diff?: string; error?: string }>; diffStat: (cwd: string) => Promise<{ additions: number; deletions: number }>; log: (cwd: string, count?: number) => Promise<GitLogEntry[] | { error: string }>; generateCommitMessage: ( cwd: string, engine?: EngineId, sessionId?: string, ) => Promise<{ message?: string; error?: string }>; }; terminal: { create: (options: { cwd?: string; cols?: number; rows?: number; spaceId?: string }) => Promise<{ terminalId?: string; error?: string }>; list: () => Promise<{ terminals?: Array<{ terminalId: string; spaceId: string; createdAt: number; exited: boolean; exitCode: number | null; }>; error?: string; }>; snapshot: (terminalId: string) => Promise<{ output?: string; seq?: number; cols?: number; rows?: number; exited?: boolean; exitCode?: number | null; error?: string; }>; write: (terminalId: string, data: string) => Promise<IpcResult>; resize: (terminalId: string, cols: number, rows: number) => Promise<IpcResult>; destroy: (terminalId: string) => Promise<{ ok?: boolean }>; destroySpace: (spaceId: string) => Promise<{ ok?: boolean }>; onData: (callback: (data: { terminalId: string; data: string; seq: number }) => void) => () => void; onExit: (callback: (data: { terminalId: string; exitCode: number }) => void) => () => void; }; acp: { log: (label: string, data: unknown) => void; start: (options: { agentId: string; cwd: string; mcpServers?: McpServerConfig[] }) => Promise<ACPStartResult>; authenticate: (sessionId: string, methodId: string) => Promise<ACPAuthenticateResult>; prompt: (sessionId: string, text: string, images?: unknown[]) => Promise<IpcResult>; stop: (sessionId: string) => Promise<IpcResult>; reloadSession: (sessionId: string, mcpServers?: McpServerConfig[], cwd?: string) => Promise<IpcResult & { supportsLoad?: boolean }>; reviveSession: (options: { agentId: string; cwd: string; agentSessionId?: string; mcpServers?: McpServerConfig[] }) => Promise<{ sessionId?: string; agentSessionId?: string; usedLoad?: boolean; configOptions?: ACPConfigOption[]; mcpStatuses?: ACPStatusInfo[]; error?: string }>; cancel: (sessionId: string) => Promise<IpcResult>; abortPendingStart: () => Promise<{ ok?: boolean }>; respondPermission: (sessionId: string, requestId: string, optionId: string) => Promise<IpcResult>; setConfig: (sessionId: string, configId: string, value: string) => Promise<{ configOptions?: ACPConfigOption[]; error?: string }>; getConfigOptions: (sessionId: string) => Promise<{ configOptions?: ACPConfigOption[] }>; getAvailableCommands: (sessionId: string) => Promise<{ commands?: ACPAvailableCommand[] }>; onEvent: (callback: (data: ACPSessionEvent) => void) => () => void; onPermissionRequest: (callback: (data: ACPPermissionEvent) => void) => () => void; onTurnComplete: (callback: (data: ACPTurnCompleteEvent) => void) => () => void; onExit: (callback: (data: { _sessionId: string; code: number | null; error?: string }) => void) => () => void; }; codex: { log: (label: string, data: unknown) => void; start: (options: { cwd: string; model?: string; approvalPolicy?: string; sandbox?: \"read-only\" | \"workspace-write\" | \"danger-full-access\"; personality?: string; collaborationMode?: CollaborationMode }) => Promise<{ sessionId?: string; threadId?: string; models?: CodexModel[]; selectedModel?: string; account?: unknown; needsAuth?: boolean; error?: string; }>; send: (sessionId: string, text: string, images?: CodexImageInput[], effort?: string, collaborationMode?: CollaborationMode) => Promise<{ turnId?: string; error?: string }>; stop: (sessionId: string) => Promise<void>; interrupt: (sessionId: string) => Promise<{ error?: string }>; respondApproval: (sessionId: string, rpcId: string | number, decision: string, acceptSettings?: unknown) => Promise<IpcResult>; respondUserInput: ( sessionId: string, rpcId: string | number, answers: Record<string, { answers: string[] }>, ) => Promise<IpcResult>; respondServerRequestError: ( sessionId: string, rpcId: string | number, code: number, message: string, ) => Promise<IpcResult>; compact: (sessionId: string) => Promise<{ error?: string }>; listSkills: (sessionId: string) => Promise<{ skills: SkillsListEntry[]; error?: string; }>; listApps: (sessionId: string) => Promise<{ apps: AppInfo[]; error?: string; }>; listModels: () => Promise<{ models: CodexModel[]; error?: string }>; authStatus: () => Promise<{ account: unknown; requiresOpenaiAuth: boolean }>; login: (sessionId: string, type: \"apiKey\" | \"chatgpt\", apiKey?: string) => Promise<unknown>; resume: (options: { cwd: string; threadId: string; model?: string; approvalPolicy?: string; sandbox?: \"read-only\" | \"workspace-write\" | \"danger-full-access\" }) => Promise<{ sessionId?: string; threadId?: string; error?: string }>; setModel: (sessionId: string, model: string) => Promise<{ error?: string }>; version: () => Promise<{ version?: string; error?: string }>; binaryStatus: () => Promise<{ installed: boolean; downloading: boolean }>; onEvent: (callback: (data: CodexSessionEvent) => void) => () => void; onApprovalRequest: (callback: (data: CodexServerRequest) => void) => () => void; onExit: (callback: (data: CodexExitEvent) => void) => () => void; }; mcp: { list: (projectId: string) => Promise<McpServerConfig[]>; add: (projectId: string, server: McpServerConfig) => Promise<IpcResult>; remove: (projectId: string, name: string) => Promise<IpcResult>; authenticate: (serverName: string, serverUrl: string) => Promise<IpcResult>; authStatus: (serverName: string) => Promise<{ hasToken: boolean; expiresAt?: number }>; probe: (servers: McpServerConfig[]) => Promise<Array<{ name: string; status: \"connected\" | \"needs-auth\" | \"failed\"; error?: string }>>; }; agents: { list: () => Promise<InstalledAgent[]>; save: (agent: InstalledAgent) => Promise<IpcResult>; delete: (id: string) => Promise<IpcResult>; updateCachedConfig: (agentId: string, configOptions: ACPConfigOption[]) => Promise<{ ok?: boolean }>; /** Batch-check if binary-only agents are installed on the system PATH. */ checkBinaries: ( agents: Array<{ id: string; binary: Record<string, { cmd: string; args?: string[] }> }>, ) => Promise<Record<string, { path: string; args?: string[] } | null>>; /** Preferred ACP registry platform keys for the current machine. */ getPlatformKeys: () => Promise<string[]>; }; subagents: { list: () => Promise<CustomSubagent[]>; save: (subagent: CustomSubagent) => Promise<IpcResult>; delete: (id: string) => Promise<IpcResult>; }; promptTemplates: { list: () => Promise<PromptTemplate[]>; save: (template: PromptTemplate) => Promise<IpcResult>; delete: (id: string) => Promise<IpcResult>; }; settings: { get: () => Promise<AppSettings>; set: (patch: Partial<AppSettings>) => Promise<IpcResult>; /** Subscribe to settings changes pushed from the main process. */ onChanged: (callback: (settings: AppSettings) => void) => () => void; }; jira: { getConfig: (projectId: string) => Promise<JiraProjectConfig | null>; saveConfig: (projectId: string, config: JiraProjectConfig) => Promise<IpcResult>; deleteConfig: (projectId: string) => Promise<IpcResult>; authenticate: ( instanceUrl: string, method: \"oauth\" | \"apitoken\", apiToken?: string, email?: string ) => Promise<IpcResult>; authStatus: (instanceUrl: string) => Promise<{ hasToken: boolean }>; logout: (instanceUrl: string) => Promise<IpcResult>; getProjects: (instanceUrl: string) => Promise<JiraProjectSummary[] | { error: string }>; getBoards: (params: JiraGetBoardsParams) => Promise<JiraBoard[] | { error: string }>; getBoardConfiguration: (params: JiraGetSprintsParams) => Promise<JiraBoardConfiguration | { error: string }>; getSprints: (params: JiraGetSprintsParams) => Promise<JiraSprint[] | { error: string }>; getIssues: (params: JiraGetIssuesParams) => Promise<JiraIssue[] | { error: string }>; getComments: (params: JiraGetCommentsParams) => Promise<JiraComment[] | { error: string }>; getTransitions: (params: JiraGetTransitionsParams) => Promise<JiraTransition[] | { error: string }>; transitionIssue: (params: JiraTransitionIssueParams) => Promise<IpcResult>; }; analytics: { /** Fire-and-forget analytics event via the main process PostHog client. */ capture: (event: string, properties?: Record<string, unknown>) => void; }; speech: { /** Triggers macOS native dictation (Cocoa startDictation: selector). Returns { ok: false } on non-macOS. */ startNativeDictation: () => Promise<{ ok: boolean; reason?: string }>; /** Returns the OS platform string (darwin, win32, linux) */ getPlatform: () => Promise<string>; /** Requests microphone permission (macOS system dialog). Returns { granted } on all platforms. */ requestMicPermission: () => Promise<{ granted: boolean }>; }; updater: { onUpdateAvailable: (cb: (info: { version: string; releaseNotes?: string }) => void) => () => void; onDownloadProgress: (cb: (progress: { percent: number; bytesPerSecond: number; total: number; transferred: number }) => void) => () => void; onUpdateDownloaded: (cb: (info: { version: string }) => void) => () => void; onInstallError: (cb: (error: { message: string }) => void) => () => void; download: () => Promise<unknown>; install: () => Promise<void>; check: () => Promise<unknown>; currentVersion: () => Promise<string>; isPreRelease: () => Promise<PreReleaseInfo>; onPreReleaseStatus: (cb: (info: PreReleaseInfo) => void) => () => void; }; }"
+        }
+      ]
+    }
+  ]
+}

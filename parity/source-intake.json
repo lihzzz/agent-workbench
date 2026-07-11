@@ -1,0 +1,21 @@
+{
+  "generatedAt": "2026-07-10T13:24:45.581Z",
+  "status": "no-input",
+  "expected": {
+    "branch": "hy_dev",
+    "headPrefix": "0e1dab7"
+  },
+  "input": {
+    "sourceBundle": null,
+    "outputWorkspace": "/Users/lh/git/harnss-source-intake",
+    "checkoutRef": null,
+    "force": false
+  },
+  "preparedWorkspace": null,
+  "note": "No --source-bundle was provided. The M0 pipeline will fall back to --source-workspace when present.",
+  "platform": {
+    "node": "v24.13.0",
+    "platform": "darwin",
+    "arch": "arm64"
+  }
+}

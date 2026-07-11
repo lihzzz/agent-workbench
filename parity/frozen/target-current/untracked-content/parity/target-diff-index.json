@@ -1,0 +1,1607 @@
+{
+  "generatedAt": "2026-07-10T13:20:25.469Z",
+  "sourceStatus": "source-pending",
+  "evidenceRule": "Target-side routing only. This index does not prove source parity or close ledger items.",
+  "summary": {
+    "total": 88,
+    "byLedgerId": {
+      "P01": 0,
+      "P02": 1,
+      "P03": 6,
+      "P04": 32,
+      "P05": 4,
+      "P06": 0,
+      "P07": 0,
+      "P08": 0,
+      "P09": 6,
+      "P10": 84
+    },
+    "byFeatureTag": {
+      "app-shell": 12,
+      "archive-preview": 3,
+      "branch-context": 2,
+      "codex-model-fallback": 6,
+      "file-io": 1,
+      "input-history": 3,
+      "preload-ipc-contract": 4,
+      "prompt-templates": 10,
+      "session-export": 2,
+      "session-persistence": 23,
+      "settings-contract": 8,
+      "skills": 2,
+      "subagents": 8,
+      "todo-checklist": 1,
+      "tool-rendering": 4,
+      "usage-dashboard": 7
+    },
+    "unmappedContractReview": 0
+  },
+  "entries": [
+    {
+      "path": "electron-builder.config.js",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "candidateLedgerIds": [
+        "P10"
+      ],
+      "featureTags": [
+        "app-shell"
+      ],
+      "evidenceStatus": "target-index-only",
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "electron/src/ipc/claude-sessions.ts",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "candidateLedgerIds": [
+        "P04",
+        "P10"
+      ],
+      "featureTags": [
+        "session-persistence"
+      ],
+      "evidenceStatus": "target-index-only",
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "electron/src/ipc/files.ts",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "candidateLedgerIds": [
+        "P02"
+      ],
+      "featureTags": [
+        "file-io"
+      ],
+      "evidenceStatus": "target-index-only",
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "electron/src/ipc/prompt-templates.ts",
+      "targetStatus": "A",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "candidateLedgerIds": [
+        "P10"
+      ],
+      "featureTags": [
+        "prompt-templates"
+      ],
+      "evidenceStatus": "target-index-only",
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "electron/src/ipc/sessions.ts",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": true,
+      "candidateLedgerIds": [
+        "P04",
+        "P10"
+      ],
+      "featureTags": [
+        "session-persistence"
+      ],
+      "evidenceStatus": "target-index-only",
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "electron/src/ipc/subagents.ts",
+      "targetStatus": "A",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "candidateLedgerIds": [
+        "P10"
+      ],
+      "featureTags": [
+        "subagents"
+      ],
+      "evidenceStatus": "target-index-only",
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "electron/src/ipc/terminal.ts",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "candidateLedgerIds": [
+        "P04",
+        "P10"
+      ],
+      "featureTags": [
+        "session-persistence"
+      ],
+      "evidenceStatus": "target-index-only",
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "electron/src/lib/__tests__/claude-model-cache.test.ts",
+      "targetStatus": "A",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "candidateLedgerIds": [
+        "P09",
+        "P10"
+      ],
+      "featureTags": [
+        "codex-model-fallback"
+      ],
+      "evidenceStatus": "target-index-only",
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "electron/src/lib/__tests__/prompt-template-registry.test.ts",
+      "targetStatus": "A",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "candidateLedgerIds": [
+        "P10"
+      ],
+      "featureTags": [
+        "prompt-templates"
+      ],
+      "evidenceStatus": "target-index-only",
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "electron/src/lib/__tests__/subagent-registry.test.ts",
+      "targetStatus": "A",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "candidateLedgerIds": [
+        "P10"
+      ],
+      "featureTags": [
+        "subagents"
+      ],
+      "evidenceStatus": "target-index-only",
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "electron/src/lib/claude-model-cache.ts",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "candidateLedgerIds": [
+        "P09",
+        "P10"
+      ],
+      "featureTags": [
+        "codex-model-fallback"
+      ],
+      "evidenceStatus": "target-index-only",
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "electron/src/lib/prompt-template-registry.ts",
+      "targetStatus": "A",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "candidateLedgerIds": [
+        "P10"
+      ],
+      "featureTags": [
+        "prompt-templates"
+      ],
+      "evidenceStatus": "target-index-only",
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "electron/src/lib/subagent-registry.ts",
+      "targetStatus": "A",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "candidateLedgerIds": [
+        "P10"
+      ],
+      "featureTags": [
+        "subagents"
+      ],
+      "evidenceStatus": "target-index-only",
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "electron/src/main.ts",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "candidateLedgerIds": [
+        "P10"
+      ],
+      "featureTags": [
+        "preload-ipc-contract"
+      ],
+      "evidenceStatus": "target-index-only",
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "electron/src/preload.ts",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": true,
+      "candidateLedgerIds": [
+        "P10"
+      ],
+      "featureTags": [
+        "preload-ipc-contract"
+      ],
+      "evidenceStatus": "target-index-only",
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "pnpm-lock.yaml",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": true,
+      "candidateLedgerIds": [
+        "P10"
+      ],
+      "featureTags": [
+        "app-shell"
+      ],
+      "evidenceStatus": "target-index-only",
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "shared/lib/session-persistence.ts",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": true,
+      "candidateLedgerIds": [
+        "P04",
+        "P10"
+      ],
+      "featureTags": [
+        "session-persistence"
+      ],
+      "evidenceStatus": "target-index-only",
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "shared/types/builtin-prompt-templates.ts",
+      "targetStatus": "A",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "candidateLedgerIds": [
+        "P10"
+      ],
+      "featureTags": [
+        "prompt-templates"
+      ],
+      "evidenceStatus": "target-index-only",
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "shared/types/builtin-subagents.ts",
+      "targetStatus": "A",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "candidateLedgerIds": [
+        "P10"
+      ],
+      "featureTags": [
+        "subagents"
+      ],
+      "evidenceStatus": "target-index-only",
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "shared/types/engine.ts",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": true,
+      "candidateLedgerIds": [
+        "P10"
+      ],
+      "featureTags": [
+        "preload-ipc-contract"
+      ],
+      "evidenceStatus": "target-index-only",
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "shared/types/prompt-template.ts",
+      "targetStatus": "A",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "candidateLedgerIds": [
+        "P10"
+      ],
+      "featureTags": [
+        "prompt-templates"
+      ],
+      "evidenceStatus": "target-index-only",
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "shared/types/subagent.ts",
+      "targetStatus": "A",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "candidateLedgerIds": [
+        "P10"
+      ],
+      "featureTags": [
+        "subagents"
+      ],
+      "evidenceStatus": "target-index-only",
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/components/AgentContext.tsx",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "candidateLedgerIds": [
+        "P10"
+      ],
+      "featureTags": [
+        "app-shell"
+      ],
+      "evidenceStatus": "target-index-only",
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/components/AppLayout.tsx",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": true,
+      "candidateLedgerIds": [
+        "P10"
+      ],
+      "featureTags": [
+        "app-shell"
+      ],
+      "evidenceStatus": "target-index-only",
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/components/AppSidebar.tsx",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": true,
+      "candidateLedgerIds": [
+        "P10"
+      ],
+      "featureTags": [
+        "app-shell"
+      ],
+      "evidenceStatus": "target-index-only",
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/components/MessageBubble.tsx",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "candidateLedgerIds": [
+        "P05",
+        "P10"
+      ],
+      "featureTags": [
+        "tool-rendering"
+      ],
+      "evidenceStatus": "target-index-only",
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/components/SettingsView.tsx",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": true,
+      "candidateLedgerIds": [
+        "P10"
+      ],
+      "featureTags": [
+        "settings-contract"
+      ],
+      "evidenceStatus": "target-index-only",
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/components/ToolCall.tsx",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "candidateLedgerIds": [
+        "P05",
+        "P10"
+      ],
+      "featureTags": [
+        "todo-checklist",
+        "tool-rendering"
+      ],
+      "evidenceStatus": "target-index-only",
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/components/input-bar/BranchIndicator.tsx",
+      "targetStatus": "A",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "candidateLedgerIds": [
+        "P10"
+      ],
+      "featureTags": [
+        "branch-context"
+      ],
+      "evidenceStatus": "target-index-only",
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/components/input-bar/InputBar.tsx",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "candidateLedgerIds": [
+        "P03"
+      ],
+      "featureTags": [
+        "input-history"
+      ],
+      "evidenceStatus": "target-index-only",
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/components/input-bar/TemplateVarForm.tsx",
+      "targetStatus": "A",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "candidateLedgerIds": [
+        "P10"
+      ],
+      "featureTags": [
+        "prompt-templates"
+      ],
+      "evidenceStatus": "target-index-only",
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/components/input-bar/input-bar-utils.ts",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "candidateLedgerIds": [
+        "P03"
+      ],
+      "featureTags": [
+        "input-history"
+      ],
+      "evidenceStatus": "target-index-only",
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/components/input-bar/useInputHistory.ts",
+      "targetStatus": "A",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "candidateLedgerIds": [
+        "P03"
+      ],
+      "featureTags": [
+        "input-history"
+      ],
+      "evidenceStatus": "target-index-only",
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/components/settings/ArchivedSettings.tsx",
+      "targetStatus": "A",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "candidateLedgerIds": [
+        "P03",
+        "P10"
+      ],
+      "featureTags": [
+        "archive-preview",
+        "settings-contract"
+      ],
+      "evidenceStatus": "target-index-only",
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/components/settings/CostDashboardSettings.tsx",
+      "targetStatus": "A",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "candidateLedgerIds": [
+        "P04",
+        "P10"
+      ],
+      "featureTags": [
+        "settings-contract",
+        "usage-dashboard"
+      ],
+      "evidenceStatus": "target-index-only",
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/components/settings/MiniBarChart.tsx",
+      "targetStatus": "A",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "candidateLedgerIds": [
+        "P04",
+        "P10"
+      ],
+      "featureTags": [
+        "settings-contract",
+        "usage-dashboard"
+      ],
+      "evidenceStatus": "target-index-only",
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/components/settings/PromptTemplateSettings.tsx",
+      "targetStatus": "A",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "candidateLedgerIds": [
+        "P10"
+      ],
+      "featureTags": [
+        "prompt-templates",
+        "settings-contract"
+      ],
+      "evidenceStatus": "target-index-only",
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/components/settings/SkillsSettings.tsx",
+      "targetStatus": "A",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "candidateLedgerIds": [
+        "P10"
+      ],
+      "featureTags": [
+        "settings-contract",
+        "skills"
+      ],
+      "evidenceStatus": "target-index-only",
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/components/settings/SubagentSettings.tsx",
+      "targetStatus": "A",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "candidateLedgerIds": [
+        "P10"
+      ],
+      "featureTags": [
+        "settings-contract",
+        "subagents"
+      ],
+      "evidenceStatus": "target-index-only",
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/components/sidebar/BranchSection.tsx",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "candidateLedgerIds": [
+        "P10"
+      ],
+      "featureTags": [
+        "branch-context"
+      ],
+      "evidenceStatus": "target-index-only",
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/components/sidebar/FolderSection.tsx",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "candidateLedgerIds": [
+        "P10"
+      ],
+      "featureTags": [
+        "app-shell"
+      ],
+      "evidenceStatus": "target-index-only",
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/components/sidebar/PinnedSection.tsx",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "candidateLedgerIds": [
+        "P10"
+      ],
+      "featureTags": [
+        "app-shell"
+      ],
+      "evidenceStatus": "target-index-only",
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/components/sidebar/ProjectSection.tsx",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "candidateLedgerIds": [
+        "P10"
+      ],
+      "featureTags": [
+        "app-shell"
+      ],
+      "evidenceStatus": "target-index-only",
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/components/sidebar/SessionItem.tsx",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "candidateLedgerIds": [
+        "P03",
+        "P10"
+      ],
+      "featureTags": [
+        "archive-preview"
+      ],
+      "evidenceStatus": "target-index-only",
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/components/sidebar/SidebarActionsContext.tsx",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "candidateLedgerIds": [
+        "P10"
+      ],
+      "featureTags": [
+        "app-shell"
+      ],
+      "evidenceStatus": "target-index-only",
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/hooks/app-layout/useAppSessionActions.ts",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "candidateLedgerIds": [
+        "P04",
+        "P10"
+      ],
+      "featureTags": [
+        "session-persistence"
+      ],
+      "evidenceStatus": "target-index-only",
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/hooks/session/types.ts",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "candidateLedgerIds": [
+        "P04",
+        "P10"
+      ],
+      "featureTags": [
+        "session-persistence"
+      ],
+      "evidenceStatus": "target-index-only",
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/hooks/session/useSessionCrud.ts",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "candidateLedgerIds": [
+        "P04",
+        "P10"
+      ],
+      "featureTags": [
+        "session-persistence"
+      ],
+      "evidenceStatus": "target-index-only",
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/hooks/session/useSessionPane.ts",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "candidateLedgerIds": [
+        "P04",
+        "P10"
+      ],
+      "featureTags": [
+        "session-persistence"
+      ],
+      "evidenceStatus": "target-index-only",
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/hooks/session/useSessionPersistence.ts",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": true,
+      "candidateLedgerIds": [
+        "P04",
+        "P10"
+      ],
+      "featureTags": [
+        "session-persistence"
+      ],
+      "evidenceStatus": "target-index-only",
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/hooks/session/useSessionRestart.ts",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "candidateLedgerIds": [
+        "P04",
+        "P10"
+      ],
+      "featureTags": [
+        "session-persistence"
+      ],
+      "evidenceStatus": "target-index-only",
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/hooks/session/useSessionRevival.ts",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "candidateLedgerIds": [
+        "P04",
+        "P10"
+      ],
+      "featureTags": [
+        "session-persistence"
+      ],
+      "evidenceStatus": "target-index-only",
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/hooks/useACP.ts",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "candidateLedgerIds": [
+        "P04",
+        "P10"
+      ],
+      "featureTags": [
+        "session-persistence"
+      ],
+      "evidenceStatus": "target-index-only",
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/hooks/useAppOrchestrator.ts",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "candidateLedgerIds": [
+        "P04",
+        "P10"
+      ],
+      "featureTags": [
+        "session-persistence"
+      ],
+      "evidenceStatus": "target-index-only",
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/hooks/useClaude.ts",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "candidateLedgerIds": [
+        "P04",
+        "P10"
+      ],
+      "featureTags": [
+        "session-persistence"
+      ],
+      "evidenceStatus": "target-index-only",
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/hooks/useCodex.ts",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "candidateLedgerIds": [
+        "P04",
+        "P09",
+        "P10"
+      ],
+      "featureTags": [
+        "codex-model-fallback",
+        "session-persistence"
+      ],
+      "evidenceStatus": "target-index-only",
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/hooks/useEngineBase.ts",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": true,
+      "candidateLedgerIds": [
+        "P04",
+        "P10"
+      ],
+      "featureTags": [
+        "session-persistence"
+      ],
+      "evidenceStatus": "target-index-only",
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/hooks/useFolderManager.ts",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "candidateLedgerIds": [
+        "P10"
+      ],
+      "featureTags": [
+        "app-shell"
+      ],
+      "evidenceStatus": "target-index-only",
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/hooks/usePromptTemplates.ts",
+      "targetStatus": "A",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "candidateLedgerIds": [
+        "P10"
+      ],
+      "featureTags": [
+        "prompt-templates"
+      ],
+      "evidenceStatus": "target-index-only",
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/hooks/useSessionManager.ts",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": true,
+      "candidateLedgerIds": [
+        "P04",
+        "P10"
+      ],
+      "featureTags": [
+        "session-persistence"
+      ],
+      "evidenceStatus": "target-index-only",
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/hooks/useSkills.ts",
+      "targetStatus": "A",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "candidateLedgerIds": [
+        "P10"
+      ],
+      "featureTags": [
+        "skills"
+      ],
+      "evidenceStatus": "target-index-only",
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/hooks/useSubagents.ts",
+      "targetStatus": "A",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "candidateLedgerIds": [
+        "P10"
+      ],
+      "featureTags": [
+        "subagents"
+      ],
+      "evidenceStatus": "target-index-only",
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/hooks/useUsageData.ts",
+      "targetStatus": "A",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "candidateLedgerIds": [
+        "P04",
+        "P10"
+      ],
+      "featureTags": [
+        "usage-dashboard"
+      ],
+      "evidenceStatus": "target-index-only",
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/lib/background/claude-handler.ts",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "candidateLedgerIds": [
+        "P04",
+        "P10"
+      ],
+      "featureTags": [
+        "session-persistence"
+      ],
+      "evidenceStatus": "target-index-only",
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/lib/background/codex-web-search.test.ts",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "candidateLedgerIds": [
+        "P09",
+        "P10"
+      ],
+      "featureTags": [
+        "codex-model-fallback"
+      ],
+      "evidenceStatus": "target-index-only",
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/lib/background/context-usage.test.ts",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "candidateLedgerIds": [
+        "P04",
+        "P10"
+      ],
+      "featureTags": [
+        "session-persistence"
+      ],
+      "evidenceStatus": "target-index-only",
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/lib/background/session-store.ts",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "candidateLedgerIds": [
+        "P04",
+        "P10"
+      ],
+      "featureTags": [
+        "session-persistence"
+      ],
+      "evidenceStatus": "target-index-only",
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/lib/engine-colors.ts",
+      "targetStatus": "A",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "candidateLedgerIds": [
+        "P10"
+      ],
+      "featureTags": [
+        "app-shell"
+      ],
+      "evidenceStatus": "target-index-only",
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/lib/engine/leaked-tool-parse.test.ts",
+      "targetStatus": "A",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "candidateLedgerIds": [
+        "P05",
+        "P10"
+      ],
+      "featureTags": [
+        "tool-rendering"
+      ],
+      "evidenceStatus": "target-index-only",
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/lib/engine/leaked-tool-parse.ts",
+      "targetStatus": "A",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "candidateLedgerIds": [
+        "P05",
+        "P10"
+      ],
+      "featureTags": [
+        "tool-rendering"
+      ],
+      "evidenceStatus": "target-index-only",
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/lib/model-utils.test.ts",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "candidateLedgerIds": [
+        "P09",
+        "P10"
+      ],
+      "featureTags": [
+        "codex-model-fallback"
+      ],
+      "evidenceStatus": "target-index-only",
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/lib/model-utils.ts",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "candidateLedgerIds": [
+        "P09",
+        "P10"
+      ],
+      "featureTags": [
+        "codex-model-fallback"
+      ],
+      "evidenceStatus": "target-index-only",
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/lib/prompt-template.test.ts",
+      "targetStatus": "A",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "candidateLedgerIds": [
+        "P10"
+      ],
+      "featureTags": [
+        "prompt-templates"
+      ],
+      "evidenceStatus": "target-index-only",
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/lib/session/model-usage.test.ts",
+      "targetStatus": "A",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "candidateLedgerIds": [
+        "P04",
+        "P10"
+      ],
+      "featureTags": [
+        "usage-dashboard"
+      ],
+      "evidenceStatus": "target-index-only",
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/lib/session/model-usage.ts",
+      "targetStatus": "A",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "candidateLedgerIds": [
+        "P04",
+        "P10"
+      ],
+      "featureTags": [
+        "usage-dashboard"
+      ],
+      "evidenceStatus": "target-index-only",
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/lib/session/records.ts",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "candidateLedgerIds": [
+        "P04",
+        "P10"
+      ],
+      "featureTags": [
+        "session-persistence"
+      ],
+      "evidenceStatus": "target-index-only",
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/lib/session/session-export.test.ts",
+      "targetStatus": "A",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "candidateLedgerIds": [
+        "P04",
+        "P10"
+      ],
+      "featureTags": [
+        "session-export"
+      ],
+      "evidenceStatus": "target-index-only",
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/lib/session/session-export.ts",
+      "targetStatus": "A",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "candidateLedgerIds": [
+        "P04",
+        "P10"
+      ],
+      "featureTags": [
+        "session-export"
+      ],
+      "evidenceStatus": "target-index-only",
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/lib/session/usage-aggregation.test.ts",
+      "targetStatus": "A",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "candidateLedgerIds": [
+        "P04",
+        "P10"
+      ],
+      "featureTags": [
+        "usage-dashboard"
+      ],
+      "evidenceStatus": "target-index-only",
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/lib/session/usage-aggregation.ts",
+      "targetStatus": "A",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "candidateLedgerIds": [
+        "P04",
+        "P10"
+      ],
+      "featureTags": [
+        "usage-dashboard"
+      ],
+      "evidenceStatus": "target-index-only",
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/lib/sidebar/grouping.ts",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "candidateLedgerIds": [
+        "P03",
+        "P10"
+      ],
+      "featureTags": [
+        "archive-preview"
+      ],
+      "evidenceStatus": "target-index-only",
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/stores/settings-store.ts",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": true,
+      "candidateLedgerIds": [
+        "P10"
+      ],
+      "featureTags": [
+        "settings-contract"
+      ],
+      "evidenceStatus": "target-index-only",
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/types/engine-hook.ts",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "candidateLedgerIds": [
+        "P04",
+        "P10"
+      ],
+      "featureTags": [
+        "session-persistence"
+      ],
+      "evidenceStatus": "target-index-only",
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/types/index.ts",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "candidateLedgerIds": [
+        "P10"
+      ],
+      "featureTags": [
+        "app-shell"
+      ],
+      "evidenceStatus": "target-index-only",
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/types/prompt-template.ts",
+      "targetStatus": "A",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "candidateLedgerIds": [
+        "P10"
+      ],
+      "featureTags": [
+        "prompt-templates"
+      ],
+      "evidenceStatus": "target-index-only",
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/types/session.ts",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "candidateLedgerIds": [
+        "P04",
+        "P10"
+      ],
+      "featureTags": [
+        "session-persistence"
+      ],
+      "evidenceStatus": "target-index-only",
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/types/subagent.ts",
+      "targetStatus": "A",
+      "matrixClass": "source-pending",
+      "hotspot": false,
+      "candidateLedgerIds": [
+        "P10"
+      ],
+      "featureTags": [
+        "subagents"
+      ],
+      "evidenceStatus": "target-index-only",
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    },
+    {
+      "path": "src/types/window.d.ts",
+      "targetStatus": "M",
+      "matrixClass": "source-pending",
+      "hotspot": true,
+      "candidateLedgerIds": [
+        "P10"
+      ],
+      "featureTags": [
+        "preload-ipc-contract"
+      ],
+      "evidenceStatus": "target-index-only",
+      "requiredAction": "Compare against the frozen source snapshot before retaining behavior."
+    }
+  ],
+  "byLedgerId": {
+    "P01": [],
+    "P02": [
+      "electron/src/ipc/files.ts"
+    ],
+    "P03": [
+      "src/components/input-bar/InputBar.tsx",
+      "src/components/input-bar/input-bar-utils.ts",
+      "src/components/input-bar/useInputHistory.ts",
+      "src/components/settings/ArchivedSettings.tsx",
+      "src/components/sidebar/SessionItem.tsx",
+      "src/lib/sidebar/grouping.ts"
+    ],
+    "P04": [
+      "electron/src/ipc/claude-sessions.ts",
+      "electron/src/ipc/sessions.ts",
+      "electron/src/ipc/terminal.ts",
+      "shared/lib/session-persistence.ts",
+      "src/components/settings/CostDashboardSettings.tsx",
+      "src/components/settings/MiniBarChart.tsx",
+      "src/hooks/app-layout/useAppSessionActions.ts",
+      "src/hooks/session/types.ts",
+      "src/hooks/session/useSessionCrud.ts",
+      "src/hooks/session/useSessionPane.ts",
+      "src/hooks/session/useSessionPersistence.ts",
+      "src/hooks/session/useSessionRestart.ts",
+      "src/hooks/session/useSessionRevival.ts",
+      "src/hooks/useACP.ts",
+      "src/hooks/useAppOrchestrator.ts",
+      "src/hooks/useClaude.ts",
+      "src/hooks/useCodex.ts",
+      "src/hooks/useEngineBase.ts",
+      "src/hooks/useSessionManager.ts",
+      "src/hooks/useUsageData.ts",
+      "src/lib/background/claude-handler.ts",
+      "src/lib/background/context-usage.test.ts",
+      "src/lib/background/session-store.ts",
+      "src/lib/session/model-usage.test.ts",
+      "src/lib/session/model-usage.ts",
+      "src/lib/session/records.ts",
+      "src/lib/session/session-export.test.ts",
+      "src/lib/session/session-export.ts",
+      "src/lib/session/usage-aggregation.test.ts",
+      "src/lib/session/usage-aggregation.ts",
+      "src/types/engine-hook.ts",
+      "src/types/session.ts"
+    ],
+    "P05": [
+      "src/components/MessageBubble.tsx",
+      "src/components/ToolCall.tsx",
+      "src/lib/engine/leaked-tool-parse.test.ts",
+      "src/lib/engine/leaked-tool-parse.ts"
+    ],
+    "P06": [],
+    "P07": [],
+    "P08": [],
+    "P09": [
+      "electron/src/lib/__tests__/claude-model-cache.test.ts",
+      "electron/src/lib/claude-model-cache.ts",
+      "src/hooks/useCodex.ts",
+      "src/lib/background/codex-web-search.test.ts",
+      "src/lib/model-utils.test.ts",
+      "src/lib/model-utils.ts"
+    ],
+    "P10": [
+      "electron-builder.config.js",
+      "electron/src/ipc/claude-sessions.ts",
+      "electron/src/ipc/prompt-templates.ts",
+      "electron/src/ipc/sessions.ts",
+      "electron/src/ipc/subagents.ts",
+      "electron/src/ipc/terminal.ts",
+      "electron/src/lib/__tests__/claude-model-cache.test.ts",
+      "electron/src/lib/__tests__/prompt-template-registry.test.ts",
+      "electron/src/lib/__tests__/subagent-registry.test.ts",
+      "electron/src/lib/claude-model-cache.ts",
+      "electron/src/lib/prompt-template-registry.ts",
+      "electron/src/lib/subagent-registry.ts",
+      "electron/src/main.ts",
+      "electron/src/preload.ts",
+      "pnpm-lock.yaml",
+      "shared/lib/session-persistence.ts",
+      "shared/types/builtin-prompt-templates.ts",
+      "shared/types/builtin-subagents.ts",
+      "shared/types/engine.ts",
+      "shared/types/prompt-template.ts",
+      "shared/types/subagent.ts",
+      "src/components/AgentContext.tsx",
+      "src/components/AppLayout.tsx",
+      "src/components/AppSidebar.tsx",
+      "src/components/MessageBubble.tsx",
+      "src/components/SettingsView.tsx",
+      "src/components/ToolCall.tsx",
+      "src/components/input-bar/BranchIndicator.tsx",
+      "src/components/input-bar/TemplateVarForm.tsx",
+      "src/components/settings/ArchivedSettings.tsx",
+      "src/components/settings/CostDashboardSettings.tsx",
+      "src/components/settings/MiniBarChart.tsx",
+      "src/components/settings/PromptTemplateSettings.tsx",
+      "src/components/settings/SkillsSettings.tsx",
+      "src/components/settings/SubagentSettings.tsx",
+      "src/components/sidebar/BranchSection.tsx",
+      "src/components/sidebar/FolderSection.tsx",
+      "src/components/sidebar/PinnedSection.tsx",
+      "src/components/sidebar/ProjectSection.tsx",
+      "src/components/sidebar/SessionItem.tsx",
+      "src/components/sidebar/SidebarActionsContext.tsx",
+      "src/hooks/app-layout/useAppSessionActions.ts",
+      "src/hooks/session/types.ts",
+      "src/hooks/session/useSessionCrud.ts",
+      "src/hooks/session/useSessionPane.ts",
+      "src/hooks/session/useSessionPersistence.ts",
+      "src/hooks/session/useSessionRestart.ts",
+      "src/hooks/session/useSessionRevival.ts",
+      "src/hooks/useACP.ts",
+      "src/hooks/useAppOrchestrator.ts",
+      "src/hooks/useClaude.ts",
+      "src/hooks/useCodex.ts",
+      "src/hooks/useEngineBase.ts",
+      "src/hooks/useFolderManager.ts",
+      "src/hooks/usePromptTemplates.ts",
+      "src/hooks/useSessionManager.ts",
+      "src/hooks/useSkills.ts",
+      "src/hooks/useSubagents.ts",
+      "src/hooks/useUsageData.ts",
+      "src/lib/background/claude-handler.ts",
+      "src/lib/background/codex-web-search.test.ts",
+      "src/lib/background/context-usage.test.ts",
+      "src/lib/background/session-store.ts",
+      "src/lib/engine-colors.ts",
+      "src/lib/engine/leaked-tool-parse.test.ts",
+      "src/lib/engine/leaked-tool-parse.ts",
+      "src/lib/model-utils.test.ts",
+      "src/lib/model-utils.ts",
+      "src/lib/prompt-template.test.ts",
+      "src/lib/session/model-usage.test.ts",
+      "src/lib/session/model-usage.ts",
+      "src/lib/session/records.ts",
+      "src/lib/session/session-export.test.ts",
+      "src/lib/session/session-export.ts",
+      "src/lib/session/usage-aggregation.test.ts",
+      "src/lib/session/usage-aggregation.ts",
+      "src/lib/sidebar/grouping.ts",
+      "src/stores/settings-store.ts",
+      "src/types/engine-hook.ts",
+      "src/types/index.ts",
+      "src/types/prompt-template.ts",
+      "src/types/session.ts",
+      "src/types/subagent.ts",
+      "src/types/window.d.ts"
+    ]
+  },
+  "byFeatureTag": {
+    "app-shell": [
+      "electron-builder.config.js",
+      "pnpm-lock.yaml",
+      "src/components/AgentContext.tsx",
+      "src/components/AppLayout.tsx",
+      "src/components/AppSidebar.tsx",
+      "src/components/sidebar/FolderSection.tsx",
+      "src/components/sidebar/PinnedSection.tsx",
+      "src/components/sidebar/ProjectSection.tsx",
+      "src/components/sidebar/SidebarActionsContext.tsx",
+      "src/hooks/useFolderManager.ts",
+      "src/lib/engine-colors.ts",
+      "src/types/index.ts"
+    ],
+    "archive-preview": [
+      "src/components/settings/ArchivedSettings.tsx",
+      "src/components/sidebar/SessionItem.tsx",
+      "src/lib/sidebar/grouping.ts"
+    ],
+    "branch-context": [
+      "src/components/input-bar/BranchIndicator.tsx",
+      "src/components/sidebar/BranchSection.tsx"
+    ],
+    "codex-model-fallback": [
+      "electron/src/lib/__tests__/claude-model-cache.test.ts",
+      "electron/src/lib/claude-model-cache.ts",
+      "src/hooks/useCodex.ts",
+      "src/lib/background/codex-web-search.test.ts",
+      "src/lib/model-utils.test.ts",
+      "src/lib/model-utils.ts"
+    ],
+    "file-io": [
+      "electron/src/ipc/files.ts"
+    ],
+    "input-history": [
+      "src/components/input-bar/InputBar.tsx",
+      "src/components/input-bar/input-bar-utils.ts",
+      "src/components/input-bar/useInputHistory.ts"
+    ],
+    "preload-ipc-contract": [
+      "electron/src/main.ts",
+      "electron/src/preload.ts",
+      "shared/types/engine.ts",
+      "src/types/window.d.ts"
+    ],
+    "prompt-templates": [
+      "electron/src/ipc/prompt-templates.ts",
+      "electron/src/lib/__tests__/prompt-template-registry.test.ts",
+      "electron/src/lib/prompt-template-registry.ts",
+      "shared/types/builtin-prompt-templates.ts",
+      "shared/types/prompt-template.ts",
+      "src/components/input-bar/TemplateVarForm.tsx",
+      "src/components/settings/PromptTemplateSettings.tsx",
+      "src/hooks/usePromptTemplates.ts",
+      "src/lib/prompt-template.test.ts",
+      "src/types/prompt-template.ts"
+    ],
+    "session-export": [
+      "src/lib/session/session-export.test.ts",
+      "src/lib/session/session-export.ts"
+    ],
+    "session-persistence": [
+      "electron/src/ipc/claude-sessions.ts",
+      "electron/src/ipc/sessions.ts",
+      "electron/src/ipc/terminal.ts",
+      "shared/lib/session-persistence.ts",
+      "src/hooks/app-layout/useAppSessionActions.ts",
+      "src/hooks/session/types.ts",
+      "src/hooks/session/useSessionCrud.ts",
+      "src/hooks/session/useSessionPane.ts",
+      "src/hooks/session/useSessionPersistence.ts",
+      "src/hooks/session/useSessionRestart.ts",
+      "src/hooks/session/useSessionRevival.ts",
+      "src/hooks/useACP.ts",
+      "src/hooks/useAppOrchestrator.ts",
+      "src/hooks/useClaude.ts",
+      "src/hooks/useCodex.ts",
+      "src/hooks/useEngineBase.ts",
+      "src/hooks/useSessionManager.ts",
+      "src/lib/background/claude-handler.ts",
+      "src/lib/background/context-usage.test.ts",
+      "src/lib/background/session-store.ts",
+      "src/lib/session/records.ts",
+      "src/types/engine-hook.ts",
+      "src/types/session.ts"
+    ],
+    "settings-contract": [
+      "src/components/SettingsView.tsx",
+      "src/components/settings/ArchivedSettings.tsx",
+      "src/components/settings/CostDashboardSettings.tsx",
+      "src/components/settings/MiniBarChart.tsx",
+      "src/components/settings/PromptTemplateSettings.tsx",
+      "src/components/settings/SkillsSettings.tsx",
+      "src/components/settings/SubagentSettings.tsx",
+      "src/stores/settings-store.ts"
+    ],
+    "skills": [
+      "src/components/settings/SkillsSettings.tsx",
+      "src/hooks/useSkills.ts"
+    ],
+    "subagents": [
+      "electron/src/ipc/subagents.ts",
+      "electron/src/lib/__tests__/subagent-registry.test.ts",
+      "electron/src/lib/subagent-registry.ts",
+      "shared/types/builtin-subagents.ts",
+      "shared/types/subagent.ts",
+      "src/components/settings/SubagentSettings.tsx",
+      "src/hooks/useSubagents.ts",
+      "src/types/subagent.ts"
+    ],
+    "todo-checklist": [
+      "src/components/ToolCall.tsx"
+    ],
+    "tool-rendering": [
+      "src/components/MessageBubble.tsx",
+      "src/components/ToolCall.tsx",
+      "src/lib/engine/leaked-tool-parse.test.ts",
+      "src/lib/engine/leaked-tool-parse.ts"
+    ],
+    "usage-dashboard": [
+      "src/components/settings/CostDashboardSettings.tsx",
+      "src/components/settings/MiniBarChart.tsx",
+      "src/hooks/useUsageData.ts",
+      "src/lib/session/model-usage.test.ts",
+      "src/lib/session/model-usage.ts",
+      "src/lib/session/usage-aggregation.test.ts",
+      "src/lib/session/usage-aggregation.ts"
+    ]
+  }
+}

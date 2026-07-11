@@ -1,0 +1,2684 @@
+{
+  "apiPaths": [
+    {
+      "path": "claude.acp.abortPendingStart",
+      "kind": "function"
+    },
+    {
+      "path": "claude.acp.authenticate",
+      "kind": "function"
+    },
+    {
+      "path": "claude.acp.cancel",
+      "kind": "function"
+    },
+    {
+      "path": "claude.acp.getAvailableCommands",
+      "kind": "function"
+    },
+    {
+      "path": "claude.acp.getConfigOptions",
+      "kind": "function"
+    },
+    {
+      "path": "claude.acp.log",
+      "kind": "function"
+    },
+    {
+      "path": "claude.acp.onEvent",
+      "kind": "function"
+    },
+    {
+      "path": "claude.acp.onExit",
+      "kind": "function"
+    },
+    {
+      "path": "claude.acp.onPermissionRequest",
+      "kind": "function"
+    },
+    {
+      "path": "claude.acp.onTurnComplete",
+      "kind": "function"
+    },
+    {
+      "path": "claude.acp.prompt",
+      "kind": "function"
+    },
+    {
+      "path": "claude.acp.reloadSession",
+      "kind": "function"
+    },
+    {
+      "path": "claude.acp.respondPermission",
+      "kind": "function"
+    },
+    {
+      "path": "claude.acp.reviveSession",
+      "kind": "function"
+    },
+    {
+      "path": "claude.acp.setConfig",
+      "kind": "function"
+    },
+    {
+      "path": "claude.acp.start",
+      "kind": "function"
+    },
+    {
+      "path": "claude.acp.stop",
+      "kind": "function"
+    },
+    {
+      "path": "claude.agents.checkBinaries",
+      "kind": "function"
+    },
+    {
+      "path": "claude.agents.delete",
+      "kind": "function"
+    },
+    {
+      "path": "claude.agents.getPlatformKeys",
+      "kind": "function"
+    },
+    {
+      "path": "claude.agents.list",
+      "kind": "function"
+    },
+    {
+      "path": "claude.agents.save",
+      "kind": "function"
+    },
+    {
+      "path": "claude.agents.updateCachedConfig",
+      "kind": "function"
+    },
+    {
+      "path": "claude.analytics.capture",
+      "kind": "function"
+    },
+    {
+      "path": "claude.binaryStatus",
+      "kind": "function"
+    },
+    {
+      "path": "claude.ccSessions.import",
+      "kind": "function"
+    },
+    {
+      "path": "claude.ccSessions.list",
+      "kind": "function"
+    },
+    {
+      "path": "claude.codex.authStatus",
+      "kind": "function"
+    },
+    {
+      "path": "claude.codex.binaryStatus",
+      "kind": "function"
+    },
+    {
+      "path": "claude.codex.compact",
+      "kind": "function"
+    },
+    {
+      "path": "claude.codex.interrupt",
+      "kind": "function"
+    },
+    {
+      "path": "claude.codex.listApps",
+      "kind": "function"
+    },
+    {
+      "path": "claude.codex.listModels",
+      "kind": "function"
+    },
+    {
+      "path": "claude.codex.listSkills",
+      "kind": "function"
+    },
+    {
+      "path": "claude.codex.log",
+      "kind": "function"
+    },
+    {
+      "path": "claude.codex.login",
+      "kind": "function"
+    },
+    {
+      "path": "claude.codex.onApprovalRequest",
+      "kind": "function"
+    },
+    {
+      "path": "claude.codex.onEvent",
+      "kind": "function"
+    },
+    {
+      "path": "claude.codex.onExit",
+      "kind": "function"
+    },
+    {
+      "path": "claude.codex.respondApproval",
+      "kind": "function"
+    },
+    {
+      "path": "claude.codex.respondServerRequestError",
+      "kind": "function"
+    },
+    {
+      "path": "claude.codex.respondUserInput",
+      "kind": "function"
+    },
+    {
+      "path": "claude.codex.resume",
+      "kind": "function"
+    },
+    {
+      "path": "claude.codex.send",
+      "kind": "function"
+    },
+    {
+      "path": "claude.codex.setModel",
+      "kind": "function"
+    },
+    {
+      "path": "claude.codex.start",
+      "kind": "function"
+    },
+    {
+      "path": "claude.codex.stop",
+      "kind": "function"
+    },
+    {
+      "path": "claude.codex.version",
+      "kind": "function"
+    },
+    {
+      "path": "claude.files.calculateDeepSize",
+      "kind": "function"
+    },
+    {
+      "path": "claude.files.list",
+      "kind": "function"
+    },
+    {
+      "path": "claude.files.listAll",
+      "kind": "function"
+    },
+    {
+      "path": "claude.files.onChanged",
+      "kind": "function"
+    },
+    {
+      "path": "claude.files.readMultiple",
+      "kind": "function"
+    },
+    {
+      "path": "claude.files.unwatch",
+      "kind": "function"
+    },
+    {
+      "path": "claude.files.watch",
+      "kind": "function"
+    },
+    {
+      "path": "claude.folders.create",
+      "kind": "function"
+    },
+    {
+      "path": "claude.folders.delete",
+      "kind": "function"
+    },
+    {
+      "path": "claude.folders.list",
+      "kind": "function"
+    },
+    {
+      "path": "claude.folders.pin",
+      "kind": "function"
+    },
+    {
+      "path": "claude.folders.rename",
+      "kind": "function"
+    },
+    {
+      "path": "claude.generateTitle",
+      "kind": "function"
+    },
+    {
+      "path": "claude.getGlassSupported",
+      "kind": "function"
+    },
+    {
+      "path": "claude.getMacBackgroundEffectSupport",
+      "kind": "function"
+    },
+    {
+      "path": "claude.git.branches",
+      "kind": "function"
+    },
+    {
+      "path": "claude.git.checkout",
+      "kind": "function"
+    },
+    {
+      "path": "claude.git.commit",
+      "kind": "function"
+    },
+    {
+      "path": "claude.git.createBranch",
+      "kind": "function"
+    },
+    {
+      "path": "claude.git.createWorktree",
+      "kind": "function"
+    },
+    {
+      "path": "claude.git.diffFile",
+      "kind": "function"
+    },
+    {
+      "path": "claude.git.diffStat",
+      "kind": "function"
+    },
+    {
+      "path": "claude.git.discard",
+      "kind": "function"
+    },
+    {
+      "path": "claude.git.discoverRepos",
+      "kind": "function"
+    },
+    {
+      "path": "claude.git.fetch",
+      "kind": "function"
+    },
+    {
+      "path": "claude.git.generateCommitMessage",
+      "kind": "function"
+    },
+    {
+      "path": "claude.git.log",
+      "kind": "function"
+    },
+    {
+      "path": "claude.git.pruneWorktrees",
+      "kind": "function"
+    },
+    {
+      "path": "claude.git.pull",
+      "kind": "function"
+    },
+    {
+      "path": "claude.git.push",
+      "kind": "function"
+    },
+    {
+      "path": "claude.git.removeWorktree",
+      "kind": "function"
+    },
+    {
+      "path": "claude.git.stage",
+      "kind": "function"
+    },
+    {
+      "path": "claude.git.stageAll",
+      "kind": "function"
+    },
+    {
+      "path": "claude.git.status",
+      "kind": "function"
+    },
+    {
+      "path": "claude.git.unstage",
+      "kind": "function"
+    },
+    {
+      "path": "claude.git.unstageAll",
+      "kind": "function"
+    },
+    {
+      "path": "claude.glass.setTheme",
+      "kind": "function"
+    },
+    {
+      "path": "claude.glass.setTintColor",
+      "kind": "function"
+    },
+    {
+      "path": "claude.interrupt",
+      "kind": "function"
+    },
+    {
+      "path": "claude.jira.authenticate",
+      "kind": "function"
+    },
+    {
+      "path": "claude.jira.authStatus",
+      "kind": "function"
+    },
+    {
+      "path": "claude.jira.deleteConfig",
+      "kind": "function"
+    },
+    {
+      "path": "claude.jira.getBoardConfiguration",
+      "kind": "function"
+    },
+    {
+      "path": "claude.jira.getBoards",
+      "kind": "function"
+    },
+    {
+      "path": "claude.jira.getComments",
+      "kind": "function"
+    },
+    {
+      "path": "claude.jira.getConfig",
+      "kind": "function"
+    },
+    {
+      "path": "claude.jira.getIssues",
+      "kind": "function"
+    },
+    {
+      "path": "claude.jira.getProjects",
+      "kind": "function"
+    },
+    {
+      "path": "claude.jira.getSprints",
+      "kind": "function"
+    },
+    {
+      "path": "claude.jira.getTransitions",
+      "kind": "function"
+    },
+    {
+      "path": "claude.jira.logout",
+      "kind": "function"
+    },
+    {
+      "path": "claude.jira.saveConfig",
+      "kind": "function"
+    },
+    {
+      "path": "claude.jira.transitionIssue",
+      "kind": "function"
+    },
+    {
+      "path": "claude.log",
+      "kind": "function"
+    },
+    {
+      "path": "claude.mcp.add",
+      "kind": "function"
+    },
+    {
+      "path": "claude.mcp.authenticate",
+      "kind": "function"
+    },
+    {
+      "path": "claude.mcp.authStatus",
+      "kind": "function"
+    },
+    {
+      "path": "claude.mcp.list",
+      "kind": "function"
+    },
+    {
+      "path": "claude.mcp.probe",
+      "kind": "function"
+    },
+    {
+      "path": "claude.mcp.remove",
+      "kind": "function"
+    },
+    {
+      "path": "claude.mcpReconnect",
+      "kind": "function"
+    },
+    {
+      "path": "claude.mcpStatus",
+      "kind": "function"
+    },
+    {
+      "path": "claude.modelsCacheGet",
+      "kind": "function"
+    },
+    {
+      "path": "claude.modelsCacheRevalidate",
+      "kind": "function"
+    },
+    {
+      "path": "claude.newFile",
+      "kind": "function"
+    },
+    {
+      "path": "claude.newFolder",
+      "kind": "function"
+    },
+    {
+      "path": "claude.onEvent",
+      "kind": "function"
+    },
+    {
+      "path": "claude.onExit",
+      "kind": "function"
+    },
+    {
+      "path": "claude.onPermissionRequest",
+      "kind": "function"
+    },
+    {
+      "path": "claude.onStderr",
+      "kind": "function"
+    },
+    {
+      "path": "claude.openExternal",
+      "kind": "function"
+    },
+    {
+      "path": "claude.openInEditor",
+      "kind": "function"
+    },
+    {
+      "path": "claude.projects.create",
+      "kind": "function"
+    },
+    {
+      "path": "claude.projects.createDev",
+      "kind": "function"
+    },
+    {
+      "path": "claude.projects.delete",
+      "kind": "function"
+    },
+    {
+      "path": "claude.projects.list",
+      "kind": "function"
+    },
+    {
+      "path": "claude.projects.rename",
+      "kind": "function"
+    },
+    {
+      "path": "claude.projects.reorder",
+      "kind": "function"
+    },
+    {
+      "path": "claude.projects.updateIcon",
+      "kind": "function"
+    },
+    {
+      "path": "claude.projects.updateSpace",
+      "kind": "function"
+    },
+    {
+      "path": "claude.promptTemplates.delete",
+      "kind": "function"
+    },
+    {
+      "path": "claude.promptTemplates.list",
+      "kind": "function"
+    },
+    {
+      "path": "claude.promptTemplates.save",
+      "kind": "function"
+    },
+    {
+      "path": "claude.readAgentOutput",
+      "kind": "function"
+    },
+    {
+      "path": "claude.readFile",
+      "kind": "function"
+    },
+    {
+      "path": "claude.relaunchApp",
+      "kind": "function"
+    },
+    {
+      "path": "claude.renameFile",
+      "kind": "function"
+    },
+    {
+      "path": "claude.respondPermission",
+      "kind": "function"
+    },
+    {
+      "path": "claude.restartSession",
+      "kind": "function"
+    },
+    {
+      "path": "claude.revertFiles",
+      "kind": "function"
+    },
+    {
+      "path": "claude.send",
+      "kind": "function"
+    },
+    {
+      "path": "claude.sessions.delete",
+      "kind": "function"
+    },
+    {
+      "path": "claude.sessions.export",
+      "kind": "function"
+    },
+    {
+      "path": "claude.sessions.list",
+      "kind": "function"
+    },
+    {
+      "path": "claude.sessions.load",
+      "kind": "function"
+    },
+    {
+      "path": "claude.sessions.save",
+      "kind": "function"
+    },
+    {
+      "path": "claude.sessions.search",
+      "kind": "function"
+    },
+    {
+      "path": "claude.sessions.updateMeta",
+      "kind": "function"
+    },
+    {
+      "path": "claude.setBrowserColorScheme",
+      "kind": "function"
+    },
+    {
+      "path": "claude.setMacBackgroundEffect",
+      "kind": "function"
+    },
+    {
+      "path": "claude.setMinWidth",
+      "kind": "function"
+    },
+    {
+      "path": "claude.setModel",
+      "kind": "function"
+    },
+    {
+      "path": "claude.setPermissionMode",
+      "kind": "function"
+    },
+    {
+      "path": "claude.setThemeSource",
+      "kind": "function"
+    },
+    {
+      "path": "claude.setThinking",
+      "kind": "function"
+    },
+    {
+      "path": "claude.settings.get",
+      "kind": "function"
+    },
+    {
+      "path": "claude.settings.onChanged",
+      "kind": "function"
+    },
+    {
+      "path": "claude.settings.set",
+      "kind": "function"
+    },
+    {
+      "path": "claude.showItemInFolder",
+      "kind": "function"
+    },
+    {
+      "path": "claude.slashCommands",
+      "kind": "function"
+    },
+    {
+      "path": "claude.spaces.list",
+      "kind": "function"
+    },
+    {
+      "path": "claude.spaces.save",
+      "kind": "function"
+    },
+    {
+      "path": "claude.speech.getPlatform",
+      "kind": "function"
+    },
+    {
+      "path": "claude.speech.requestMicPermission",
+      "kind": "function"
+    },
+    {
+      "path": "claude.speech.startNativeDictation",
+      "kind": "function"
+    },
+    {
+      "path": "claude.start",
+      "kind": "function"
+    },
+    {
+      "path": "claude.stop",
+      "kind": "function"
+    },
+    {
+      "path": "claude.stopTask",
+      "kind": "function"
+    },
+    {
+      "path": "claude.subagents.delete",
+      "kind": "function"
+    },
+    {
+      "path": "claude.subagents.list",
+      "kind": "function"
+    },
+    {
+      "path": "claude.subagents.save",
+      "kind": "function"
+    },
+    {
+      "path": "claude.supportedModels",
+      "kind": "function"
+    },
+    {
+      "path": "claude.terminal.create",
+      "kind": "function"
+    },
+    {
+      "path": "claude.terminal.destroy",
+      "kind": "function"
+    },
+    {
+      "path": "claude.terminal.destroySpace",
+      "kind": "function"
+    },
+    {
+      "path": "claude.terminal.list",
+      "kind": "function"
+    },
+    {
+      "path": "claude.terminal.onData",
+      "kind": "function"
+    },
+    {
+      "path": "claude.terminal.onExit",
+      "kind": "function"
+    },
+    {
+      "path": "claude.terminal.resize",
+      "kind": "function"
+    },
+    {
+      "path": "claude.terminal.snapshot",
+      "kind": "function"
+    },
+    {
+      "path": "claude.terminal.write",
+      "kind": "function"
+    },
+    {
+      "path": "claude.trashItem",
+      "kind": "function"
+    },
+    {
+      "path": "claude.updater.check",
+      "kind": "function"
+    },
+    {
+      "path": "claude.updater.currentVersion",
+      "kind": "function"
+    },
+    {
+      "path": "claude.updater.download",
+      "kind": "function"
+    },
+    {
+      "path": "claude.updater.install",
+      "kind": "function"
+    },
+    {
+      "path": "claude.updater.isPreRelease",
+      "kind": "function"
+    },
+    {
+      "path": "claude.updater.onDownloadProgress",
+      "kind": "function"
+    },
+    {
+      "path": "claude.updater.onInstallError",
+      "kind": "function"
+    },
+    {
+      "path": "claude.updater.onPreReleaseStatus",
+      "kind": "function"
+    },
+    {
+      "path": "claude.updater.onUpdateAvailable",
+      "kind": "function"
+    },
+    {
+      "path": "claude.updater.onUpdateDownloaded",
+      "kind": "function"
+    },
+    {
+      "path": "claude.version",
+      "kind": "function"
+    },
+    {
+      "path": "claude.writeClipboardText",
+      "kind": "function"
+    }
+  ],
+  "apiIpcCalls": [
+    {
+      "apiPath": "claude.acp.abortPendingStart",
+      "method": "invoke",
+      "channel": "acp:abort-pending-start"
+    },
+    {
+      "apiPath": "claude.acp.authenticate",
+      "method": "invoke",
+      "channel": "acp:authenticate"
+    },
+    {
+      "apiPath": "claude.acp.cancel",
+      "method": "invoke",
+      "channel": "acp:cancel"
+    },
+    {
+      "apiPath": "claude.acp.onEvent",
+      "method": "on",
+      "channel": "acp:event"
+    },
+    {
+      "apiPath": "claude.acp.onEvent",
+      "method": "removeListener",
+      "channel": "acp:event"
+    },
+    {
+      "apiPath": "claude.acp.onExit",
+      "method": "on",
+      "channel": "acp:exit"
+    },
+    {
+      "apiPath": "claude.acp.onExit",
+      "method": "removeListener",
+      "channel": "acp:exit"
+    },
+    {
+      "apiPath": "claude.acp.getAvailableCommands",
+      "method": "invoke",
+      "channel": "acp:get-available-commands"
+    },
+    {
+      "apiPath": "claude.acp.getConfigOptions",
+      "method": "invoke",
+      "channel": "acp:get-config-options"
+    },
+    {
+      "apiPath": "claude.acp.log",
+      "method": "send",
+      "channel": "acp:log"
+    },
+    {
+      "apiPath": "claude.acp.onPermissionRequest",
+      "method": "on",
+      "channel": "acp:permission_request"
+    },
+    {
+      "apiPath": "claude.acp.onPermissionRequest",
+      "method": "removeListener",
+      "channel": "acp:permission_request"
+    },
+    {
+      "apiPath": "claude.acp.respondPermission",
+      "method": "invoke",
+      "channel": "acp:permission_response"
+    },
+    {
+      "apiPath": "claude.acp.prompt",
+      "method": "invoke",
+      "channel": "acp:prompt"
+    },
+    {
+      "apiPath": "claude.acp.reloadSession",
+      "method": "invoke",
+      "channel": "acp:reload-session"
+    },
+    {
+      "apiPath": "claude.acp.reviveSession",
+      "method": "invoke",
+      "channel": "acp:revive-session"
+    },
+    {
+      "apiPath": "claude.acp.setConfig",
+      "method": "invoke",
+      "channel": "acp:set-config"
+    },
+    {
+      "apiPath": "claude.acp.start",
+      "method": "invoke",
+      "channel": "acp:start"
+    },
+    {
+      "apiPath": "claude.acp.stop",
+      "method": "invoke",
+      "channel": "acp:stop"
+    },
+    {
+      "apiPath": "claude.acp.onTurnComplete",
+      "method": "on",
+      "channel": "acp:turn_complete"
+    },
+    {
+      "apiPath": "claude.acp.onTurnComplete",
+      "method": "removeListener",
+      "channel": "acp:turn_complete"
+    },
+    {
+      "apiPath": "claude.agents.checkBinaries",
+      "method": "invoke",
+      "channel": "agents:check-binaries"
+    },
+    {
+      "apiPath": "claude.agents.delete",
+      "method": "invoke",
+      "channel": "agents:delete"
+    },
+    {
+      "apiPath": "claude.agents.getPlatformKeys",
+      "method": "invoke",
+      "channel": "agents:get-platform-keys"
+    },
+    {
+      "apiPath": "claude.agents.list",
+      "method": "invoke",
+      "channel": "agents:list"
+    },
+    {
+      "apiPath": "claude.agents.save",
+      "method": "invoke",
+      "channel": "agents:save"
+    },
+    {
+      "apiPath": "claude.agents.updateCachedConfig",
+      "method": "invoke",
+      "channel": "agents:update-cached-config"
+    },
+    {
+      "apiPath": "claude.analytics.capture",
+      "method": "send",
+      "channel": "analytics:capture"
+    },
+    {
+      "apiPath": "claude.getMacBackgroundEffectSupport",
+      "method": "invoke",
+      "channel": "app:get-mac-background-effect-support"
+    },
+    {
+      "apiPath": "claude.getGlassSupported",
+      "method": "invoke",
+      "channel": "app:getGlassSupported"
+    },
+    {
+      "apiPath": "claude.relaunchApp",
+      "method": "invoke",
+      "channel": "app:relaunch"
+    },
+    {
+      "apiPath": "claude.setMacBackgroundEffect",
+      "method": "send",
+      "channel": "app:set-mac-background-effect"
+    },
+    {
+      "apiPath": "claude.setMinWidth",
+      "method": "send",
+      "channel": "app:set-min-width"
+    },
+    {
+      "apiPath": "claude.setThemeSource",
+      "method": "send",
+      "channel": "app:set-theme-source"
+    },
+    {
+      "apiPath": "claude.setBrowserColorScheme",
+      "method": "invoke",
+      "channel": "browser:set-color-scheme"
+    },
+    {
+      "apiPath": "claude.ccSessions.import",
+      "method": "invoke",
+      "channel": "cc-sessions:import"
+    },
+    {
+      "apiPath": "claude.ccSessions.list",
+      "method": "invoke",
+      "channel": "cc-sessions:list"
+    },
+    {
+      "apiPath": "claude.binaryStatus",
+      "method": "invoke",
+      "channel": "claude:binary-status"
+    },
+    {
+      "apiPath": "claude.onEvent",
+      "method": "on",
+      "channel": "claude:event"
+    },
+    {
+      "apiPath": "claude.onEvent",
+      "method": "removeListener",
+      "channel": "claude:event"
+    },
+    {
+      "apiPath": "claude.onExit",
+      "method": "on",
+      "channel": "claude:exit"
+    },
+    {
+      "apiPath": "claude.onExit",
+      "method": "removeListener",
+      "channel": "claude:exit"
+    },
+    {
+      "apiPath": "claude.generateTitle",
+      "method": "invoke",
+      "channel": "claude:generate-title"
+    },
+    {
+      "apiPath": "claude.interrupt",
+      "method": "invoke",
+      "channel": "claude:interrupt"
+    },
+    {
+      "apiPath": "claude.log",
+      "method": "send",
+      "channel": "claude:log"
+    },
+    {
+      "apiPath": "claude.mcpReconnect",
+      "method": "invoke",
+      "channel": "claude:mcp-reconnect"
+    },
+    {
+      "apiPath": "claude.mcpStatus",
+      "method": "invoke",
+      "channel": "claude:mcp-status"
+    },
+    {
+      "apiPath": "claude.modelsCacheGet",
+      "method": "invoke",
+      "channel": "claude:models-cache:get"
+    },
+    {
+      "apiPath": "claude.modelsCacheRevalidate",
+      "method": "invoke",
+      "channel": "claude:models-cache:revalidate"
+    },
+    {
+      "apiPath": "claude.onPermissionRequest",
+      "method": "on",
+      "channel": "claude:permission_request"
+    },
+    {
+      "apiPath": "claude.onPermissionRequest",
+      "method": "removeListener",
+      "channel": "claude:permission_request"
+    },
+    {
+      "apiPath": "claude.respondPermission",
+      "method": "invoke",
+      "channel": "claude:permission_response"
+    },
+    {
+      "apiPath": "claude.readAgentOutput",
+      "method": "invoke",
+      "channel": "claude:read-agent-output"
+    },
+    {
+      "apiPath": "claude.restartSession",
+      "method": "invoke",
+      "channel": "claude:restart-session"
+    },
+    {
+      "apiPath": "claude.revertFiles",
+      "method": "invoke",
+      "channel": "claude:revert-files"
+    },
+    {
+      "apiPath": "claude.send",
+      "method": "invoke",
+      "channel": "claude:send"
+    },
+    {
+      "apiPath": "claude.setModel",
+      "method": "invoke",
+      "channel": "claude:set-model"
+    },
+    {
+      "apiPath": "claude.setPermissionMode",
+      "method": "invoke",
+      "channel": "claude:set-permission-mode"
+    },
+    {
+      "apiPath": "claude.setThinking",
+      "method": "invoke",
+      "channel": "claude:set-thinking"
+    },
+    {
+      "apiPath": "claude.slashCommands",
+      "method": "invoke",
+      "channel": "claude:slash-commands"
+    },
+    {
+      "apiPath": "claude.start",
+      "method": "invoke",
+      "channel": "claude:start"
+    },
+    {
+      "apiPath": "claude.onStderr",
+      "method": "on",
+      "channel": "claude:stderr"
+    },
+    {
+      "apiPath": "claude.onStderr",
+      "method": "removeListener",
+      "channel": "claude:stderr"
+    },
+    {
+      "apiPath": "claude.stop",
+      "method": "invoke",
+      "channel": "claude:stop"
+    },
+    {
+      "apiPath": "claude.stopTask",
+      "method": "invoke",
+      "channel": "claude:stop-task"
+    },
+    {
+      "apiPath": "claude.supportedModels",
+      "method": "invoke",
+      "channel": "claude:supported-models"
+    },
+    {
+      "apiPath": "claude.version",
+      "method": "invoke",
+      "channel": "claude:version"
+    },
+    {
+      "apiPath": "claude.writeClipboardText",
+      "method": "invoke",
+      "channel": "clipboard:write-text"
+    },
+    {
+      "apiPath": "claude.codex.onApprovalRequest",
+      "method": "on",
+      "channel": "codex:approval_request"
+    },
+    {
+      "apiPath": "claude.codex.onApprovalRequest",
+      "method": "removeListener",
+      "channel": "codex:approval_request"
+    },
+    {
+      "apiPath": "claude.codex.respondApproval",
+      "method": "invoke",
+      "channel": "codex:approval_response"
+    },
+    {
+      "apiPath": "claude.codex.authStatus",
+      "method": "invoke",
+      "channel": "codex:auth-status"
+    },
+    {
+      "apiPath": "claude.codex.binaryStatus",
+      "method": "invoke",
+      "channel": "codex:binary-status"
+    },
+    {
+      "apiPath": "claude.codex.compact",
+      "method": "invoke",
+      "channel": "codex:compact"
+    },
+    {
+      "apiPath": "claude.codex.onEvent",
+      "method": "on",
+      "channel": "codex:event"
+    },
+    {
+      "apiPath": "claude.codex.onEvent",
+      "method": "removeListener",
+      "channel": "codex:event"
+    },
+    {
+      "apiPath": "claude.codex.onExit",
+      "method": "on",
+      "channel": "codex:exit"
+    },
+    {
+      "apiPath": "claude.codex.onExit",
+      "method": "removeListener",
+      "channel": "codex:exit"
+    },
+    {
+      "apiPath": "claude.codex.interrupt",
+      "method": "invoke",
+      "channel": "codex:interrupt"
+    },
+    {
+      "apiPath": "claude.codex.listApps",
+      "method": "invoke",
+      "channel": "codex:list-apps"
+    },
+    {
+      "apiPath": "claude.codex.listModels",
+      "method": "invoke",
+      "channel": "codex:list-models"
+    },
+    {
+      "apiPath": "claude.codex.listSkills",
+      "method": "invoke",
+      "channel": "codex:list-skills"
+    },
+    {
+      "apiPath": "claude.codex.log",
+      "method": "send",
+      "channel": "codex:log"
+    },
+    {
+      "apiPath": "claude.codex.login",
+      "method": "invoke",
+      "channel": "codex:login"
+    },
+    {
+      "apiPath": "claude.codex.resume",
+      "method": "invoke",
+      "channel": "codex:resume"
+    },
+    {
+      "apiPath": "claude.codex.send",
+      "method": "invoke",
+      "channel": "codex:send"
+    },
+    {
+      "apiPath": "claude.codex.respondServerRequestError",
+      "method": "invoke",
+      "channel": "codex:server_request_error"
+    },
+    {
+      "apiPath": "claude.codex.setModel",
+      "method": "invoke",
+      "channel": "codex:set-model"
+    },
+    {
+      "apiPath": "claude.codex.start",
+      "method": "invoke",
+      "channel": "codex:start"
+    },
+    {
+      "apiPath": "claude.codex.stop",
+      "method": "invoke",
+      "channel": "codex:stop"
+    },
+    {
+      "apiPath": "claude.codex.respondUserInput",
+      "method": "invoke",
+      "channel": "codex:user_input_response"
+    },
+    {
+      "apiPath": "claude.codex.version",
+      "method": "invoke",
+      "channel": "codex:version"
+    },
+    {
+      "apiPath": "claude.newFile",
+      "method": "invoke",
+      "channel": "file:new-file"
+    },
+    {
+      "apiPath": "claude.newFolder",
+      "method": "invoke",
+      "channel": "file:new-folder"
+    },
+    {
+      "apiPath": "claude.openInEditor",
+      "method": "invoke",
+      "channel": "file:open-in-editor"
+    },
+    {
+      "apiPath": "claude.readFile",
+      "method": "invoke",
+      "channel": "file:read"
+    },
+    {
+      "apiPath": "claude.renameFile",
+      "method": "invoke",
+      "channel": "file:rename"
+    },
+    {
+      "apiPath": "claude.trashItem",
+      "method": "invoke",
+      "channel": "file:trash"
+    },
+    {
+      "apiPath": "claude.files.calculateDeepSize",
+      "method": "invoke",
+      "channel": "files:calculate-deep-size"
+    },
+    {
+      "apiPath": "claude.files.onChanged",
+      "method": "on",
+      "channel": "files:changed"
+    },
+    {
+      "apiPath": "claude.files.onChanged",
+      "method": "removeListener",
+      "channel": "files:changed"
+    },
+    {
+      "apiPath": "claude.files.list",
+      "method": "invoke",
+      "channel": "files:list"
+    },
+    {
+      "apiPath": "claude.files.listAll",
+      "method": "invoke",
+      "channel": "files:list-all"
+    },
+    {
+      "apiPath": "claude.files.readMultiple",
+      "method": "invoke",
+      "channel": "files:read-multiple"
+    },
+    {
+      "apiPath": "claude.files.unwatch",
+      "method": "invoke",
+      "channel": "files:unwatch"
+    },
+    {
+      "apiPath": "claude.files.watch",
+      "method": "invoke",
+      "channel": "files:watch"
+    },
+    {
+      "apiPath": "claude.folders.create",
+      "method": "invoke",
+      "channel": "folders:create"
+    },
+    {
+      "apiPath": "claude.folders.delete",
+      "method": "invoke",
+      "channel": "folders:delete"
+    },
+    {
+      "apiPath": "claude.folders.list",
+      "method": "invoke",
+      "channel": "folders:list"
+    },
+    {
+      "apiPath": "claude.folders.pin",
+      "method": "invoke",
+      "channel": "folders:pin"
+    },
+    {
+      "apiPath": "claude.folders.rename",
+      "method": "invoke",
+      "channel": "folders:rename"
+    },
+    {
+      "apiPath": "claude.git.branches",
+      "method": "invoke",
+      "channel": "git:branches"
+    },
+    {
+      "apiPath": "claude.git.checkout",
+      "method": "invoke",
+      "channel": "git:checkout"
+    },
+    {
+      "apiPath": "claude.git.commit",
+      "method": "invoke",
+      "channel": "git:commit"
+    },
+    {
+      "apiPath": "claude.git.createBranch",
+      "method": "invoke",
+      "channel": "git:create-branch"
+    },
+    {
+      "apiPath": "claude.git.createWorktree",
+      "method": "invoke",
+      "channel": "git:create-worktree"
+    },
+    {
+      "apiPath": "claude.git.diffFile",
+      "method": "invoke",
+      "channel": "git:diff-file"
+    },
+    {
+      "apiPath": "claude.git.diffStat",
+      "method": "invoke",
+      "channel": "git:diff-stat"
+    },
+    {
+      "apiPath": "claude.git.discard",
+      "method": "invoke",
+      "channel": "git:discard"
+    },
+    {
+      "apiPath": "claude.git.discoverRepos",
+      "method": "invoke",
+      "channel": "git:discover-repos"
+    },
+    {
+      "apiPath": "claude.git.fetch",
+      "method": "invoke",
+      "channel": "git:fetch"
+    },
+    {
+      "apiPath": "claude.git.generateCommitMessage",
+      "method": "invoke",
+      "channel": "git:generate-commit-message"
+    },
+    {
+      "apiPath": "claude.git.log",
+      "method": "invoke",
+      "channel": "git:log"
+    },
+    {
+      "apiPath": "claude.git.pruneWorktrees",
+      "method": "invoke",
+      "channel": "git:prune-worktrees"
+    },
+    {
+      "apiPath": "claude.git.pull",
+      "method": "invoke",
+      "channel": "git:pull"
+    },
+    {
+      "apiPath": "claude.git.push",
+      "method": "invoke",
+      "channel": "git:push"
+    },
+    {
+      "apiPath": "claude.git.removeWorktree",
+      "method": "invoke",
+      "channel": "git:remove-worktree"
+    },
+    {
+      "apiPath": "claude.git.stage",
+      "method": "invoke",
+      "channel": "git:stage"
+    },
+    {
+      "apiPath": "claude.git.stageAll",
+      "method": "invoke",
+      "channel": "git:stage-all"
+    },
+    {
+      "apiPath": "claude.git.status",
+      "method": "invoke",
+      "channel": "git:status"
+    },
+    {
+      "apiPath": "claude.git.unstage",
+      "method": "invoke",
+      "channel": "git:unstage"
+    },
+    {
+      "apiPath": "claude.git.unstageAll",
+      "method": "invoke",
+      "channel": "git:unstage-all"
+    },
+    {
+      "apiPath": "claude.glass.setTheme",
+      "method": "send",
+      "channel": "glass:set-theme"
+    },
+    {
+      "apiPath": "claude.glass.setTintColor",
+      "method": "send",
+      "channel": "glass:set-tint-color"
+    },
+    {
+      "apiPath": "claude.jira.authStatus",
+      "method": "invoke",
+      "channel": "jira:auth-status"
+    },
+    {
+      "apiPath": "claude.jira.authenticate",
+      "method": "invoke",
+      "channel": "jira:authenticate"
+    },
+    {
+      "apiPath": "claude.jira.deleteConfig",
+      "method": "invoke",
+      "channel": "jira:delete-config"
+    },
+    {
+      "apiPath": "claude.jira.getBoardConfiguration",
+      "method": "invoke",
+      "channel": "jira:get-board-configuration"
+    },
+    {
+      "apiPath": "claude.jira.getBoards",
+      "method": "invoke",
+      "channel": "jira:get-boards"
+    },
+    {
+      "apiPath": "claude.jira.getComments",
+      "method": "invoke",
+      "channel": "jira:get-comments"
+    },
+    {
+      "apiPath": "claude.jira.getConfig",
+      "method": "invoke",
+      "channel": "jira:get-config"
+    },
+    {
+      "apiPath": "claude.jira.getIssues",
+      "method": "invoke",
+      "channel": "jira:get-issues"
+    },
+    {
+      "apiPath": "claude.jira.getProjects",
+      "method": "invoke",
+      "channel": "jira:get-projects"
+    },
+    {
+      "apiPath": "claude.jira.getSprints",
+      "method": "invoke",
+      "channel": "jira:get-sprints"
+    },
+    {
+      "apiPath": "claude.jira.getTransitions",
+      "method": "invoke",
+      "channel": "jira:get-transitions"
+    },
+    {
+      "apiPath": "claude.jira.logout",
+      "method": "invoke",
+      "channel": "jira:logout"
+    },
+    {
+      "apiPath": "claude.jira.saveConfig",
+      "method": "invoke",
+      "channel": "jira:save-config"
+    },
+    {
+      "apiPath": "claude.jira.transitionIssue",
+      "method": "invoke",
+      "channel": "jira:transition-issue"
+    },
+    {
+      "apiPath": "claude.mcp.add",
+      "method": "invoke",
+      "channel": "mcp:add"
+    },
+    {
+      "apiPath": "claude.mcp.authStatus",
+      "method": "invoke",
+      "channel": "mcp:auth-status"
+    },
+    {
+      "apiPath": "claude.mcp.authenticate",
+      "method": "invoke",
+      "channel": "mcp:authenticate"
+    },
+    {
+      "apiPath": "claude.mcp.list",
+      "method": "invoke",
+      "channel": "mcp:list"
+    },
+    {
+      "apiPath": "claude.mcp.probe",
+      "method": "invoke",
+      "channel": "mcp:probe"
+    },
+    {
+      "apiPath": "claude.mcp.remove",
+      "method": "invoke",
+      "channel": "mcp:remove"
+    },
+    {
+      "apiPath": "claude.projects.create",
+      "method": "invoke",
+      "channel": "projects:create"
+    },
+    {
+      "apiPath": "claude.projects.createDev",
+      "method": "invoke",
+      "channel": "projects:create-dev"
+    },
+    {
+      "apiPath": "claude.projects.delete",
+      "method": "invoke",
+      "channel": "projects:delete"
+    },
+    {
+      "apiPath": "claude.projects.list",
+      "method": "invoke",
+      "channel": "projects:list"
+    },
+    {
+      "apiPath": "claude.projects.rename",
+      "method": "invoke",
+      "channel": "projects:rename"
+    },
+    {
+      "apiPath": "claude.projects.reorder",
+      "method": "invoke",
+      "channel": "projects:reorder"
+    },
+    {
+      "apiPath": "claude.projects.updateIcon",
+      "method": "invoke",
+      "channel": "projects:update-icon"
+    },
+    {
+      "apiPath": "claude.projects.updateSpace",
+      "method": "invoke",
+      "channel": "projects:update-space"
+    },
+    {
+      "apiPath": "claude.promptTemplates.delete",
+      "method": "invoke",
+      "channel": "prompt-templates:delete"
+    },
+    {
+      "apiPath": "claude.promptTemplates.list",
+      "method": "invoke",
+      "channel": "prompt-templates:list"
+    },
+    {
+      "apiPath": "claude.promptTemplates.save",
+      "method": "invoke",
+      "channel": "prompt-templates:save"
+    },
+    {
+      "apiPath": "claude.sessions.delete",
+      "method": "invoke",
+      "channel": "sessions:delete"
+    },
+    {
+      "apiPath": "claude.sessions.export",
+      "method": "invoke",
+      "channel": "sessions:export"
+    },
+    {
+      "apiPath": "claude.sessions.list",
+      "method": "invoke",
+      "channel": "sessions:list"
+    },
+    {
+      "apiPath": "claude.sessions.load",
+      "method": "invoke",
+      "channel": "sessions:load"
+    },
+    {
+      "apiPath": "claude.sessions.save",
+      "method": "invoke",
+      "channel": "sessions:save"
+    },
+    {
+      "apiPath": "claude.sessions.search",
+      "method": "invoke",
+      "channel": "sessions:search"
+    },
+    {
+      "apiPath": "claude.sessions.updateMeta",
+      "method": "invoke",
+      "channel": "sessions:update-meta"
+    },
+    {
+      "apiPath": "claude.settings.onChanged",
+      "method": "on",
+      "channel": "settings:changed"
+    },
+    {
+      "apiPath": "claude.settings.onChanged",
+      "method": "removeListener",
+      "channel": "settings:changed"
+    },
+    {
+      "apiPath": "claude.settings.get",
+      "method": "invoke",
+      "channel": "settings:get"
+    },
+    {
+      "apiPath": "claude.settings.set",
+      "method": "invoke",
+      "channel": "settings:set"
+    },
+    {
+      "apiPath": "claude.openExternal",
+      "method": "invoke",
+      "channel": "shell:open-external"
+    },
+    {
+      "apiPath": "claude.showItemInFolder",
+      "method": "invoke",
+      "channel": "shell:show-item-in-folder"
+    },
+    {
+      "apiPath": "claude.spaces.list",
+      "method": "invoke",
+      "channel": "spaces:list"
+    },
+    {
+      "apiPath": "claude.spaces.save",
+      "method": "invoke",
+      "channel": "spaces:save"
+    },
+    {
+      "apiPath": "claude.speech.getPlatform",
+      "method": "invoke",
+      "channel": "speech:get-platform"
+    },
+    {
+      "apiPath": "claude.speech.requestMicPermission",
+      "method": "invoke",
+      "channel": "speech:request-mic-permission"
+    },
+    {
+      "apiPath": "claude.speech.startNativeDictation",
+      "method": "invoke",
+      "channel": "speech:start-native-dictation"
+    },
+    {
+      "apiPath": "claude.subagents.delete",
+      "method": "invoke",
+      "channel": "subagents:delete"
+    },
+    {
+      "apiPath": "claude.subagents.list",
+      "method": "invoke",
+      "channel": "subagents:list"
+    },
+    {
+      "apiPath": "claude.subagents.save",
+      "method": "invoke",
+      "channel": "subagents:save"
+    },
+    {
+      "apiPath": "claude.terminal.create",
+      "method": "invoke",
+      "channel": "terminal:create"
+    },
+    {
+      "apiPath": "claude.terminal.onData",
+      "method": "on",
+      "channel": "terminal:data"
+    },
+    {
+      "apiPath": "claude.terminal.onData",
+      "method": "removeListener",
+      "channel": "terminal:data"
+    },
+    {
+      "apiPath": "claude.terminal.destroy",
+      "method": "invoke",
+      "channel": "terminal:destroy"
+    },
+    {
+      "apiPath": "claude.terminal.destroySpace",
+      "method": "invoke",
+      "channel": "terminal:destroy-space"
+    },
+    {
+      "apiPath": "claude.terminal.onExit",
+      "method": "on",
+      "channel": "terminal:exit"
+    },
+    {
+      "apiPath": "claude.terminal.onExit",
+      "method": "removeListener",
+      "channel": "terminal:exit"
+    },
+    {
+      "apiPath": "claude.terminal.list",
+      "method": "invoke",
+      "channel": "terminal:list"
+    },
+    {
+      "apiPath": "claude.terminal.resize",
+      "method": "invoke",
+      "channel": "terminal:resize"
+    },
+    {
+      "apiPath": "claude.terminal.snapshot",
+      "method": "invoke",
+      "channel": "terminal:snapshot"
+    },
+    {
+      "apiPath": "claude.terminal.write",
+      "method": "invoke",
+      "channel": "terminal:write"
+    },
+    {
+      "apiPath": "claude.updater.check",
+      "method": "invoke",
+      "channel": "updater:check"
+    },
+    {
+      "apiPath": "claude.updater.currentVersion",
+      "method": "invoke",
+      "channel": "updater:current-version"
+    },
+    {
+      "apiPath": "claude.updater.download",
+      "method": "invoke",
+      "channel": "updater:download"
+    },
+    {
+      "apiPath": "claude.updater.onDownloadProgress",
+      "method": "on",
+      "channel": "updater:download-progress"
+    },
+    {
+      "apiPath": "claude.updater.onDownloadProgress",
+      "method": "removeListener",
+      "channel": "updater:download-progress"
+    },
+    {
+      "apiPath": "claude.updater.install",
+      "method": "invoke",
+      "channel": "updater:install"
+    },
+    {
+      "apiPath": "claude.updater.onInstallError",
+      "method": "on",
+      "channel": "updater:install-error"
+    },
+    {
+      "apiPath": "claude.updater.onInstallError",
+      "method": "removeListener",
+      "channel": "updater:install-error"
+    },
+    {
+      "apiPath": "claude.updater.isPreRelease",
+      "method": "invoke",
+      "channel": "updater:is-prerelease"
+    },
+    {
+      "apiPath": "claude.updater.onPreReleaseStatus",
+      "method": "on",
+      "channel": "updater:prerelease-status"
+    },
+    {
+      "apiPath": "claude.updater.onPreReleaseStatus",
+      "method": "removeListener",
+      "channel": "updater:prerelease-status"
+    },
+    {
+      "apiPath": "claude.updater.onUpdateAvailable",
+      "method": "on",
+      "channel": "updater:update-available"
+    },
+    {
+      "apiPath": "claude.updater.onUpdateAvailable",
+      "method": "removeListener",
+      "channel": "updater:update-available"
+    },
+    {
+      "apiPath": "claude.updater.onUpdateDownloaded",
+      "method": "on",
+      "channel": "updater:update-downloaded"
+    },
+    {
+      "apiPath": "claude.updater.onUpdateDownloaded",
+      "method": "removeListener",
+      "channel": "updater:update-downloaded"
+    }
+  ],
+  "ipcRendererChannels": [
+    {
+      "method": "invoke",
+      "channel": "acp:abort-pending-start"
+    },
+    {
+      "method": "invoke",
+      "channel": "acp:authenticate"
+    },
+    {
+      "method": "invoke",
+      "channel": "acp:cancel"
+    },
+    {
+      "method": "on",
+      "channel": "acp:event"
+    },
+    {
+      "method": "removeListener",
+      "channel": "acp:event"
+    },
+    {
+      "method": "on",
+      "channel": "acp:exit"
+    },
+    {
+      "method": "removeListener",
+      "channel": "acp:exit"
+    },
+    {
+      "method": "invoke",
+      "channel": "acp:get-available-commands"
+    },
+    {
+      "method": "invoke",
+      "channel": "acp:get-config-options"
+    },
+    {
+      "method": "send",
+      "channel": "acp:log"
+    },
+    {
+      "method": "on",
+      "channel": "acp:permission_request"
+    },
+    {
+      "method": "removeListener",
+      "channel": "acp:permission_request"
+    },
+    {
+      "method": "invoke",
+      "channel": "acp:permission_response"
+    },
+    {
+      "method": "invoke",
+      "channel": "acp:prompt"
+    },
+    {
+      "method": "invoke",
+      "channel": "acp:reload-session"
+    },
+    {
+      "method": "invoke",
+      "channel": "acp:revive-session"
+    },
+    {
+      "method": "invoke",
+      "channel": "acp:set-config"
+    },
+    {
+      "method": "invoke",
+      "channel": "acp:start"
+    },
+    {
+      "method": "invoke",
+      "channel": "acp:stop"
+    },
+    {
+      "method": "on",
+      "channel": "acp:turn_complete"
+    },
+    {
+      "method": "removeListener",
+      "channel": "acp:turn_complete"
+    },
+    {
+      "method": "invoke",
+      "channel": "agents:check-binaries"
+    },
+    {
+      "method": "invoke",
+      "channel": "agents:delete"
+    },
+    {
+      "method": "invoke",
+      "channel": "agents:get-platform-keys"
+    },
+    {
+      "method": "invoke",
+      "channel": "agents:list"
+    },
+    {
+      "method": "invoke",
+      "channel": "agents:save"
+    },
+    {
+      "method": "invoke",
+      "channel": "agents:update-cached-config"
+    },
+    {
+      "method": "send",
+      "channel": "analytics:capture"
+    },
+    {
+      "method": "invoke",
+      "channel": "app:get-mac-background-effect-support"
+    },
+    {
+      "method": "invoke",
+      "channel": "app:getGlassSupported"
+    },
+    {
+      "method": "invoke",
+      "channel": "app:relaunch"
+    },
+    {
+      "method": "send",
+      "channel": "app:set-mac-background-effect"
+    },
+    {
+      "method": "send",
+      "channel": "app:set-min-width"
+    },
+    {
+      "method": "send",
+      "channel": "app:set-theme-source"
+    },
+    {
+      "method": "invoke",
+      "channel": "browser:set-color-scheme"
+    },
+    {
+      "method": "invoke",
+      "channel": "cc-sessions:import"
+    },
+    {
+      "method": "invoke",
+      "channel": "cc-sessions:list"
+    },
+    {
+      "method": "invoke",
+      "channel": "claude:binary-status"
+    },
+    {
+      "method": "on",
+      "channel": "claude:event"
+    },
+    {
+      "method": "removeListener",
+      "channel": "claude:event"
+    },
+    {
+      "method": "on",
+      "channel": "claude:exit"
+    },
+    {
+      "method": "removeListener",
+      "channel": "claude:exit"
+    },
+    {
+      "method": "invoke",
+      "channel": "claude:generate-title"
+    },
+    {
+      "method": "invoke",
+      "channel": "claude:interrupt"
+    },
+    {
+      "method": "send",
+      "channel": "claude:log"
+    },
+    {
+      "method": "invoke",
+      "channel": "claude:mcp-reconnect"
+    },
+    {
+      "method": "invoke",
+      "channel": "claude:mcp-status"
+    },
+    {
+      "method": "invoke",
+      "channel": "claude:models-cache:get"
+    },
+    {
+      "method": "invoke",
+      "channel": "claude:models-cache:revalidate"
+    },
+    {
+      "method": "on",
+      "channel": "claude:permission_request"
+    },
+    {
+      "method": "removeListener",
+      "channel": "claude:permission_request"
+    },
+    {
+      "method": "invoke",
+      "channel": "claude:permission_response"
+    },
+    {
+      "method": "invoke",
+      "channel": "claude:read-agent-output"
+    },
+    {
+      "method": "invoke",
+      "channel": "claude:restart-session"
+    },
+    {
+      "method": "invoke",
+      "channel": "claude:revert-files"
+    },
+    {
+      "method": "invoke",
+      "channel": "claude:send"
+    },
+    {
+      "method": "invoke",
+      "channel": "claude:set-model"
+    },
+    {
+      "method": "invoke",
+      "channel": "claude:set-permission-mode"
+    },
+    {
+      "method": "invoke",
+      "channel": "claude:set-thinking"
+    },
+    {
+      "method": "invoke",
+      "channel": "claude:slash-commands"
+    },
+    {
+      "method": "invoke",
+      "channel": "claude:start"
+    },
+    {
+      "method": "on",
+      "channel": "claude:stderr"
+    },
+    {
+      "method": "removeListener",
+      "channel": "claude:stderr"
+    },
+    {
+      "method": "invoke",
+      "channel": "claude:stop"
+    },
+    {
+      "method": "invoke",
+      "channel": "claude:stop-task"
+    },
+    {
+      "method": "invoke",
+      "channel": "claude:supported-models"
+    },
+    {
+      "method": "invoke",
+      "channel": "claude:version"
+    },
+    {
+      "method": "invoke",
+      "channel": "clipboard:write-text"
+    },
+    {
+      "method": "on",
+      "channel": "codex:approval_request"
+    },
+    {
+      "method": "removeListener",
+      "channel": "codex:approval_request"
+    },
+    {
+      "method": "invoke",
+      "channel": "codex:approval_response"
+    },
+    {
+      "method": "invoke",
+      "channel": "codex:auth-status"
+    },
+    {
+      "method": "invoke",
+      "channel": "codex:binary-status"
+    },
+    {
+      "method": "invoke",
+      "channel": "codex:compact"
+    },
+    {
+      "method": "on",
+      "channel": "codex:event"
+    },
+    {
+      "method": "removeListener",
+      "channel": "codex:event"
+    },
+    {
+      "method": "on",
+      "channel": "codex:exit"
+    },
+    {
+      "method": "removeListener",
+      "channel": "codex:exit"
+    },
+    {
+      "method": "invoke",
+      "channel": "codex:interrupt"
+    },
+    {
+      "method": "invoke",
+      "channel": "codex:list-apps"
+    },
+    {
+      "method": "invoke",
+      "channel": "codex:list-models"
+    },
+    {
+      "method": "invoke",
+      "channel": "codex:list-skills"
+    },
+    {
+      "method": "send",
+      "channel": "codex:log"
+    },
+    {
+      "method": "invoke",
+      "channel": "codex:login"
+    },
+    {
+      "method": "invoke",
+      "channel": "codex:resume"
+    },
+    {
+      "method": "invoke",
+      "channel": "codex:send"
+    },
+    {
+      "method": "invoke",
+      "channel": "codex:server_request_error"
+    },
+    {
+      "method": "invoke",
+      "channel": "codex:set-model"
+    },
+    {
+      "method": "invoke",
+      "channel": "codex:start"
+    },
+    {
+      "method": "invoke",
+      "channel": "codex:stop"
+    },
+    {
+      "method": "invoke",
+      "channel": "codex:user_input_response"
+    },
+    {
+      "method": "invoke",
+      "channel": "codex:version"
+    },
+    {
+      "method": "invoke",
+      "channel": "file:new-file"
+    },
+    {
+      "method": "invoke",
+      "channel": "file:new-folder"
+    },
+    {
+      "method": "invoke",
+      "channel": "file:open-in-editor"
+    },
+    {
+      "method": "invoke",
+      "channel": "file:read"
+    },
+    {
+      "method": "invoke",
+      "channel": "file:rename"
+    },
+    {
+      "method": "invoke",
+      "channel": "file:trash"
+    },
+    {
+      "method": "invoke",
+      "channel": "files:calculate-deep-size"
+    },
+    {
+      "method": "on",
+      "channel": "files:changed"
+    },
+    {
+      "method": "removeListener",
+      "channel": "files:changed"
+    },
+    {
+      "method": "invoke",
+      "channel": "files:list"
+    },
+    {
+      "method": "invoke",
+      "channel": "files:list-all"
+    },
+    {
+      "method": "invoke",
+      "channel": "files:read-multiple"
+    },
+    {
+      "method": "invoke",
+      "channel": "files:unwatch"
+    },
+    {
+      "method": "invoke",
+      "channel": "files:watch"
+    },
+    {
+      "method": "invoke",
+      "channel": "folders:create"
+    },
+    {
+      "method": "invoke",
+      "channel": "folders:delete"
+    },
+    {
+      "method": "invoke",
+      "channel": "folders:list"
+    },
+    {
+      "method": "invoke",
+      "channel": "folders:pin"
+    },
+    {
+      "method": "invoke",
+      "channel": "folders:rename"
+    },
+    {
+      "method": "invoke",
+      "channel": "git:branches"
+    },
+    {
+      "method": "invoke",
+      "channel": "git:checkout"
+    },
+    {
+      "method": "invoke",
+      "channel": "git:commit"
+    },
+    {
+      "method": "invoke",
+      "channel": "git:create-branch"
+    },
+    {
+      "method": "invoke",
+      "channel": "git:create-worktree"
+    },
+    {
+      "method": "invoke",
+      "channel": "git:diff-file"
+    },
+    {
+      "method": "invoke",
+      "channel": "git:diff-stat"
+    },
+    {
+      "method": "invoke",
+      "channel": "git:discard"
+    },
+    {
+      "method": "invoke",
+      "channel": "git:discover-repos"
+    },
+    {
+      "method": "invoke",
+      "channel": "git:fetch"
+    },
+    {
+      "method": "invoke",
+      "channel": "git:generate-commit-message"
+    },
+    {
+      "method": "invoke",
+      "channel": "git:log"
+    },
+    {
+      "method": "invoke",
+      "channel": "git:prune-worktrees"
+    },
+    {
+      "method": "invoke",
+      "channel": "git:pull"
+    },
+    {
+      "method": "invoke",
+      "channel": "git:push"
+    },
+    {
+      "method": "invoke",
+      "channel": "git:remove-worktree"
+    },
+    {
+      "method": "invoke",
+      "channel": "git:stage"
+    },
+    {
+      "method": "invoke",
+      "channel": "git:stage-all"
+    },
+    {
+      "method": "invoke",
+      "channel": "git:status"
+    },
+    {
+      "method": "invoke",
+      "channel": "git:unstage"
+    },
+    {
+      "method": "invoke",
+      "channel": "git:unstage-all"
+    },
+    {
+      "method": "send",
+      "channel": "glass:set-theme"
+    },
+    {
+      "method": "send",
+      "channel": "glass:set-tint-color"
+    },
+    {
+      "method": "invoke",
+      "channel": "jira:auth-status"
+    },
+    {
+      "method": "invoke",
+      "channel": "jira:authenticate"
+    },
+    {
+      "method": "invoke",
+      "channel": "jira:delete-config"
+    },
+    {
+      "method": "invoke",
+      "channel": "jira:get-board-configuration"
+    },
+    {
+      "method": "invoke",
+      "channel": "jira:get-boards"
+    },
+    {
+      "method": "invoke",
+      "channel": "jira:get-comments"
+    },
+    {
+      "method": "invoke",
+      "channel": "jira:get-config"
+    },
+    {
+      "method": "invoke",
+      "channel": "jira:get-issues"
+    },
+    {
+      "method": "invoke",
+      "channel": "jira:get-projects"
+    },
+    {
+      "method": "invoke",
+      "channel": "jira:get-sprints"
+    },
+    {
+      "method": "invoke",
+      "channel": "jira:get-transitions"
+    },
+    {
+      "method": "invoke",
+      "channel": "jira:logout"
+    },
+    {
+      "method": "invoke",
+      "channel": "jira:save-config"
+    },
+    {
+      "method": "invoke",
+      "channel": "jira:transition-issue"
+    },
+    {
+      "method": "invoke",
+      "channel": "mcp:add"
+    },
+    {
+      "method": "invoke",
+      "channel": "mcp:auth-status"
+    },
+    {
+      "method": "invoke",
+      "channel": "mcp:authenticate"
+    },
+    {
+      "method": "invoke",
+      "channel": "mcp:list"
+    },
+    {
+      "method": "invoke",
+      "channel": "mcp:probe"
+    },
+    {
+      "method": "invoke",
+      "channel": "mcp:remove"
+    },
+    {
+      "method": "invoke",
+      "channel": "projects:create"
+    },
+    {
+      "method": "invoke",
+      "channel": "projects:create-dev"
+    },
+    {
+      "method": "invoke",
+      "channel": "projects:delete"
+    },
+    {
+      "method": "invoke",
+      "channel": "projects:list"
+    },
+    {
+      "method": "invoke",
+      "channel": "projects:rename"
+    },
+    {
+      "method": "invoke",
+      "channel": "projects:reorder"
+    },
+    {
+      "method": "invoke",
+      "channel": "projects:update-icon"
+    },
+    {
+      "method": "invoke",
+      "channel": "projects:update-space"
+    },
+    {
+      "method": "invoke",
+      "channel": "prompt-templates:delete"
+    },
+    {
+      "method": "invoke",
+      "channel": "prompt-templates:list"
+    },
+    {
+      "method": "invoke",
+      "channel": "prompt-templates:save"
+    },
+    {
+      "method": "invoke",
+      "channel": "sessions:delete"
+    },
+    {
+      "method": "invoke",
+      "channel": "sessions:export"
+    },
+    {
+      "method": "invoke",
+      "channel": "sessions:list"
+    },
+    {
+      "method": "invoke",
+      "channel": "sessions:load"
+    },
+    {
+      "method": "invoke",
+      "channel": "sessions:save"
+    },
+    {
+      "method": "invoke",
+      "channel": "sessions:search"
+    },
+    {
+      "method": "invoke",
+      "channel": "sessions:update-meta"
+    },
+    {
+      "method": "on",
+      "channel": "settings:changed"
+    },
+    {
+      "method": "removeListener",
+      "channel": "settings:changed"
+    },
+    {
+      "method": "invoke",
+      "channel": "settings:get"
+    },
+    {
+      "method": "invoke",
+      "channel": "settings:set"
+    },
+    {
+      "method": "invoke",
+      "channel": "shell:open-external"
+    },
+    {
+      "method": "invoke",
+      "channel": "shell:show-item-in-folder"
+    },
+    {
+      "method": "invoke",
+      "channel": "spaces:list"
+    },
+    {
+      "method": "invoke",
+      "channel": "spaces:save"
+    },
+    {
+      "method": "invoke",
+      "channel": "speech:get-platform"
+    },
+    {
+      "method": "invoke",
+      "channel": "speech:request-mic-permission"
+    },
+    {
+      "method": "invoke",
+      "channel": "speech:start-native-dictation"
+    },
+    {
+      "method": "invoke",
+      "channel": "subagents:delete"
+    },
+    {
+      "method": "invoke",
+      "channel": "subagents:list"
+    },
+    {
+      "method": "invoke",
+      "channel": "subagents:save"
+    },
+    {
+      "method": "invoke",
+      "channel": "terminal:create"
+    },
+    {
+      "method": "on",
+      "channel": "terminal:data"
+    },
+    {
+      "method": "removeListener",
+      "channel": "terminal:data"
+    },
+    {
+      "method": "invoke",
+      "channel": "terminal:destroy"
+    },
+    {
+      "method": "invoke",
+      "channel": "terminal:destroy-space"
+    },
+    {
+      "method": "on",
+      "channel": "terminal:exit"
+    },
+    {
+      "method": "removeListener",
+      "channel": "terminal:exit"
+    },
+    {
+      "method": "invoke",
+      "channel": "terminal:list"
+    },
+    {
+      "method": "invoke",
+      "channel": "terminal:resize"
+    },
+    {
+      "method": "invoke",
+      "channel": "terminal:snapshot"
+    },
+    {
+      "method": "invoke",
+      "channel": "terminal:write"
+    },
+    {
+      "method": "invoke",
+      "channel": "updater:check"
+    },
+    {
+      "method": "invoke",
+      "channel": "updater:current-version"
+    },
+    {
+      "method": "invoke",
+      "channel": "updater:download"
+    },
+    {
+      "method": "on",
+      "channel": "updater:download-progress"
+    },
+    {
+      "method": "removeListener",
+      "channel": "updater:download-progress"
+    },
+    {
+      "method": "invoke",
+      "channel": "updater:install"
+    },
+    {
+      "method": "on",
+      "channel": "updater:install-error"
+    },
+    {
+      "method": "removeListener",
+      "channel": "updater:install-error"
+    },
+    {
+      "method": "invoke",
+      "channel": "updater:is-prerelease"
+    },
+    {
+      "method": "on",
+      "channel": "updater:prerelease-status"
+    },
+    {
+      "method": "removeListener",
+      "channel": "updater:prerelease-status"
+    },
+    {
+      "method": "on",
+      "channel": "updater:update-available"
+    },
+    {
+      "method": "removeListener",
+      "channel": "updater:update-available"
+    },
+    {
+      "method": "on",
+      "channel": "updater:update-downloaded"
+    },
+    {
+      "method": "removeListener",
+      "channel": "updater:update-downloaded"
+    }
+  ]
+}

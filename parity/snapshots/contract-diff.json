@@ -1,0 +1,128 @@
+{
+  "status": "not-equal",
+  "sourceDir": "parity/snapshots/source",
+  "targetDir": "parity/snapshots/target",
+  "maxDiffsPerFile": 50,
+  "results": [
+    {
+      "file": "preload-api.json",
+      "status": "missing",
+      "sourceExists": false,
+      "targetExists": true,
+      "diffCount": 1,
+      "sampleDiffs": [
+        {
+          "path": "",
+          "kind": "snapshot-missing",
+          "sourceExists": false,
+          "targetExists": true
+        }
+      ]
+    },
+    {
+      "file": "ipc-channels.json",
+      "status": "missing",
+      "sourceExists": false,
+      "targetExists": true,
+      "diffCount": 1,
+      "sampleDiffs": [
+        {
+          "path": "",
+          "kind": "snapshot-missing",
+          "sourceExists": false,
+          "targetExists": true
+        }
+      ]
+    },
+    {
+      "file": "settings-defaults.json",
+      "status": "missing",
+      "sourceExists": false,
+      "targetExists": true,
+      "diffCount": 1,
+      "sampleDiffs": [
+        {
+          "path": "",
+          "kind": "snapshot-missing",
+          "sourceExists": false,
+          "targetExists": true
+        }
+      ]
+    },
+    {
+      "file": "shared-types.json",
+      "status": "missing",
+      "sourceExists": false,
+      "targetExists": true,
+      "diffCount": 1,
+      "sampleDiffs": [
+        {
+          "path": "",
+          "kind": "snapshot-missing",
+          "sourceExists": false,
+          "targetExists": true
+        }
+      ]
+    },
+    {
+      "file": "session-serialization.json",
+      "status": "missing",
+      "sourceExists": false,
+      "targetExists": true,
+      "diffCount": 1,
+      "sampleDiffs": [
+        {
+          "path": "",
+          "kind": "snapshot-missing",
+          "sourceExists": false,
+          "targetExists": true
+        }
+      ]
+    },
+    {
+      "file": "package-dependencies.json",
+      "status": "missing",
+      "sourceExists": false,
+      "targetExists": true,
+      "diffCount": 1,
+      "sampleDiffs": [
+        {
+          "path": "",
+          "kind": "snapshot-missing",
+          "sourceExists": false,
+          "targetExists": true
+        }
+      ]
+    },
+    {
+      "file": "build-config.json",
+      "status": "missing",
+      "sourceExists": false,
+      "targetExists": true,
+      "diffCount": 1,
+      "sampleDiffs": [
+        {
+          "path": "",
+          "kind": "snapshot-missing",
+          "sourceExists": false,
+          "targetExists": true
+        }
+      ]
+    },
+    {
+      "file": "default-surface.json",
+      "status": "missing",
+      "sourceExists": false,
+      "targetExists": true,
+      "diffCount": 1,
+      "sampleDiffs": [
+        {
+          "path": "",
+          "kind": "snapshot-missing",
+          "sourceExists": false,
+          "targetExists": true
+        }
+      ]
+    }
+  ]
+}

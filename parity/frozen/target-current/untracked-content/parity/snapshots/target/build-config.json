@@ -1,0 +1,238 @@
+{
+  "files": [
+    {
+      "file": "electron-builder.config.js",
+      "exists": true,
+      "exportedConfig": [
+        {
+          "kind": "module-exports",
+          "value": {
+            "afterPack": {
+              "expression": "afterPackHook"
+            },
+            "afterSign": "scripts/notarize.js",
+            "appId": "com.harnss.app",
+            "asar": true,
+            "asarUnpack": [
+              "node_modules/node-pty/**",
+              "node_modules/electron-liquid-glass/**",
+              "node_modules/@anthropic-ai/claude-agent-sdk/cli.js",
+              "node_modules/@anthropic-ai/claude-agent-sdk/*.wasm",
+              "node_modules/@anthropic-ai/claude-agent-sdk/vendor/**",
+              "node_modules/@anthropic-ai/claude-agent-sdk/manifest*.json"
+            ],
+            "deb": {
+              "depends": [
+                "libnotify4",
+                "libsecret-1-0"
+              ]
+            },
+            "directories": {
+              "buildResources": "build",
+              "output": "release/${version}"
+            },
+            "dmg": {
+              "contents": [
+                {
+                  "x": 130,
+                  "y": 220
+                },
+                {
+                  "path": "/Applications",
+                  "type": "link",
+                  "x": 410,
+                  "y": 220
+                }
+              ],
+              "icon": "build/icon.icns",
+              "window": {
+                "height": 380,
+                "width": 540
+              }
+            },
+            "files": [
+              "!**/{test,tests,__tests__,__mocks__,spec,specs}/**",
+              "!**/*.d.ts",
+              "!**/*.d.cts",
+              "!**/*.d.mts",
+              "!**/*.map"
+            ],
+            "includePdb": false,
+            "linux": {
+              "category": "Development",
+              "files": [
+                "!node_modules/electron-liquid-glass/**",
+                "!node_modules/@anthropic-ai/claude-agent-sdk/vendor/ripgrep/arm64-darwin/**",
+                "!node_modules/@anthropic-ai/claude-agent-sdk/vendor/ripgrep/x64-darwin/**",
+                "!node_modules/@anthropic-ai/claude-agent-sdk/vendor/ripgrep/arm64-win32/**",
+                "!node_modules/@anthropic-ai/claude-agent-sdk/vendor/ripgrep/x64-win32/**",
+                "!node_modules/node-pty/prebuilds/darwin-*/**",
+                "!node_modules/node-pty/prebuilds/win32-*/**"
+              ],
+              "icon": "build/icon.png",
+              "target": [
+                {
+                  "target": "AppImage"
+                },
+                {
+                  "target": "deb"
+                }
+              ]
+            },
+            "mac": {
+              "category": "public.app-category.developer-tools",
+              "darkModeSupport": true,
+              "entitlements": "build/entitlements.mac.plist",
+              "entitlementsInherit": "build/entitlements.mac.plist",
+              "extendInfo": {
+                "NSMicrophoneUsageDescription": "Harnss uses the microphone for voice dictation to transcribe speech into text."
+              },
+              "gatekeeperAssess": false,
+              "hardenedRuntime": true,
+              "icon": "build/icon.icns",
+              "target": [
+                "dmg",
+                "zip"
+              ]
+            },
+            "nodeGypRebuild": false,
+            "npmRebuild": true,
+            "nsis": {
+              "allowToChangeInstallationDirectory": true,
+              "artifactName": "${productName}-Setup-${version}-${arch}.${ext}",
+              "deleteAppDataOnUninstall": false,
+              "oneClick": false,
+              "perMachine": false
+            },
+            "productName": "Harnss",
+            "publish": {
+              "owner": "OpenSource03",
+              "provider": "github",
+              "releaseType": "release",
+              "repo": "harnss"
+            },
+            "win": {
+              "files": [
+                "!node_modules/electron-liquid-glass/**",
+                "!node_modules/@anthropic-ai/claude-agent-sdk/vendor/ripgrep/arm64-darwin/**",
+                "!node_modules/@anthropic-ai/claude-agent-sdk/vendor/ripgrep/x64-darwin/**",
+                "!node_modules/@anthropic-ai/claude-agent-sdk/vendor/ripgrep/arm64-linux/**",
+                "!node_modules/@anthropic-ai/claude-agent-sdk/vendor/ripgrep/x64-linux/**",
+                "!node_modules/node-pty/prebuilds/darwin-*/**",
+                "!node_modules/node-pty/prebuilds/linux-*/**"
+              ],
+              "icon": "build/icon.ico",
+              "target": [
+                {
+                  "arch": [
+                    "x64",
+                    "arm64"
+                  ],
+                  "target": "nsis"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "file": "vite.config.ts",
+      "exists": true,
+      "exportedConfig": [
+        {
+          "kind": "export-default",
+          "value": {
+            "base": "./",
+            "build": {
+              "outDir": "dist",
+              "rollupOptions": {
+                "output": {
+                  "manualChunks": {
+                    "vendor-diff": [
+                      "diff"
+                    ],
+                    "vendor-konva": [
+                      "konva",
+                      "react-konva"
+                    ],
+                    "vendor-markdown": [
+                      "react-markdown",
+                      "remark-gfm"
+                    ],
+                    "vendor-syntax": [
+                      "react-syntax-highlighter",
+                      "refractor"
+                    ],
+                    "vendor-xterm": [
+                      "@xterm/xterm",
+                      "@xterm/addon-fit"
+                    ]
+                  }
+                }
+              }
+            },
+            "plugins": [
+              {
+                "expression": "react()"
+              },
+              {
+                "expression": "tailwindcss()"
+              }
+            ],
+            "resolve": {
+              "alias": {
+                "@": {
+                  "expression": "path.resolve(__dirname, \"./src\")"
+                },
+                "@shared": {
+                  "expression": "path.resolve(__dirname, \"./shared\")"
+                }
+              }
+            },
+            "server": {
+              "port": 5173
+            }
+          }
+        }
+      ]
+    },
+    {
+      "file": "tsup.config.ts",
+      "exists": false
+    },
+    {
+      "file": "tsup.electron.config.ts",
+      "exists": true,
+      "exportedConfig": [
+        {
+          "kind": "export-default",
+          "value": {
+            "clean": true,
+            "entry": {
+              "main": "electron/src/main.ts",
+              "preload": "electron/src/preload.ts"
+            },
+            "external": [
+              "electron",
+              "node-pty",
+              "electron-liquid-glass",
+              "@anthropic-ai/claude-agent-sdk",
+              "electron-updater",
+              "posthog-node"
+            ],
+            "format": [
+              "cjs"
+            ],
+            "noExternal": [],
+            "outDir": "electron/dist",
+            "platform": "node",
+            "splitting": false,
+            "target": "es2020",
+            "treeshake": true
+          }
+        }
+      ]
+    }
+  ]
+}

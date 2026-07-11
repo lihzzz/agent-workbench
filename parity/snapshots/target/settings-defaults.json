@@ -1,0 +1,53 @@
+{
+  "notificationDefaults": {
+    "askUserQuestion": {
+      "osNotification": "unfocused",
+      "sound": "always"
+    },
+    "exitPlanMode": {
+      "osNotification": "unfocused",
+      "sound": "always"
+    },
+    "permissions": {
+      "osNotification": "unfocused",
+      "sound": "unfocused"
+    },
+    "sessionComplete": {
+      "osNotification": "unfocused",
+      "sound": "always"
+    }
+  },
+  "appSettingsDefaults": {
+    "allowPrereleaseUpdates": false,
+    "analyticsEnabled": true,
+    "claudeBinarySource": "auto",
+    "claudeCustomBinaryPath": "",
+    "codexBinarySource": "auto",
+    "codexClientName": "Harnss",
+    "codexCustomBinaryPath": "",
+    "defaultChatLimit": 10,
+    "macBackgroundEffect": "liquid-glass",
+    "notifications": {
+      "askUserQuestion": {
+        "osNotification": "unfocused",
+        "sound": "always"
+      },
+      "exitPlanMode": {
+        "osNotification": "unfocused",
+        "sound": "always"
+      },
+      "permissions": {
+        "osNotification": "unfocused",
+        "sound": "unfocused"
+      },
+      "sessionComplete": {
+        "osNotification": "unfocused",
+        "sound": "always"
+      }
+    },
+    "preferredEditor": "auto",
+    "showDevFillInChatTitleBar": false,
+    "showJiraBoard": false,
+    "voiceDictation": "native"
+  }
+}

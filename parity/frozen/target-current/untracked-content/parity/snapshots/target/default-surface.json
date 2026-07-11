@@ -1,0 +1,705 @@
+{
+  "builtInAgents": [
+    {
+      "file": "electron/src/lib/agent-registry.ts",
+      "name": "BUILTIN_CLAUDE",
+      "value": {
+        "builtIn": true,
+        "engine": "claude",
+        "icon": "brain",
+        "id": "claude-code",
+        "name": "Claude Code"
+      }
+    },
+    {
+      "file": "electron/src/lib/agent-registry.ts",
+      "name": "BUILTIN_CODEX",
+      "value": {
+        "builtIn": true,
+        "engine": "codex",
+        "icon": "zap",
+        "id": "codex",
+        "name": "Codex"
+      }
+    }
+  ],
+  "engineIcons": [
+    {
+      "file": "src/lib/engine-icons.ts",
+      "name": "ENGINE_ICONS",
+      "value": {
+        "claude": "https://cdn.agentclientprotocol.com/registry/v1/latest/claude-acp.svg",
+        "codex": "https://cdn.agentclientprotocol.com/registry/v1/latest/codex-acp.svg"
+      }
+    }
+  ],
+  "engineAccents": [
+    {
+      "file": "src/lib/engine-colors.ts",
+      "name": "ACCENTS",
+      "value": {
+        "acp": {
+          "bar": "#8b7cf6",
+          "ring": "rgba(139, 124, 246, 0.45)",
+          "tint": "rgba(139, 124, 246, 0.14)"
+        },
+        "claude": {
+          "bar": "#d97757",
+          "ring": "rgba(217, 119, 87, 0.45)",
+          "tint": "rgba(217, 119, 87, 0.14)"
+        },
+        "codex": {
+          "bar": "#2da8a8",
+          "ring": "rgba(45, 168, 168, 0.45)",
+          "tint": "rgba(45, 168, 168, 0.14)"
+        }
+      }
+    }
+  ],
+  "files": [
+    {
+      "file": "electron/src/lib/agent-registry.ts",
+      "exists": true,
+      "imports": [
+        "@shared/types/acp",
+        "@shared/types/registry",
+        "child_process",
+        "electron",
+        "fs",
+        "path",
+        "util"
+      ],
+      "exports": [
+        {
+          "name": "checkBinaries",
+          "kind": "function"
+        },
+        {
+          "name": "deleteAgent",
+          "kind": "function"
+        },
+        {
+          "name": "getAgent",
+          "kind": "function"
+        },
+        {
+          "name": "getRegistryPlatformKeys",
+          "kind": "function"
+        },
+        {
+          "name": "listAgents",
+          "kind": "function"
+        },
+        {
+          "name": "loadUserAgents",
+          "kind": "function"
+        },
+        {
+          "name": "saveAgent",
+          "kind": "function"
+        },
+        {
+          "name": "updateCachedConfig",
+          "kind": "function"
+        }
+      ],
+      "jsxStrings": [],
+      "keywordStrings": [
+        "ACP agents require a binary",
+        "Claude Code",
+        "Codex"
+      ]
+    },
+    {
+      "file": "shared/types/engine.ts",
+      "exists": true,
+      "imports": [],
+      "exports": [
+        {
+          "name": "SlashCommand",
+          "kind": "interface"
+        },
+        {
+          "name": "AppPermissionBehavior",
+          "kind": "type"
+        },
+        {
+          "name": "EngineId",
+          "kind": "type"
+        },
+        {
+          "name": "RespondPermissionFn",
+          "kind": "type"
+        }
+      ],
+      "jsxStrings": [],
+      "keywordStrings": []
+    },
+    {
+      "file": "src/lib/engine-icons.ts",
+      "exists": true,
+      "imports": [
+        "@/types",
+        "@shared/types/engine"
+      ],
+      "exports": [
+        {
+          "name": "ENGINE_ICONS",
+          "kind": "const"
+        },
+        {
+          "name": "getAgentIcon",
+          "kind": "function"
+        },
+        {
+          "name": "getSessionEngineIcon",
+          "kind": "function"
+        }
+      ],
+      "jsxStrings": [],
+      "keywordStrings": []
+    },
+    {
+      "file": "src/lib/engine-colors.ts",
+      "exists": true,
+      "imports": [
+        "@shared/types/engine"
+      ],
+      "exports": [
+        {
+          "name": "getEngineAccent",
+          "kind": "function"
+        },
+        {
+          "name": "EngineAccent",
+          "kind": "interface"
+        }
+      ],
+      "jsxStrings": [],
+      "keywordStrings": []
+    },
+    {
+      "file": "src/components/AppSidebar.tsx",
+      "exists": true,
+      "imports": [
+        "./AgentContext",
+        "./PreReleaseBanner",
+        "./SidebarSearch",
+        "./SpaceBar",
+        "./SpaceCustomizer",
+        "./UpdateBanner",
+        "./sidebar/ProjectSection",
+        "./sidebar/SidebarActionsContext",
+        "@/components/ui/button",
+        "@/components/ui/input",
+        "@/components/ui/popover",
+        "@/components/ui/scroll-area",
+        "@/lib/analytics/analytics",
+        "@/lib/layout/constants",
+        "@/lib/session/session-export",
+        "@/lib/sidebar/dnd",
+        "@/lib/utils",
+        "@/types",
+        "lucide-react",
+        "react",
+        "sonner"
+      ],
+      "exports": [
+        {
+          "name": "AppSidebar",
+          "kind": "const"
+        }
+      ],
+      "jsxStrings": [
+        {
+          "attribute": "jsxText",
+          "value": "·"
+        },
+        {
+          "attribute": "jsxText",
+          "value": "Add project"
+        },
+        {
+          "attribute": "jsxText",
+          "value": "Cancel"
+        },
+        {
+          "attribute": "jsxText",
+          "value": "Choose a Theme"
+        },
+        {
+          "attribute": "jsxText",
+          "value": "Create a Space"
+        },
+        {
+          "attribute": "jsxText",
+          "value": "Create Space"
+        },
+        {
+          "attribute": "jsxText",
+          "value": "Harnss is in early beta"
+        },
+        {
+          "attribute": "jsxText",
+          "value": "Report a bug"
+        },
+        {
+          "attribute": "jsxText",
+          "value": "Separate your projects for work, life, and more."
+        },
+        {
+          "attribute": "placeholder",
+          "value": "Space name..."
+        }
+      ],
+      "keywordStrings": []
+    },
+    {
+      "file": "src/components/SettingsView.tsx",
+      "exists": true,
+      "imports": [
+        "./AgentContext",
+        "@/components/settings/AboutSettings",
+        "@/components/settings/AdvancedSettings",
+        "@/components/settings/AgentSettings",
+        "@/components/settings/AnalyticsSettings",
+        "@/components/settings/AppearanceSettings",
+        "@/components/settings/ArchivedSettings",
+        "@/components/settings/CostDashboardSettings",
+        "@/components/settings/EngineSettings",
+        "@/components/settings/GeneralSettings",
+        "@/components/settings/McpSettings",
+        "@/components/settings/NotificationsSettings",
+        "@/components/settings/PromptTemplateSettings",
+        "@/components/settings/SkillsSettings",
+        "@/components/settings/SubagentSettings",
+        "@/components/ui/button",
+        "@/lib/utils",
+        "@/stores/settings-store",
+        "@/types",
+        "lucide-react",
+        "react"
+      ],
+      "exports": [
+        {
+          "name": "SettingsView",
+          "kind": "const"
+        },
+        {
+          "name": "SettingsSection",
+          "kind": "type"
+        }
+      ],
+      "jsxStrings": [
+        {
+          "attribute": "jsxText",
+          "value": "Settings"
+        },
+        {
+          "attribute": "jsxText",
+          "value": "Soon"
+        }
+      ],
+      "keywordStrings": [
+        "@/components/settings/AboutSettings",
+        "@/components/settings/AdvancedSettings",
+        "@/components/settings/AgentSettings",
+        "@/components/settings/AnalyticsSettings",
+        "@/components/settings/AppearanceSettings",
+        "@/components/settings/ArchivedSettings",
+        "@/components/settings/CostDashboardSettings",
+        "@/components/settings/EngineSettings",
+        "@/components/settings/GeneralSettings",
+        "@/components/settings/McpSettings",
+        "@/components/settings/NotificationsSettings",
+        "@/components/settings/PromptTemplateSettings",
+        "@/components/settings/SkillsSettings",
+        "@/components/settings/SubagentSettings",
+        "ACP Agents",
+        "Archived Chats",
+        "Engines"
+      ]
+    },
+    {
+      "file": "src/components/FilePreviewOverlay.tsx",
+      "exists": true,
+      "imports": [
+        "./OpenInEditorButton",
+        "@/components/ui/tooltip",
+        "@/hooks/useTheme",
+        "@/lib/analytics/analytics",
+        "@/lib/languages",
+        "@/lib/monaco",
+        "lucide-react",
+        "motion/react",
+        "react"
+      ],
+      "exports": [
+        {
+          "name": "FilePreviewOverlay",
+          "kind": "const"
+        }
+      ],
+      "jsxStrings": [
+        {
+          "attribute": "jsxText",
+          "value": "•"
+        },
+        {
+          "attribute": "jsxText",
+          "value": "Open in editor"
+        }
+      ],
+      "keywordStrings": []
+    },
+    {
+      "file": "src/components/TodoPanel.tsx",
+      "exists": true,
+      "imports": [
+        "@/components/PanelHeader",
+        "@/components/ui/scroll-area",
+        "@/lib/chat/todo-utils",
+        "@/types",
+        "lucide-react"
+      ],
+      "exports": [
+        {
+          "name": "TodoPanel",
+          "kind": "function"
+        }
+      ],
+      "jsxStrings": [
+        {
+          "attribute": "jsxText",
+          "value": "/"
+        }
+      ],
+      "keywordStrings": []
+    },
+    {
+      "file": "src/components/input-bar/EnginePickerDropdown.tsx",
+      "exists": true,
+      "imports": [
+        "./constants",
+        "@/components/AgentIcon",
+        "@/components/ui/button",
+        "@/components/ui/dropdown-menu",
+        "@/lib/engine-icons",
+        "@/lib/engine/acp-utils",
+        "@/types",
+        "lucide-react",
+        "react"
+      ],
+      "exports": [
+        {
+          "name": "EnginePickerDropdown",
+          "kind": "const"
+        },
+        {
+          "name": "EnginePickerDropdownProps",
+          "kind": "interface"
+        }
+      ],
+      "jsxStrings": [
+        {
+          "attribute": "jsxText",
+          "value": "·"
+        },
+        {
+          "attribute": "jsxText",
+          "value": "ACP Agents"
+        },
+        {
+          "attribute": "jsxText",
+          "value": "Could not load options for this agent"
+        },
+        {
+          "attribute": "jsxText",
+          "value": "Current"
+        },
+        {
+          "attribute": "jsxText",
+          "value": "Effort"
+        },
+        {
+          "attribute": "jsxText",
+          "value": "Engines"
+        },
+        {
+          "attribute": "jsxText",
+          "value": "Loading options..."
+        },
+        {
+          "attribute": "jsxText",
+          "value": "Manage ACPs"
+        },
+        {
+          "attribute": "jsxText",
+          "value": "Opens new chat"
+        }
+      ],
+      "keywordStrings": [
+        "Claude Code"
+      ]
+    },
+    {
+      "file": "src/components/input-bar/InputBar.tsx",
+      "exists": true,
+      "imports": [
+        "./AttachmentPreview",
+        "./BranchIndicator",
+        "./CommandPicker",
+        "./ContextGauge",
+        "./EngineControls",
+        "./EnginePickerDropdown",
+        "./MentionPicker",
+        "./TemplateVarForm",
+        "./constants",
+        "./input-bar-utils",
+        "./useInputHistory",
+        "./useMentionAutocomplete",
+        "@/components/AgentContext",
+        "@/components/ImageAnnotationEditor",
+        "@/components/ui/button",
+        "@/components/ui/confirm-dialog",
+        "@/components/ui/tooltip",
+        "@/hooks/useSpeechRecognition",
+        "@/lib/layout/constants",
+        "@/lib/model-utils",
+        "@/types",
+        "lucide-react",
+        "react"
+      ],
+      "exports": [
+        {
+          "name": "InputBar",
+          "kind": "const"
+        },
+        {
+          "name": "InputBarProps",
+          "kind": "interface"
+        }
+      ],
+      "jsxStrings": [
+        {
+          "attribute": "jsxText",
+          "value": "... and"
+        },
+        {
+          "attribute": "jsxText",
+          "value": "(~"
+        },
+        {
+          "attribute": "jsxText",
+          "value": ")."
+        },
+        {
+          "attribute": "jsxText",
+          "value": "files"
+        },
+        {
+          "attribute": "jsxText",
+          "value": "KB"
+        },
+        {
+          "attribute": "jsxText",
+          "value": "more"
+        },
+        {
+          "attribute": "jsxText",
+          "value": "Note: Some files will be skipped:"
+        },
+        {
+          "attribute": "jsxText",
+          "value": "Sending this much content will consume a significant portion of the context window and may impact response quality."
+        },
+        {
+          "attribute": "jsxText",
+          "value": "This deep folder includes"
+        },
+        {
+          "attribute": "jsxText",
+          "value": "tokens"
+        },
+        {
+          "attribute": "jsxText",
+          "value": "totaling"
+        },
+        {
+          "attribute": "title",
+          "value": "Attach image"
+        },
+        {
+          "attribute": "title",
+          "value": "Large Context Warning"
+        }
+      ],
+      "keywordStrings": [
+        "./EngineControls",
+        "./EnginePickerDropdown",
+        "./useInputHistory",
+        "Claude",
+        "Loading Codex models..."
+      ]
+    },
+    {
+      "file": "src/components/sidebar/SessionItem.tsx",
+      "exists": true,
+      "imports": [
+        "@/components/AgentIcon",
+        "@/components/ui/button",
+        "@/components/ui/dropdown-menu",
+        "@/hooks/useContextMenuPosition",
+        "@/hooks/useInlineRename",
+        "@/lib/clipboard",
+        "@/lib/engine-colors",
+        "@/lib/engine-icons",
+        "@/lib/session/session-export",
+        "@/lib/sidebar/dnd",
+        "@/types",
+        "lucide-react",
+        "react",
+        "sonner"
+      ],
+      "exports": [
+        {
+          "name": "SessionItem",
+          "kind": "function"
+        }
+      ],
+      "jsxStrings": [
+        {
+          "attribute": "jsxText",
+          "value": "Copy session ID"
+        },
+        {
+          "attribute": "jsxText",
+          "value": "Delete"
+        },
+        {
+          "attribute": "jsxText",
+          "value": "Export"
+        },
+        {
+          "attribute": "jsxText",
+          "value": "Generating title..."
+        },
+        {
+          "attribute": "jsxText",
+          "value": "HTML (.html)"
+        },
+        {
+          "attribute": "jsxText",
+          "value": "JSON (.json)"
+        },
+        {
+          "attribute": "jsxText",
+          "value": "Markdown (.md)"
+        },
+        {
+          "attribute": "jsxText",
+          "value": "Move to folder"
+        },
+        {
+          "attribute": "jsxText",
+          "value": "Open in Split View"
+        },
+        {
+          "attribute": "jsxText",
+          "value": "Pin"
+        },
+        {
+          "attribute": "jsxText",
+          "value": "Remove from folder"
+        },
+        {
+          "attribute": "jsxText",
+          "value": "Rename"
+        },
+        {
+          "attribute": "jsxText",
+          "value": "Unpin"
+        }
+      ],
+      "keywordStrings": [
+        "Archive"
+      ]
+    },
+    {
+      "file": "src/components/split/SplitPaneHost.tsx",
+      "exists": true,
+      "imports": [
+        "@/hooks/session/types",
+        "@/hooks/session/useExtraPaneLoader",
+        "@/hooks/session/useSessionPane",
+        "@/types"
+      ],
+      "exports": [
+        {
+          "name": "SplitPaneHost",
+          "kind": "function"
+        }
+      ],
+      "jsxStrings": [],
+      "keywordStrings": []
+    },
+    {
+      "file": "src/components/settings/ArchivedSettings.tsx",
+      "exists": true,
+      "imports": [
+        "./shared",
+        "@/components/AgentIcon",
+        "@/components/ui/button",
+        "@/components/ui/confirm-dialog",
+        "@/components/ui/scroll-area",
+        "@/lib/engine-icons",
+        "@/types",
+        "lucide-react",
+        "react"
+      ],
+      "exports": [
+        {
+          "name": "ArchivedSettings",
+          "kind": "const"
+        }
+      ],
+      "jsxStrings": [
+        {
+          "attribute": "jsxText",
+          "value": ". This action cannot be undone."
+        },
+        {
+          "attribute": "jsxText",
+          "value": "Archive a chat from its menu in the sidebar and it will appear here."
+        },
+        {
+          "attribute": "jsxText",
+          "value": "No archived chats"
+        },
+        {
+          "attribute": "jsxText",
+          "value": "Restore"
+        },
+        {
+          "attribute": "jsxText",
+          "value": "This will permanently delete"
+        },
+        {
+          "attribute": "title",
+          "value": "Archived Chats"
+        },
+        {
+          "attribute": "title",
+          "value": "Delete chat?"
+        },
+        {
+          "attribute": "title",
+          "value": "Delete permanently"
+        }
+      ],
+      "keywordStrings": [
+        "Archived Chats"
+      ]
+    }
+  ]
+}

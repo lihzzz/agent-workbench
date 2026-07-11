@@ -391,6 +391,29 @@ contextBridge.exposeInMainWorld("claude", {
       return () => ipcRenderer.removeListener("settings:changed", listener);
     },
   },
+  remote: {
+    status: () => ipcRenderer.invoke("remote:status"),
+    pair: (input: { serverUrl: string; desktopName: string; deviceToken: string; desktopId?: string }) =>
+      ipcRenderer.invoke("remote:pair", input),
+    revoke: () => ipcRenderer.invoke("remote:revoke"),
+    setEnabled: (enabled: boolean) => ipcRenderer.invoke("remote:set-enabled", enabled),
+    auditList: (limit?: number) => ipcRenderer.invoke("remote:audit-list", limit),
+    rendererReady: () => ipcRenderer.send("remote:renderer-ready"),
+    rendererDispose: () => ipcRenderer.send("remote:renderer-dispose"),
+    publishSnapshot: (snapshot: unknown) => ipcRenderer.send("remote:snapshot-update", snapshot),
+    commandResult: (result: { commandId: string; ok: boolean; result?: unknown; error?: string }) =>
+      ipcRenderer.invoke("remote:command-result", result),
+    onStatusChanged: (callback: (data: unknown) => void) => {
+      const listener = (_event: IpcRendererEvent, data: unknown) => callback(data);
+      ipcRenderer.on("remote:status-changed", listener);
+      return () => ipcRenderer.removeListener("remote:status-changed", listener);
+    },
+    onCommand: (callback: (data: unknown) => void) => {
+      const listener = (_event: IpcRendererEvent, data: unknown) => callback(data);
+      ipcRenderer.on("remote:command", listener);
+      return () => ipcRenderer.removeListener("remote:command", listener);
+    },
+  },
   jira: {
     getConfig: (projectId: string) => ipcRenderer.invoke("jira:get-config", projectId),
     saveConfig: (projectId: string, config: unknown) =>

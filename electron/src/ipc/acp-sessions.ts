@@ -10,6 +10,7 @@ import type { InstalledAgent } from "../lib/agent-registry";
 import { getMcpAuthHeaders } from "../lib/mcp-oauth-flow";
 import { extractErrorMessage, reportError } from "../lib/error-utils";
 import { captureEvent } from "../lib/posthog";
+import { permissionLedger } from "../lib/permissions/permission-ledger";
 import {
   buildAuthRequiredError,
   extractAuthRequired,
@@ -86,7 +87,45 @@ interface ACPSessionEntry {
   promptInFlight?: boolean;
 }
 
+function previewPermissionInput(input: unknown): string {
+  try {
+    return JSON.stringify(input, null, 2).slice(0, 4000);
+  } catch {
+    return String(input).slice(0, 4000);
+  }
+}
+
 export const acpSessions = new Map<string, ACPSessionEntry>();
+
+function permissionRaceError(reason: string): string {
+  if (reason === "already_resolved") return "Permission request was already resolved";
+  if (reason === "expired") return "Permission request expired";
+  return "Permission request is no longer available";
+}
+
+export async function respondAcpPermissionDirect(input: {
+  sessionId: string;
+  requestId: string;
+  optionId: string;
+}): Promise<{ ok?: boolean; error?: string }> {
+  const session = acpSessions.get(input.sessionId);
+  if (!session) {
+    log("ACP_PERMISSION_RESPONSE", `ERROR: session ${input.sessionId?.slice(0, 8)} not found`);
+    return { error: "Session not found" };
+  }
+
+  const resolver = session.pendingPermissions.get(input.requestId);
+  if (!resolver) {
+    log("ACP_PERMISSION_RESPONSE", `ERROR: session=${input.sessionId.slice(0, 8)} no pending permission for requestId=${input.requestId}`);
+    return { error: "No pending permission" };
+  }
+
+  log("ACP_PERMISSION_RESPONSE", `session=${input.sessionId.slice(0, 8)} requestId=${input.requestId} optionId=${input.optionId}`);
+  resolver.resolve({ outcome: { outcome: "selected", optionId: input.optionId } });
+  session.pendingPermissions.delete(input.requestId);
+  permissionLedger.resolve(input.requestId);
+  return { ok: true };
+}
 
 // Buffer latest config options per session — survives the renderer's DRAFT→active transition
 // where events arrive before useACP's listener is subscribed
@@ -358,6 +397,7 @@ async function createAcpConnection(
       resolver.resolve({ outcome: { outcome: "cancelled" } });
     }
     entry.pendingPermissions.clear();
+    permissionLedger.deleteSession(sessionId);
     safeSend(getMainWindow, "acp:exit", { _sessionId: internalId, code });
     acpSessions.delete(internalId);
     configBuffer.delete(internalId);
@@ -439,6 +479,35 @@ async function createAcpConnection(
         const toolCall = (params as { toolCall: Record<string, unknown> }).toolCall;
         const opts = (params as { options: unknown[] }).options;
         pendingPermissions.set(requestId, { resolve });
+        const optionActions = Array.isArray(opts)
+          ? opts
+              .map((option) => option as Record<string, unknown>)
+              .filter((option) => typeof option.optionId === "string")
+              .map((option) => ({
+                kind: "answer" as const,
+                optionId: option.optionId as string,
+                label: typeof option.name === "string"
+                  ? option.name
+                  : typeof option.kind === "string"
+                    ? option.kind
+                    : option.optionId as string,
+              }))
+          : [];
+        permissionLedger.add({
+          requestId,
+          sessionId: internalId,
+          engine: "acp",
+          expiresAt: Date.now() + 10 * 60 * 1000,
+          toolName: String(toolCall?.title ?? toolCall?.kind ?? "ACP permission"),
+          cwd: entry?.cwd,
+          risk: "high",
+          summary: String(toolCall?.title ?? toolCall?.kind ?? "ACP permission"),
+          rawPreview: previewPermissionInput({ toolCall, options: opts }),
+          allowedActions: optionActions.length > 0
+            ? optionActions
+            : [{ kind: "deny", label: "Deny" }],
+          originalRef: { acpSessionId, toolCall },
+        });
 
         log("ACP_PERMISSION_REQUEST", {
           session: internalId.slice(0, 8),
@@ -800,6 +869,7 @@ export function register(getMainWindow: () => BrowserWindow | null): void {
       resolver.resolve({ outcome: { outcome: "cancelled" } });
     }
     session.pendingPermissions.clear();
+    permissionLedger.deleteSession(sessionId);
     session.process.kill();
     acpSessions.delete(sessionId);
     configBuffer.delete(sessionId);
@@ -872,6 +942,7 @@ export function register(getMainWindow: () => BrowserWindow | null): void {
       resolver.resolve({ outcome: { outcome: "cancelled" } });
     }
     session.pendingPermissions.clear();
+    permissionLedger.deleteSession(sessionId);
     if (!session.acpSessionId) {
       return { ok: true };
     }
@@ -950,22 +1021,17 @@ export function register(getMainWindow: () => BrowserWindow | null): void {
   });
 
   ipcMain.handle("acp:permission_response", async (_event, { sessionId, requestId, optionId }: { sessionId: string; requestId: string; optionId: string }) => {
-    const session = acpSessions.get(sessionId);
-    if (!session) {
-      log("ACP_PERMISSION_RESPONSE", `ERROR: session ${sessionId?.slice(0, 8)} not found`);
-      return { error: "Session not found" };
+    const claimId = `local:${requestId}`;
+    const claim = permissionLedger.claimLocal(requestId, claimId);
+    if (!claim.ok && claim.reason !== "not_found" && claim.reason !== "expired") {
+      return { error: permissionRaceError(claim.reason) };
     }
 
-    const resolver = session.pendingPermissions.get(requestId);
-    if (!resolver) {
-      log("ACP_PERMISSION_RESPONSE", `ERROR: session=${sessionId.slice(0, 8)} no pending permission for requestId=${requestId}`);
-      return { error: "No pending permission" };
+    const result = await respondAcpPermissionDirect({ sessionId, requestId, optionId });
+    if (result.error && claim.ok) {
+      permissionLedger.releaseClaim(requestId, claimId);
     }
-
-    log("ACP_PERMISSION_RESPONSE", `session=${sessionId.slice(0, 8)} requestId=${requestId} optionId=${optionId}`);
-    resolver.resolve({ outcome: { outcome: "selected", optionId } });
-    session.pendingPermissions.delete(requestId);
-    return { ok: true };
+    return result;
   });
 }
 

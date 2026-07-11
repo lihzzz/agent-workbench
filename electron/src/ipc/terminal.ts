@@ -11,7 +11,7 @@ import {
 } from "../lib/terminal-history";
 import type { TerminalHistoryState } from "../lib/terminal-history";
 
-interface TerminalEntry {
+export interface TerminalEntry {
   pty: {
     write: (data: string) => void;
     resize: (cols: number, rows: number) => void;
@@ -22,7 +22,9 @@ interface TerminalEntry {
   cols: number;
   rows: number;
   spaceId: string;
+  cwd: string;
   createdAt: number;
+  lastActivityAt: number;
   history: TerminalHistoryState;
   seq: number;
   exited: boolean;
@@ -31,6 +33,20 @@ interface TerminalEntry {
 }
 
 export const terminals = new Map<string, TerminalEntry>();
+
+type TerminalDataListener = (event: { terminalId: string; data: string; seq: number }) => void;
+const terminalDataListeners = new Set<TerminalDataListener>();
+
+export function onTerminalData(listener: TerminalDataListener): () => void {
+  terminalDataListeners.add(listener);
+  return () => terminalDataListeners.delete(listener);
+}
+
+function emitTerminalData(event: { terminalId: string; data: string; seq: number }): void {
+  for (const listener of terminalDataListeners) {
+    listener(event);
+  }
+}
 
 /**
  * Ensure the PTY child process gets a UTF-8 locale.
@@ -98,7 +114,9 @@ export function register(getMainWindow: () => BrowserWindow | null): void {
         cols: cols || 80,
         rows: rows || 24,
         spaceId: spaceId || "default",
+        cwd: cwd || (isWin ? process.env.USERPROFILE || "" : process.env.HOME || ""),
         createdAt: Date.now(),
+        lastActivityAt: Date.now(),
         history: EMPTY_TERMINAL_HISTORY,
         seq: 0,
         exited: false,
@@ -112,6 +130,8 @@ export function register(getMainWindow: () => BrowserWindow | null): void {
         if (entry.destroyed) return;
         entry.history = appendTerminalHistory(entry.history, data);
         entry.seq += 1;
+        entry.lastActivityAt = Date.now();
+        emitTerminalData({ terminalId, data, seq: entry.seq });
         safeSend(getMainWindow, "terminal:data", { terminalId, data, seq: entry.seq });
       });
 
@@ -123,6 +143,8 @@ export function register(getMainWindow: () => BrowserWindow | null): void {
         const exitNotice = "\r\n\x1b[2m[process exited]\x1b[0m\r\n";
         entry.history = appendTerminalHistory(entry.history, exitNotice);
         entry.seq += 1;
+        entry.lastActivityAt = Date.now();
+        emitTerminalData({ terminalId, data: exitNotice, seq: entry.seq });
         safeSend(getMainWindow, "terminal:data", {
           terminalId,
           data: exitNotice,
@@ -144,6 +166,7 @@ export function register(getMainWindow: () => BrowserWindow | null): void {
     if (!term) return { error: "Terminal not found" };
     if (term.exited) return { error: "Terminal has exited" };
     term.pty.write(data);
+    term.lastActivityAt = Date.now();
     return { ok: true };
   });
 
@@ -187,7 +210,9 @@ export function register(getMainWindow: () => BrowserWindow | null): void {
         .map(([terminalId, term]) => ({
           terminalId,
           spaceId: term.spaceId,
+          cwd: term.cwd,
           createdAt: term.createdAt,
+          lastActivityAt: term.lastActivityAt,
           exited: term.exited,
           exitCode: term.exitCode,
         }))

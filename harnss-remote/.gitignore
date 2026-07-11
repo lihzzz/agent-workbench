@@ -1,0 +1,10 @@
+node_modules/
+dist/
+dist-types/
+apps/*/dist/
+apps/*/dist-types/
+packages/*/dist/
+data/
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal

@@ -108,6 +108,32 @@ export type {
   AppSettings,
 } from "@shared/types/settings";
 
+export type {
+  RemoteCapability,
+  RemoteChatInput,
+  RemoteCommandEnvelope,
+  RemoteCommandError,
+  RemoteCommandKind,
+  RemoteConnectorStatus,
+  RemoteControlPublicSettings,
+  RemoteDiffFileResult,
+  RemoteDiffSummary,
+  RemoteExecutionProfile,
+  RemoteExecutionProfileId,
+  RemoteMessage,
+  RemoteMessagePage,
+  RemotePermissionAction,
+  RemotePermissionRequest,
+  RemotePublicStatus,
+  RemoteSessionSnapshot,
+  RemoteSessionSummary,
+  RemoteSnapshot,
+  RemoteStartTaskInput,
+  RemoteTerminalSnapshot,
+  RemoteTerminalSummary,
+  StreamCursor,
+} from "@shared/types/remote";
+
 // ── Git types (shared) ──
 
 export type {

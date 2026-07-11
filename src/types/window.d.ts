@@ -10,6 +10,11 @@ import type { CustomSubagent } from "@shared/types/subagent";
 import type { PromptTemplate } from "@shared/types/prompt-template";
 import type { AppSettings, MacBackgroundEffect, ThemeOption } from "@shared/types/settings";
 import type {
+  RemoteCommandEnvelope,
+  RemotePublicStatus,
+  RemoteSnapshot,
+} from "@shared/types/remote";
+import type {
   ACPSessionEvent,
   ACPPermissionEvent,
   ACPTurnCompleteEvent,
@@ -453,6 +458,32 @@ declare global {
         set: (patch: Partial<AppSettings>) => Promise<IpcResult>;
         /** Subscribe to settings changes pushed from the main process. */
         onChanged: (callback: (settings: AppSettings) => void) => () => void;
+      };
+      remote: {
+        status: () => Promise<RemotePublicStatus>;
+        pair: (input: {
+          serverUrl: string;
+          desktopName: string;
+          deviceToken: string;
+          desktopId?: string;
+        }) => Promise<IpcResult>;
+        revoke: () => Promise<IpcResult>;
+        setEnabled: (enabled: boolean) => Promise<IpcResult>;
+        auditList: (limit?: number) => Promise<unknown[]>;
+        rendererReady: () => void;
+        rendererDispose: () => void;
+        publishSnapshot: (snapshot: RemoteSnapshot) => void;
+        commandResult: (result: {
+          commandId: string;
+          ok: boolean;
+          result?: unknown;
+          error?: string;
+        }) => Promise<IpcResult>;
+        onStatusChanged: (callback: (status: RemotePublicStatus) => void) => () => void;
+        onCommand: (callback: (data: {
+          command: RemoteCommandEnvelope;
+          payload: unknown;
+        }) => void) => () => void;
       };
       jira: {
         getConfig: (projectId: string) => Promise<JiraProjectConfig | null>;

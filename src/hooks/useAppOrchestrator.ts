@@ -14,6 +14,7 @@ import { useSplitView } from "@/hooks/useSplitView";
 import { useFolderManager } from "@/hooks/useFolderManager";
 import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
 import { useRelayOrchestrator } from "@/hooks/useRelayOrchestrator";
+import { useRemoteControlBridge } from "@/hooks/useRemoteControlBridge";
 import { canonicalizeModelValue, resolveModelValue } from "@/lib/model-utils";
 import type { ToolId } from "@/types/tools";
 import type { AcpPermissionBehavior, EngineId, InstalledAgent } from "@/types";
@@ -61,6 +62,20 @@ export function useAppOrchestrator() {
     ? manager.activeSession.agentId
     : null;
   const spaceTerminals = useSpaceTerminals();
+
+  useRemoteControlBridge({
+    projects: projectManager.projects,
+    spaces: spaceManager.spaces,
+    sessions: manager.sessions,
+    activeSessionId: manager.activeSessionId,
+    messages: manager.messages,
+    pendingPermission: manager.pendingPermission,
+    send: manager.send,
+    interrupt: manager.interrupt,
+    stop: manager.stop,
+    respondPermission: manager.respondPermission,
+    startRemoteTask: manager.startRemoteTask,
+  });
 
   // ── Tool toggle with suppression ──
 

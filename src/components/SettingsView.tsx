@@ -15,6 +15,7 @@ import {
   PanelLeft,
   Archive,
   FileText,
+  RadioTower,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -32,6 +33,7 @@ import { CostDashboardSettings } from "@/components/settings/CostDashboardSettin
 import { SubagentSettings } from "@/components/settings/SubagentSettings";
 import { PromptTemplateSettings } from "@/components/settings/PromptTemplateSettings";
 import { SkillsSettings } from "@/components/settings/SkillsSettings";
+import { RemoteControlSettings } from "@/components/settings/RemoteControlSettings";
 import { useSettingsStore } from "@/stores/settings-store";
 import { isMac } from "@/lib/utils";
 import type { AppSettings, ChatSession, Project, EngineId } from "@/types";
@@ -39,7 +41,7 @@ import { useAgentContext } from "./AgentContext";
 
 // ── Section definitions ──
 
-export type SettingsSection = "general" | "appearance" | "notifications" | "analytics" | "usage" | "archived" | "agents" | "mcp" | "engines" | "skills" | "custom-agents" | "prompt-templates" | "advanced" | "about";
+export type SettingsSection = "general" | "appearance" | "notifications" | "analytics" | "usage" | "archived" | "agents" | "mcp" | "engines" | "skills" | "custom-agents" | "prompt-templates" | "remote" | "advanced" | "about";
 
 interface NavItem {
   id: SettingsSection;
@@ -62,6 +64,7 @@ const NAV_ITEMS: NavItem[] = [
   { id: "skills", label: "Skills", icon: Sparkles },
   { id: "custom-agents", label: "Subagents", icon: Users },
   { id: "prompt-templates", label: "Prompt Templates", icon: FileText },
+  { id: "remote", label: "Remote Control", icon: RadioTower },
   { id: "advanced", label: "Advanced", icon: Wrench },
   { id: "about", label: "About", icon: Info },
 ];
@@ -220,6 +223,13 @@ export const SettingsView = memo(function SettingsView({
             templates={promptTemplates}
             onSave={savePromptTemplate}
             onDelete={deletePromptTemplate}
+          />
+        );
+      case "remote":
+        return (
+          <RemoteControlSettings
+            appSettings={appSettings}
+            onUpdateAppSettings={updateAppSettings}
           />
         );
       case "about":

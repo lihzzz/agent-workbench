@@ -16,6 +16,8 @@ import { getCodexBinaryPath, getCodexBinaryStatus, getCodexVersion } from "../li
 import { getAppSetting } from "../lib/app-settings";
 import { reportError } from "../lib/error-utils";
 import { captureEvent } from "../lib/posthog";
+import { permissionLedger } from "../lib/permissions/permission-ledger";
+import type { RemotePermissionAction } from "@shared/types/remote";
 
 import type {
   CodexServerNotification,
@@ -70,6 +72,103 @@ import {
 } from "@shared/lib/codex-helpers";
 
 const codexSessions = new Map<string, CodexSession>();
+
+function permissionRaceError(reason: string): string {
+  if (reason === "already_resolved") return "Permission request was already resolved";
+  if (reason === "expired") return "Permission request expired";
+  return "Permission request is no longer available";
+}
+
+export async function respondCodexApprovalDirect(input: {
+  sessionId: string;
+  rpcId: string | number;
+  decision: string;
+  acceptSettings?: { forSession?: boolean };
+}): Promise<{ ok?: boolean; error?: string }> {
+  const session = codexSessions.get(input.sessionId);
+  if (!session) return { error: "Session not found" };
+
+  try {
+    const result: Record<string, unknown> = { decision: input.decision };
+    if (input.acceptSettings) result.acceptSettings = input.acceptSettings;
+    session.rpc.respondToServer(input.rpcId, result);
+    permissionLedger.resolve(String(input.rpcId));
+    return { ok: true };
+  } catch (err) {
+    return {
+      error: reportError("CODEX_APPROVAL_RESPONSE_ERR", err, {
+        engine: "codex",
+        sessionId: input.sessionId,
+        rpcId: input.rpcId,
+      }),
+    };
+  }
+}
+
+export async function respondCodexUserInputDirect(input: {
+  sessionId: string;
+  rpcId: string | number;
+  answers: Record<string, { answers: string[] }>;
+}): Promise<{ ok?: boolean; error?: string }> {
+  const session = codexSessions.get(input.sessionId);
+  if (!session) return { error: "Session not found" };
+  try {
+    session.rpc.respondToServer(input.rpcId, { answers: input.answers });
+    permissionLedger.resolve(String(input.rpcId));
+    return { ok: true };
+  } catch (err) {
+    return {
+      error: reportError("CODEX_USER_INPUT_RESPONSE_ERR", err, {
+        engine: "codex",
+        sessionId: input.sessionId,
+        rpcId: input.rpcId,
+      }),
+    };
+  }
+}
+
+export async function respondCodexServerRequestErrorDirect(input: {
+  sessionId: string;
+  rpcId: string | number;
+  code: number;
+  message: string;
+}): Promise<{ ok?: boolean; error?: string }> {
+  const session = codexSessions.get(input.sessionId);
+  if (!session) return { error: "Session not found" };
+  try {
+    session.rpc.respondToServerError(input.rpcId, input.code, input.message);
+    permissionLedger.resolve(String(input.rpcId));
+    return { ok: true };
+  } catch (err) {
+    return {
+      error: reportError("CODEX_SERVER_REQUEST_ERROR_ERR", err, {
+        engine: "codex",
+        sessionId: input.sessionId,
+        rpcId: input.rpcId,
+      }),
+    };
+  }
+}
+
+export function codexAnswersFromRemoteAction(
+  action: RemotePermissionAction,
+): Record<string, { answers: string[] }> {
+  if (action.kind !== "answer") return {};
+  const answers: Record<string, { answers: string[] }> = {};
+  for (const [questionId, values] of Object.entries(action.answers ?? {})) {
+    const cleaned = values.map((value) => value.trim()).filter(Boolean);
+    if (cleaned.length > 0) answers[questionId] = { answers: cleaned };
+  }
+  return answers;
+}
+
+function previewPermissionInput(input: unknown): string {
+  try {
+    return JSON.stringify(input, null, 2).slice(0, 4000);
+  } catch {
+    return String(input).slice(0, 4000);
+  }
+}
 
 async function listCodexModelsWithConfiguredFallback(
   rpc: CodexRpcClient,
@@ -251,6 +350,28 @@ function setupCodexHandlers(
       `[srvreq:${internalId.slice(0, 8)}] ${msg.method} id=${msg.id}`,
     );
     if (isSupportedServerRequestMethod(msg.method)) {
+      const allowedActions: RemotePermissionAction[] = msg.method === "item/tool/requestUserInput"
+        ? [
+            { kind: "answer", optionId: "codex_user_input", label: "Submit answers" },
+            { kind: "deny", label: "Deny" },
+          ]
+        : [
+            { kind: "approve_once", label: "Approve once" },
+            { kind: "deny", label: "Deny" },
+          ];
+      permissionLedger.add({
+        requestId: String(msg.id),
+        sessionId: internalId,
+        engine: "codex",
+        expiresAt: Date.now() + 10 * 60 * 1000,
+        toolName: msg.method,
+        cwd: session.cwd,
+        risk: "high",
+        summary: msg.method,
+        rawPreview: previewPermissionInput(msg.params),
+        allowedActions,
+        originalRef: { rpcId: msg.id, method: msg.method },
+      });
       safeSend(getMainWindow, "codex:approval_request", {
         _sessionId: internalId,
         rpcId: msg.id,
@@ -279,6 +400,7 @@ function setupCodexHandlers(
   rpc.onExit = (code, signal) => {
     log("codex", ` Process exited: code=${code} signal=${signal} session=${internalId}`);
     codexSessions.delete(internalId);
+    permissionLedger.deleteSession(internalId);
     safeSend(getMainWindow, "codex:exit", {
       _sessionId: internalId,
       code,
@@ -426,6 +548,7 @@ export function register(getMainWindow: () => BrowserWindow | null): void {
         if (session) {
           session.rpc.destroy();
           codexSessions.delete(internalId);
+          permissionLedger.deleteSession(internalId);
         }
         return { error: errMsg };
       }
@@ -509,6 +632,7 @@ export function register(getMainWindow: () => BrowserWindow | null): void {
     if (!session) return;
     session.rpc.destroy();
     codexSessions.delete(sessionId);
+    permissionLedger.deleteSession(sessionId);
     log("codex",` Session stopped: ${sessionId}`);
   });
 
@@ -547,23 +671,18 @@ export function register(getMainWindow: () => BrowserWindow | null): void {
         acceptSettings?: { forSession?: boolean };
       },
     ) => {
-      const session = codexSessions.get(data.sessionId);
-      if (!session) return { error: "Session not found" };
-
-      try {
-        const result: Record<string, unknown> = { decision: data.decision };
-        if (data.acceptSettings) result.acceptSettings = data.acceptSettings;
-        session.rpc.respondToServer(data.rpcId, result);
-        return { ok: true };
-      } catch (err) {
-        return {
-          error: reportError("CODEX_APPROVAL_RESPONSE_ERR", err, {
-            engine: "codex",
-            sessionId: data.sessionId,
-            rpcId: data.rpcId,
-          }),
-        };
+      const requestId = String(data.rpcId);
+      const claimId = `local:${requestId}`;
+      const claim = permissionLedger.claimLocal(requestId, claimId);
+      if (!claim.ok && claim.reason !== "not_found" && claim.reason !== "expired") {
+        return { error: permissionRaceError(claim.reason) };
       }
+
+      const result = await respondCodexApprovalDirect(data);
+      if (result.error && claim.ok) {
+        permissionLedger.releaseClaim(requestId, claimId);
+      }
+      return result;
     },
   );
 
@@ -578,20 +697,18 @@ export function register(getMainWindow: () => BrowserWindow | null): void {
         answers: Record<string, { answers: string[] }>;
       },
     ) => {
-      const session = codexSessions.get(data.sessionId);
-      if (!session) return { error: "Session not found" };
-      try {
-        session.rpc.respondToServer(data.rpcId, { answers: data.answers });
-        return { ok: true };
-      } catch (err) {
-        return {
-          error: reportError("CODEX_USER_INPUT_RESPONSE_ERR", err, {
-            engine: "codex",
-            sessionId: data.sessionId,
-            rpcId: data.rpcId,
-          }),
-        };
+      const requestId = String(data.rpcId);
+      const claimId = `local:${requestId}`;
+      const claim = permissionLedger.claimLocal(requestId, claimId);
+      if (!claim.ok && claim.reason !== "not_found" && claim.reason !== "expired") {
+        return { error: permissionRaceError(claim.reason) };
       }
+
+      const result = await respondCodexUserInputDirect(data);
+      if (result.error && claim.ok) {
+        permissionLedger.releaseClaim(requestId, claimId);
+      }
+      return result;
     },
   );
 
@@ -607,20 +724,18 @@ export function register(getMainWindow: () => BrowserWindow | null): void {
         message: string;
       },
     ) => {
-      const session = codexSessions.get(data.sessionId);
-      if (!session) return { error: "Session not found" };
-      try {
-        session.rpc.respondToServerError(data.rpcId, data.code, data.message);
-        return { ok: true };
-      } catch (err) {
-        return {
-          error: reportError("CODEX_SERVER_REQUEST_ERROR_ERR", err, {
-            engine: "codex",
-            sessionId: data.sessionId,
-            rpcId: data.rpcId,
-          }),
-        };
+      const requestId = String(data.rpcId);
+      const claimId = `local:${requestId}`;
+      const claim = permissionLedger.claimLocal(requestId, claimId);
+      if (!claim.ok && claim.reason !== "not_found" && claim.reason !== "expired") {
+        return { error: permissionRaceError(claim.reason) };
       }
+
+      const result = await respondCodexServerRequestErrorDirect(data);
+      if (result.error && claim.ok) {
+        permissionLedger.releaseClaim(requestId, claimId);
+      }
+      return result;
     },
   );
 
@@ -921,6 +1036,7 @@ export function register(getMainWindow: () => BrowserWindow | null): void {
         if (session) {
           session.rpc.destroy();
           codexSessions.delete(internalId);
+          permissionLedger.deleteSession(internalId);
         }
         return { error: errMsg };
       }
@@ -975,5 +1091,6 @@ export function stopAll(): void {
   for (const [id, session] of codexSessions) {
     session.rpc.destroy();
     codexSessions.delete(id);
+    permissionLedger.deleteSession(id);
   }
 }

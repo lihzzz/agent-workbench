@@ -12,6 +12,18 @@ export function onSettingsChanged(cb: SettingsListener): void {
   listeners.push(cb);
 }
 
+export function updateSettings(
+  patch: Partial<AppSettings>,
+  getMainWindow?: () => BrowserWindow | null,
+): AppSettings {
+  const next = setAppSettings(patch);
+  for (const cb of listeners) cb(next);
+  if (getMainWindow) {
+    safeSend(getMainWindow, "settings:changed", next);
+  }
+  return next;
+}
+
 export function register(getMainWindow: () => BrowserWindow | null): void {
   ipcMain.handle("settings:get", () => {
     try {
@@ -24,11 +36,7 @@ export function register(getMainWindow: () => BrowserWindow | null): void {
 
   ipcMain.handle("settings:set", (_event, patch: Partial<AppSettings>) => {
     try {
-      const next = setAppSettings(patch);
-      // Notify in-process listeners (e.g. autoUpdater)
-      for (const cb of listeners) cb(next);
-      // Notify renderer so reactive subscribers update without polling
-      safeSend(getMainWindow, "settings:changed", next);
+      updateSettings(patch, getMainWindow);
       return { ok: true };
     } catch (err) {
       const errMsg = reportError("SETTINGS:SET_ERR", err);

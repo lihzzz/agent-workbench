@@ -1,0 +1,26 @@
+{
+  "name": "harnss-remote",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@10.26.0",
+  "scripts": {
+    "dev": "pnpm --filter @harnss-remote/server dev",
+    "dev:web": "pnpm --filter @harnss-remote/web dev",
+    "build": "pnpm --filter @harnss-remote/protocol build && pnpm --filter @harnss-remote/server build && pnpm --filter @harnss-remote/web build",
+    "start": "pnpm --filter @harnss-remote/server start"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "argon2",
+      "better-sqlite3",
+      "esbuild"
+    ]
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  }
+}

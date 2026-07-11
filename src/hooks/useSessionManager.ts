@@ -1,10 +1,11 @@
 import { useState, useCallback, useEffect, useRef } from "react";
-import type { ChatSession, UIMessage, PermissionRequest, McpServerStatus, McpServerConfig, ModelInfo, AcpPermissionBehavior, EngineId, Project, ACPAuthenticateResult, ACPConfigOption, ACPPermissionEvent, ACPStartResult } from "@/types";
+import type { ChatSession, UIMessage, PermissionRequest, McpServerStatus, McpServerConfig, ModelInfo, AcpPermissionBehavior, EngineId, Project, ACPAuthenticateResult, ACPConfigOption, ACPPermissionEvent, ACPStartResult, RemoteStartTaskInput } from "@/types";
 import { toMcpStatusState } from "../lib/mcp-utils";
 import { toChatSession } from "../lib/session/records";
 import { BackgroundSessionStore } from "../lib/background/session-store";
-import { createSystemMessage } from "../lib/message-factory";
+import { createSystemMessage, createUserMessage } from "../lib/message-factory";
 import { suppressNextSessionCompletion } from "../lib/notification-utils";
+import { buildSdkContent } from "../lib/engine/protocol";
 import {
   DRAFT_ID,
   getCodexApprovalPolicy,
@@ -25,6 +26,37 @@ import { useSessionPersistence } from "./session/useSessionPersistence";
 import { useDraftMaterialization } from "./session/useDraftMaterialization";
 import { useSessionRevival } from "./session/useSessionRevival";
 import { useSessionLifecycle } from "./session/useSessionLifecycle";
+
+function getRemoteProfileModes(profileId: RemoteStartTaskInput["profileId"]): {
+  claudePermissionMode: string;
+  codexApprovalPolicy: string;
+  codexSandbox: "read-only" | "workspace-write";
+} {
+  if (profileId === "read_only") {
+    return {
+      claudePermissionMode: "plan",
+      codexApprovalPolicy: "on-request",
+      codexSandbox: "read-only",
+    };
+  }
+  return {
+    claudePermissionMode: "default",
+    codexApprovalPolicy: "on-request",
+    codexSandbox: "workspace-write",
+  };
+}
+
+function joinRemoteWorktreePath(projectPath: string, worktreeId?: string): string {
+  if (!worktreeId) return projectPath;
+  const separator = projectPath.includes("\\") ? "\\" : "/";
+  return `${projectPath.replace(/[\\/]+$/, "")}${separator}${worktreeId}`;
+}
+
+function fallbackRemoteTitle(prompt: string): string {
+  const trimmed = prompt.trim();
+  if (!trimmed) return "Remote Task";
+  return trimmed.length > 60 ? `${trimmed.slice(0, 57)}...` : trimmed;
+}
 
 export function useSessionManager(
   projects: Project[],
@@ -424,6 +456,134 @@ export function useSessionManager(
     });
   }, [setSessions]);
 
+  const startRemoteTask = useCallback(async (input: RemoteStartTaskInput): Promise<{ sessionId: string }> => {
+    if (input.engine === "acp") {
+      throw new Error("ACP remote task start requires an agent id and is not supported by this command payload");
+    }
+
+    const project = projectsRef.current.find((item) => item.id === input.projectId);
+    if (!project) throw new Error("PROJECT_NOT_FOUND");
+
+    const cwd = joinRemoteWorktreePath(project.path, input.worktreeId);
+    const modes = getRemoteProfileModes(input.profileId);
+    const userMessage = createUserMessage(input.prompt);
+    const now = Date.now();
+    let sessionId: string | undefined;
+    let codexThreadId: string | undefined;
+    let opencodeSessionId: string | undefined;
+    let selectedModel = input.model;
+
+    if (input.engine === "claude") {
+      const start = await window.claude.start({
+        cwd,
+        model: input.model,
+        permissionMode: modes.claudePermissionMode,
+      });
+      if (start.error || !start.sessionId) throw new Error(start.error || "Claude session did not start");
+      sessionId = start.sessionId;
+    } else if (input.engine === "codex") {
+      const start = await window.claude.codex.start({
+        cwd,
+        model: input.model,
+        approvalPolicy: modes.codexApprovalPolicy,
+        sandbox: modes.codexSandbox,
+      });
+      if (start.error || !start.sessionId) throw new Error(start.error || "Codex session did not start");
+      sessionId = start.sessionId;
+      codexThreadId = start.threadId;
+      selectedModel = start.selectedModel ?? input.model;
+    } else {
+      const start = await window.claude.opencode.start({
+        cwd,
+        model: input.model,
+      });
+      if (start.error || !start.sessionId) throw new Error(start.error || "OpenCode session did not start");
+      sessionId = start.sessionId;
+      opencodeSessionId = start.opencodeSessionId;
+      selectedModel = start.selectedModel ?? input.model;
+    }
+
+    const session: ChatSession = {
+      id: sessionId,
+      projectId: project.id,
+      title: fallbackRemoteTitle(input.prompt),
+      createdAt: now,
+      lastMessageAt: userMessage.timestamp,
+      totalCost: 0,
+      isActive: false,
+      isProcessing: true,
+      titleGenerating: true,
+      engine: input.engine,
+      model: selectedModel,
+      permissionMode: input.engine === "claude" ? modes.claudePermissionMode : undefined,
+      codexThreadId,
+      opencodeSessionId,
+      branch: currentBranchRef.current,
+    };
+
+    liveSessionIdsRef.current.add(sessionId);
+    backgroundStoreRef.current.initFromState(sessionId, {
+      messages: [userMessage],
+      isProcessing: true,
+      isConnected: true,
+      isCompacting: false,
+      sessionInfo: null,
+      totalCost: 0,
+      contextUsage: null,
+      modelUsage: {},
+      pendingPermission: null,
+      rawAcpPermission: null,
+      slashCommands: [],
+    });
+
+    setSessions((prev) => [
+      session,
+      ...prev.filter((item) => item.id !== sessionId),
+    ].sort((a, b) => (b.lastMessageAt ?? b.createdAt) - (a.lastMessageAt ?? a.createdAt)));
+
+    await window.claude.sessions.save({
+      id: session.id,
+      projectId: session.projectId,
+      title: session.title,
+      createdAt: session.createdAt,
+      messages: [userMessage],
+      model: session.model,
+      permissionMode: session.permissionMode,
+      totalCost: 0,
+      engine: session.engine,
+      codexThreadId: session.codexThreadId,
+      opencodeSessionId: session.opencodeSessionId,
+      branch: session.branch,
+    });
+
+    try {
+      if (input.engine === "claude") {
+        const sendResult = await window.claude.send(sessionId, {
+          type: "user",
+          message: { role: "user", content: buildSdkContent(input.prompt) },
+        });
+        if (sendResult.error) throw new Error(sendResult.error);
+      } else if (input.engine === "codex") {
+        const sendResult = await window.claude.codex.send(sessionId, input.prompt);
+        if (sendResult.error) throw new Error(sendResult.error);
+      } else {
+        const sendResult = await window.claude.opencode.send(sessionId, input.prompt);
+        if (sendResult.error) throw new Error(sendResult.error);
+      }
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      backgroundStoreRef.current.updateMessages(sessionId, (messages) => [
+        ...messages,
+        createSystemMessage(`Remote task start failed: ${message}`, true),
+      ]);
+      backgroundStoreRef.current.setProcessing(sessionId, false);
+      throw error;
+    }
+
+    void generateSessionTitle(sessionId, input.prompt, cwd, input.engine);
+    return { sessionId };
+  }, [generateSessionTitle, setSessions]);
+
   // ── Derived state ──
   const isDraft = activeSessionId === DRAFT_ID;
   const activeSession = sessions.find((s) => s.id === activeSessionId) ?? null;
@@ -687,6 +847,7 @@ export function useSessionManager(
     deleteSession,
     renameSession,
     importCCSession,
+    startRemoteTask,
     setActiveModel,
     setSessionModel,
     setActivePermissionMode,

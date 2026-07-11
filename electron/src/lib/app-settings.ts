@@ -12,6 +12,7 @@ import path from "path";
 import fs from "fs";
 import { getDataDir } from "./data-dir";
 import type { AppSettings, NotificationSettings } from "@shared/types/settings";
+import { DEFAULT_REMOTE_CONTROL_SETTINGS } from "@shared/types/remote";
 
 // Re-export shared types so existing `import from "./app-settings"` consumers still work
 export type { AppSettings, MacBackgroundEffect, PreferredEditor, VoiceDictationMode, NotificationTrigger, NotificationEventSettings, NotificationSettings, CodexBinarySource, ClaudeBinarySource, OpenCodeBinarySource } from "@shared/types/settings";
@@ -40,6 +41,7 @@ const DEFAULTS: AppSettings = {
   showJiraBoard: false,
   macBackgroundEffect: "liquid-glass",
   analyticsEnabled: true,
+  remoteControl: DEFAULT_REMOTE_CONTROL_SETTINGS,
 };
 
 // ── Internal state ──
@@ -63,6 +65,7 @@ export function getAppSettings(): AppSettings {
     // Deep-merge `notifications` so upgrading users get defaults for each event type
     // even if their settings.json has a partial or missing notifications object.
     const parsedNotif = parsed.notifications as Partial<NotificationSettings> | undefined;
+    const parsedRemote = parsed.remoteControl;
     cached = {
       ...DEFAULTS,
       ...parsed,
@@ -71,6 +74,14 @@ export function getAppSettings(): AppSettings {
         permissions: { ...NOTIFICATION_DEFAULTS.permissions, ...parsedNotif?.permissions },
         askUserQuestion: { ...NOTIFICATION_DEFAULTS.askUserQuestion, ...parsedNotif?.askUserQuestion },
         sessionComplete: { ...NOTIFICATION_DEFAULTS.sessionComplete, ...parsedNotif?.sessionComplete },
+      },
+      remoteControl: {
+        ...DEFAULT_REMOTE_CONTROL_SETTINGS,
+        ...parsedRemote,
+        capabilities: {
+          ...DEFAULT_REMOTE_CONTROL_SETTINGS.capabilities,
+          ...parsedRemote?.capabilities,
+        },
       },
     };
   } catch {
@@ -87,7 +98,20 @@ export function getAppSetting<K extends keyof AppSettings>(key: K): AppSettings[
 /** Update one or more settings and persist to disk. */
 export function setAppSettings(patch: Partial<AppSettings>): AppSettings {
   const current = getAppSettings();
-  const next = { ...current, ...patch };
+  const next = {
+    ...current,
+    ...patch,
+    remoteControl: patch.remoteControl
+      ? {
+          ...current.remoteControl,
+          ...patch.remoteControl,
+          capabilities: {
+            ...current.remoteControl.capabilities,
+            ...patch.remoteControl.capabilities,
+          },
+        }
+      : current.remoteControl,
+  };
   cached = next;
 
   try {

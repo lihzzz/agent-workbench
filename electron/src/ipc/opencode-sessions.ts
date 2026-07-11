@@ -15,6 +15,7 @@ import { log } from "../lib/logger";
 import { getOpenCodeBinaryStatus, getOpenCodeVersion, resolveOpenCodeBinaryPath } from "../lib/opencode-binary";
 import { startOpenCodeServer, type OpenCodeServerHandle } from "../lib/opencode-client";
 import { loadOpenCodeModelCatalog } from "../lib/opencode-model-filter";
+import { permissionLedger } from "../lib/permissions/permission-ledger";
 
 interface OpenCodeSessionState {
   internalId: string;
@@ -34,6 +35,14 @@ interface OpenCodeEventSubscription {
 
 const sessions = new Map<string, OpenCodeSessionState>();
 const pendingStarts = new Map<string, AbortController>();
+
+function previewPermissionInput(input: unknown): string {
+  try {
+    return JSON.stringify(input, null, 2).slice(0, 4000);
+  } catch {
+    return String(input).slice(0, 4000);
+  }
+}
 
 function splitModel(model: string | undefined): { providerID: string; modelID: string } | undefined {
   if (!model) return undefined;
@@ -63,6 +72,33 @@ function permissionToolName(permission: Permission): string {
   return permission.title || permission.type;
 }
 
+function permissionRaceError(reason: string): string {
+  if (reason === "already_resolved") return "Permission request was already resolved";
+  if (reason === "expired") return "Permission request expired";
+  return "Permission request is no longer available";
+}
+
+export async function respondOpenCodePermissionDirect(input: {
+  sessionId: string;
+  requestId: string;
+  reply: OpenCodePermissionReply;
+}): Promise<{ ok?: boolean; error?: string }> {
+  const state = sessions.get(input.sessionId);
+  if (!state) return { error: "OpenCode session not found" };
+  try {
+    await state.client.postSessionIdPermissionsPermissionId({
+      path: { id: state.opencodeSessionId, permissionID: input.requestId },
+      query: { directory: state.cwd },
+      body: { response: input.reply },
+      throwOnError: true,
+    });
+    permissionLedger.resolve(input.requestId);
+    return { ok: true };
+  } catch (error) {
+    return { error: reportError("OPENCODE_PERMISSION_ERR", error, { sessionId: input.sessionId }) };
+  }
+}
+
 async function getModels(
   client: OpencodeClient,
   cwd: string,
@@ -79,6 +115,7 @@ async function destroySession(state: OpenCodeSessionState, abortNative: boolean)
   if (state.stopping) return;
   state.stopping = true;
   sessions.delete(state.internalId);
+  permissionLedger.deleteSession(state.internalId);
   state.eventAbort.abort();
   if (abortNative) {
     await state.client.session.abort({
@@ -125,6 +162,22 @@ async function runEventLoop(
         safeSend(getMainWindow, "opencode:event", { _sessionId: state.internalId, event });
         if (event.type === "permission.updated") {
           const permission = event.properties;
+          permissionLedger.add({
+            requestId: permission.id,
+            sessionId: state.internalId,
+            engine: "opencode",
+            expiresAt: Date.now() + 10 * 60 * 1000,
+            toolName: permissionToolName(permission),
+            cwd: state.cwd,
+            risk: "high",
+            summary: permission.title ?? permissionToolName(permission),
+            rawPreview: previewPermissionInput(permission.metadata),
+            allowedActions: [
+              { kind: "approve_once", label: "Approve once" },
+              { kind: "deny", label: "Deny" },
+            ],
+            originalRef: { opencodeSessionId: state.opencodeSessionId, callId: permission.callID },
+          });
           safeSend(getMainWindow, "opencode:permission_request", {
             _sessionId: state.internalId,
             requestId: permission.id,
@@ -214,6 +267,7 @@ async function startSession(
       safeSend(getMainWindow, "opencode:exit", { _sessionId: internalId, code, signal });
       state.eventAbort.abort();
       sessions.delete(internalId);
+      permissionLedger.deleteSession(internalId);
       void fs.rm(state.tempDir, { recursive: true, force: true });
     });
     void runEventLoop(state, getMainWindow, initialSubscription);
@@ -307,19 +361,17 @@ export function register(getMainWindow: () => BrowserWindow | null): void {
     requestId: string;
     reply: OpenCodePermissionReply;
   }) => {
-    const state = sessions.get(data.sessionId);
-    if (!state) return { error: "OpenCode session not found" };
-    try {
-      await state.client.postSessionIdPermissionsPermissionId({
-        path: { id: state.opencodeSessionId, permissionID: data.requestId },
-        query: { directory: state.cwd },
-        body: { response: data.reply },
-        throwOnError: true,
-      });
-      return { ok: true };
-    } catch (error) {
-      return { error: reportError("OPENCODE_PERMISSION_ERR", error, { sessionId: data.sessionId }) };
+    const claimId = `local:${data.requestId}`;
+    const claim = permissionLedger.claimLocal(data.requestId, claimId);
+    if (!claim.ok && claim.reason !== "not_found" && claim.reason !== "expired") {
+      return { error: permissionRaceError(claim.reason) };
     }
+
+    const result = await respondOpenCodePermissionDirect(data);
+    if (result.error && claim.ok) {
+      permissionLedger.releaseClaim(data.requestId, claimId);
+    }
+    return result;
   });
 
   ipcMain.handle("opencode:list-models", async (_, cwd: string) => {

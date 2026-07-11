@@ -49,6 +49,7 @@ import * as codexSessionsIpc from "./ipc/codex-sessions";
 import * as opencodeSessionsIpc from "./ipc/opencode-sessions";
 import * as mcpIpc from "./ipc/mcp";
 import * as settingsIpc from "./ipc/settings";
+import * as remoteIpc from "./ipc/remote";
 import * as jiraIpc from "./ipc/jira";
 import { onSettingsChanged } from "./ipc/settings";
 
@@ -343,6 +344,7 @@ codexSessionsIpc.register(getMainWindow);
 opencodeSessionsIpc.register(getMainWindow);
 mcpIpc.register();
 settingsIpc.register(getMainWindow);
+remoteIpc.register(getMainWindow);
 jiraIpc.register();
 
 // Listen for analytics settings changes and reinitialize PostHog

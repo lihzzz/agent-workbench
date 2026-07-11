@@ -1,0 +1,32 @@
+services:
+  caddy:
+    image: caddy:2
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - server
+    restart: unless-stopped
+
+  server:
+    build:
+      context: ..
+      dockerfile: deploy/server.Dockerfile
+    environment:
+      NODE_ENV: production
+      PUBLIC_ORIGIN: ${PUBLIC_ORIGIN:-https://remote.example.com}
+      DATABASE_URL: file:/data/harnss-remote.sqlite
+      REMOTE_ADMIN_EMAIL: ${REMOTE_ADMIN_EMAIL}
+      REMOTE_ADMIN_PASSWORD: ${REMOTE_ADMIN_PASSWORD}
+    volumes:
+      - server_data:/data
+    restart: unless-stopped
+
+volumes:
+  caddy_data:
+  caddy_config:
+  server_data:

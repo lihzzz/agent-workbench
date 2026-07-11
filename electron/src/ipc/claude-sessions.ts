@@ -15,6 +15,7 @@ import { buildSdkMcpConfig } from "@shared/lib/mcp-config";
 import type { McpServerInput } from "@shared/lib/mcp-config";
 import { getClaudeBinaryMetadata, getClaudeBinaryPath, getClaudeBinaryStatus, getClaudeVersion } from "../lib/claude-binary";
 import { captureEvent } from "../lib/posthog";
+import { permissionLedger } from "../lib/permissions/permission-ledger";
 
 /** SDK options for file checkpointing — enables Write/Edit/NotebookEdit revert support */
 function fileCheckpointOptions(): Record<string, unknown> {
@@ -48,6 +49,105 @@ interface SessionEntry {
 }
 
 export const sessions = new Map<string, SessionEntry>();
+
+function previewPermissionInput(input: unknown): string {
+  try {
+    return JSON.stringify(input, null, 2).slice(0, 4000);
+  } catch {
+    return String(input).slice(0, 4000);
+  }
+}
+
+function addClaudeLedgerEntry(input: {
+  sessionId: string;
+  requestId: string;
+  toolName: string;
+  toolInput: unknown;
+  toolUseId?: string;
+  cwd?: string;
+  decisionReason?: string;
+}): void {
+  permissionLedger.add({
+    requestId: input.requestId,
+    sessionId: input.sessionId,
+    engine: "claude",
+    expiresAt: Date.now() + 10 * 60 * 1000,
+    toolName: input.toolName,
+    cwd: input.cwd,
+    risk: "high",
+    summary: input.decisionReason || input.toolName,
+    rawPreview: previewPermissionInput(input.toolInput),
+    allowedActions: [
+      { kind: "approve_once", label: "Approve once" },
+      { kind: "deny", label: "Deny" },
+    ],
+    originalRef: { toolUseId: input.toolUseId, toolInput: input.toolInput },
+  });
+}
+
+function permissionRaceError(reason: string): string {
+  if (reason === "already_resolved") return "Permission request was already resolved";
+  if (reason === "expired") return "Permission request expired";
+  return "Permission request is no longer available";
+}
+
+export async function respondClaudePermissionDirect(input: {
+  sessionId: string;
+  requestId: string;
+  behavior: string;
+  toolInput?: Record<string, unknown>;
+  newPermissionMode?: string;
+  updatedPermissions?: unknown[];
+}): Promise<{ ok?: boolean; error?: string }> {
+  const session = sessions.get(input.sessionId);
+  if (!session) {
+    log("PERMISSION_RESPONSE", `ERROR: session ${input.sessionId?.slice(0, 8)} not found`);
+    return { error: "Claude session not found" };
+  }
+  const pending = session.pendingPermissions.get(input.requestId);
+  if (!pending) {
+    log("PERMISSION_RESPONSE", `ERROR: no pending permission for requestId=${input.requestId}`);
+    return { error: "No pending permission request" };
+  }
+  log("PERMISSION_RESPONSE", `session=${input.sessionId.slice(0, 8)} behavior=${input.behavior} requestId=${input.requestId} newMode=${input.newPermissionMode ?? "none"} hasUpdatedPermissions=${!!input.updatedPermissions?.length}`);
+
+  if (input.newPermissionMode) {
+    try {
+      await setSessionPermissionMode(
+        input.sessionId,
+        session,
+        input.newPermissionMode,
+        "PERMISSION_MODE_CHANGED",
+      );
+    } catch (err) {
+      const errMsg = reportError("PERMISSION_MODE_ERR", err, {
+        engine: "claude",
+        sessionId: input.sessionId,
+        newPermissionMode: input.newPermissionMode,
+      });
+      log("PERMISSION_RESPONSE", `ERROR: session=${input.sessionId.slice(0, 8)} requestId=${input.requestId} modeChangeFailed=${errMsg}`);
+      return { error: errMsg };
+    }
+  }
+
+  session.pendingPermissions.delete(input.requestId);
+  permissionLedger.resolve(input.requestId);
+
+  if (input.behavior === "allow") {
+    pending.resolve({
+      behavior: "allow",
+      updatedInput: input.toolInput,
+      updatedPermissions: input.updatedPermissions,
+    });
+  } else {
+    const denyMsg = input.toolInput?.denyMessage;
+    pending.resolve({
+      behavior: "deny",
+      message: typeof denyMsg === "string" && denyMsg.trim() ? denyMsg.trim() : "User denied permission",
+    });
+  }
+  return { ok: true };
+}
 
 /**
  * System-prompt addition that keeps the agent replying in the user's language.
@@ -552,6 +652,7 @@ async function restartSession(
     pending.resolve({ behavior: "deny", message: "Session restarting" });
     session.pendingPermissions.delete(reqId);
   }
+  permissionLedger.deleteSession(sessionId);
 
   const opts = session.startOptions;
   const mcpServers = mcpServersOverride ?? opts.mcpServers;
@@ -579,6 +680,15 @@ async function restartSession(
     return new Promise<PermissionResult>((resolve) => {
       const requestId = crypto.randomUUID();
       newSession.pendingPermissions.set(requestId, { resolve });
+      addClaudeLedgerEntry({
+        sessionId,
+        requestId,
+        toolName,
+        toolInput: input,
+        toolUseId: context.toolUseID,
+        cwd,
+        decisionReason: context.decisionReason,
+      });
       safeSend(getMainWindow,"claude:permission_request", {
         _sessionId: sessionId,
         requestId,
@@ -678,6 +788,15 @@ export function register(getMainWindow: () => BrowserWindow | null): void {
         return new Promise<PermissionResult>((resolve) => {
           const requestId = crypto.randomUUID();
           session.pendingPermissions.set(requestId, { resolve });
+          addClaudeLedgerEntry({
+            sessionId,
+            requestId,
+            toolName,
+            toolInput: input,
+            toolUseId: context.toolUseID,
+            cwd: options.cwd || process.cwd(),
+            decisionReason: context.decisionReason,
+          });
           log("PERMISSION_REQUEST", {
             session: sessionId.slice(0, 8),
             tool: toolName,
@@ -808,50 +927,24 @@ export function register(getMainWindow: () => BrowserWindow | null): void {
     newPermissionMode?: string;
     updatedPermissions?: unknown[];
   }) => {
-    const session = sessions.get(sessionId);
-    if (!session) {
-      log("PERMISSION_RESPONSE", `ERROR: session ${sessionId?.slice(0, 8)} not found`);
-      return { error: "Claude session not found" };
-    }
-    const pending = session.pendingPermissions.get(requestId);
-    if (!pending) {
-      log("PERMISSION_RESPONSE", `ERROR: no pending permission for requestId=${requestId}`);
-      return { error: "No pending permission request" };
-    }
-    log("PERMISSION_RESPONSE", `session=${sessionId.slice(0, 8)} behavior=${behavior} requestId=${requestId} newMode=${newPermissionMode ?? "none"} hasUpdatedPermissions=${!!updatedPermissions?.length}`);
-
-    if (newPermissionMode) {
-      try {
-        await setSessionPermissionMode(
-          sessionId,
-          session,
-          newPermissionMode,
-          "PERMISSION_MODE_CHANGED",
-        );
-      } catch (err) {
-        const errMsg = reportError("PERMISSION_MODE_ERR", err, {
-          engine: "claude",
-          sessionId,
-          newPermissionMode,
-        });
-        log("PERMISSION_RESPONSE", `ERROR: session=${sessionId.slice(0, 8)} requestId=${requestId} modeChangeFailed=${errMsg}`);
-        return { error: errMsg };
-      }
+    const claimId = `local:${requestId}`;
+    const claim = permissionLedger.claimLocal(requestId, claimId);
+    if (!claim.ok && claim.reason !== "not_found" && claim.reason !== "expired") {
+      return { error: permissionRaceError(claim.reason) };
     }
 
-    session.pendingPermissions.delete(requestId);
-
-    if (behavior === "allow") {
-      pending.resolve({ behavior: "allow", updatedInput: toolInput, updatedPermissions });
-    } else {
-      // Pass user-provided rejection reason (from plan feedback) to the SDK so the model can adjust
-      const denyMsg = toolInput?.denyMessage;
-      pending.resolve({
-        behavior: "deny",
-        message: typeof denyMsg === "string" && denyMsg.trim() ? denyMsg.trim() : "User denied permission",
-      });
+    const result = await respondClaudePermissionDirect({
+      sessionId,
+      requestId,
+      behavior,
+      toolInput,
+      newPermissionMode,
+      updatedPermissions,
+    });
+    if (result.error && claim.ok) {
+      permissionLedger.releaseClaim(requestId, claimId);
     }
-    return { ok: true };
+    return result;
   });
 
   ipcMain.handle("claude:set-permission-mode", async (_event, { sessionId, permissionMode }: { sessionId: string; permissionMode: string }) => {
@@ -938,6 +1031,7 @@ export function register(getMainWindow: () => BrowserWindow | null): void {
           pending.resolve({ behavior: "deny", message: "Session stopped" });
         }
         session.pendingPermissions.clear();
+        permissionLedger.deleteSession(sessionId);
         session.channel.close();
         session.queryHandle?.close();
         // Let the event loop's finally block handle sessions.delete + claude:exit
@@ -964,6 +1058,7 @@ export function register(getMainWindow: () => BrowserWindow | null): void {
       pending.resolve({ behavior: "deny", message: "Interrupted by user" });
       session.pendingPermissions.delete(requestId);
     }
+    permissionLedger.deleteSession(sessionId);
 
     try {
       await session.queryHandle!.interrupt();
@@ -1141,6 +1236,7 @@ export function stopAll(): void {
       pending.resolve({ behavior: "deny", message: "App closing" });
     }
     session.pendingPermissions.clear();
+    permissionLedger.deleteSession(sessionId);
     session.channel.close();
     session.queryHandle?.close();
   }

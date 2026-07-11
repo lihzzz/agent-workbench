@@ -1,0 +1,19 @@
+{
+  "name": "@harnss-remote/web",
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "tsc -p tsconfig.json && vite build",
+    "preview": "vite preview --host 0.0.0.0"
+  },
+  "dependencies": {
+    "@harnss-remote/protocol": "workspace:*",
+    "@vitejs/plugin-react": "^5.1.4",
+    "vite": "^7.3.1",
+    "typescript": "^5.9.3"
+  },
+  "devDependencies": {
+    "@types/node": "^25.2.3"
+  }
+}

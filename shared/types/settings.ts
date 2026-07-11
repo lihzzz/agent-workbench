@@ -14,6 +14,8 @@ export type CodexBinarySource = "auto" | "managed" | "custom";
 export type ClaudeBinarySource = "auto" | "managed" | "custom";
 export type OpenCodeBinarySource = "auto" | "custom";
 
+export type { RemoteControlPublicSettings } from "./remote";
+
 // ── Notification settings ──
 
 export type NotificationTrigger = "always" | "unfocused" | "never";
@@ -70,4 +72,6 @@ export interface AppSettings {
   analyticsUserId?: string;
   /** Last date (YYYY-MM-DD) when daily_active_user was sent */
   analyticsLastDailyActiveDate?: string;
+  /** Public remote-control settings. Secrets are stored in RemoteCredentialStore, never here. */
+  remoteControl: import("./remote").RemoteControlPublicSettings;
 }
